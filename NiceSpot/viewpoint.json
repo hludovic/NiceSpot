@@ -1,0 +1,35 @@
+[
+    {
+        "id": 1,
+        "category": "Plage",
+        "title": "Le Riflet",
+        "description": "Une plage est une berge en pente douce ou très douce1, ainsi que, dans une acception plus étendue qui tend de plus en plus à être d'ordre maritime depuis le xixe siècle, un rivage oblique, assez peu prononcé par rapport à l'horizontale, qui se poursuit longuement sous le niveau de l'eau2. Cette morphologie de la berge ou du rivage par rapport au plan d'eau, à la rivière ou à la mer favorisent l'échouage des embarcations ou des navires, comme l'atterrissement des corps et matériaux transportés par les flots ou poussés par les courants.",
+        "longitude" : 1320913.2382,
+        "latitude" : 42.25475478,
+        "municipality" : "Deshaie",
+        "image": "riflet",
+        "isActive": true
+    },
+    {
+        "id": 2,
+        "category": "Plage",
+        "title": "Le Perle",
+        "description": "Une plage est une berge en pente douce ou très douce1, ainsi que, dans une acception plus étendue qui tend de plus en plus à être d'ordre maritime depuis le xixe siècle, un rivage oblique, assez peu prononcé par rapport à l'horizontale, qui se poursuit longuement sous le niveau de l'eau2. Cette morphologie de la berge ou du rivage par rapport au plan d'eau, à la rivière ou à la mer favorisent l'échouage des embarcations ou des navires, comme l'atterrissement des corps et matériaux transportés par les flots ou poussés par les courants.",
+        "longitude" : 1320913.2382,
+        "latitude" : 42.25475478,
+        "municipality" : "Deshaie",
+        "image": "perle",
+        "isActive": true
+    },
+    {
+        "id": 3,
+        "category": "Plage",
+        "title": "Les Amandiers",
+        "description": "Une plage est une berge en pente douce ou très douce1, ainsi que, dans une acception plus étendue qui tend de plus en plus à être d'ordre maritime depuis le xixe siècle, un rivage oblique, assez peu prononcé par rapport à l'horizontale, qui se poursuit longuement sous le niveau de l'eau2. Cette morphologie de la berge ou du rivage par rapport au plan d'eau, à la rivière ou à la mer favorisent l'échouage des embarcations ou des navires, comme l'atterrissement des corps et matériaux transportés par les flots ou poussés par les courants.",
+        "longitude" : 1320913.2382,
+        "latitude" : 42.25475478,
+        "municipality" : "Sainte-Rose",
+        "image": "amandiers",
+        "isActive": true
+    }
+]
