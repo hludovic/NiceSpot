@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct SpotItem: View {
-
     var spot: Spot
     
     var body: some View {        
@@ -35,8 +34,9 @@ struct SpotItem: View {
     }
 }
 
-struct viewPointItem_Previews: PreviewProvider {
-    static var previews: some View {
-        SpotItem(spot: <#Spot#>)
-    }
-}
+//struct viewPointItem_Previews: PreviewProvider {
+//    static var previews: some View {
+//        let
+//        SpotItem(spot: <#T##Spot#>)
+//    }
+//}

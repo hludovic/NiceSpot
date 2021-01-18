@@ -11,12 +11,25 @@ struct HomeView: View {
     @State private var searchText: String = ""
     @State private var isSearching: Bool = false
 
+    @Environment(\.managedObjectContext) private var viewContext
+    @FetchRequest(entity: Spot.entity(), sortDescriptors: []) var spots: FetchedResults<Spot>
+    
+    func fetch() {
+        HomeContent.fetchSpots(quantity: 1) { (result) in
+            switch result {
+            case .failure(let error):
+                print("ERROR \(error.localizedDescription)")
+            case .success(let spots):
+                print("success \(spots.count)")
+            }
+        }
+
+    }
+    
     var body: some View {
-
+        
         NavigationView {
-
             VStack(alignment: .leading) {
-
                 HStack {
                     TextField("Rechercher...", text: $searchText)
                         .padding(7)
@@ -54,9 +67,9 @@ struct HomeView: View {
                 .padding(.bottom, -10)
                 ScrollView(.horizontal, showsIndicators: true, content: {
                     HStack {
-                        ForEach(viewpointsData) { viewpoint in
-                            NavigationLink(destination: Text(viewpoint.title)) {
-                                    SpotItem()
+                        ForEach(spots, id: \.self) { spot in
+                            NavigationLink(destination: Text(spot.title)) {
+                                    SpotItem(spot: spot)
                                     .frame(width: 300)
                                     .padding(.trailing, 20.0)
                             }
@@ -68,14 +81,13 @@ struct HomeView: View {
                 Spacer()
 
             }
-            .navigationBarTitle(Text("Recommendations"))
-
+            .navigationTitle("Recommendations")
         }
     }
 }
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView()
+        HomeView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
 }
