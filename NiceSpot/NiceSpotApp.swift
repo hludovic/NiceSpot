@@ -9,7 +9,7 @@ import SwiftUI
 
 @main
 struct NiceSpotApp: App {
-    let homeContent = HomeContent(context: PersistenceController.preview.container.viewContext)
+    let homeContent = HomeContent(context: PersistenceController.shared.container.viewContext)
 
     var body: some Scene {
         WindowGroup {

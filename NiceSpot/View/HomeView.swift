@@ -51,10 +51,10 @@ struct HomeView: View {
                 .padding(.bottom, -10)
                 ScrollView(.horizontal, showsIndicators: true, content: {
                     HStack {
-                        ForEach(content.allSpots(), id: \.self) { spot in
+                        ForEach(content.spots, id: \.self) { spot in
                             NavigationLink(destination: Text(spot.title)) {
-                                let content = SpotContent(spot: spot)
-                                SpotView(newContent: content)
+                                let content = SpotCellContent(spot: spot)
+                                SpotCellView(content: content)
                                     .frame(width: 300)
                                     .padding(.trailing, 20.0)
                             }

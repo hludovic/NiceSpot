@@ -7,14 +7,12 @@
 
 import SwiftUI
 
-struct SpotView: View {
-//    var spot: Spot
-    @ObservedObject var newContent: SpotContent
-
+struct SpotCellView: View {
+    @ObservedObject var content: SpotCellContent
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10.0) {
-            newContent.image
+            content.image
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .frame(width: 300.0, height: 170.0)
@@ -23,10 +21,10 @@ struct SpotView: View {
                 .shadow(radius: 10)
 
             VStack(alignment: .leading, spacing: 5.0) {
-                Text(newContent.title)
+                Text(content.title)
                     .font(.headline)
                     .foregroundColor(Color.primary)
-                Text(newContent.detail)
+                Text(content.detail)
                     .foregroundColor(Color.secondary)
                     .lineLimit(2)
             }
@@ -39,9 +37,7 @@ struct viewPointItem_Previews: PreviewProvider {
         let context = PersistenceController.preview.container.viewContext
         let homeContent = HomeContent(context: context)
         
-        let spotContent = SpotContent(spot: homeContent.allSpots().first!)
-        SpotView(newContent: spotContent)
-//        SpotView(content: homeContent.allSpots().first!, newContent: <#T##SpotContent#>)
-////            .environmentObject(SpotContent(spot: homeContent.allSpots().first!))
+        let spotContent = SpotCellContent(spot: homeContent.spots.first!)
+        SpotCellView(content: spotContent)
     }
 }

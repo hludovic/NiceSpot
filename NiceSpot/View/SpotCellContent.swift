@@ -6,10 +6,9 @@
 //
 
 import Foundation
-//import CloudKit.CKRecord
 import SwiftUI
 
-class SpotContent: ObservableObject {
+class SpotCellContent: ObservableObject {
     private(set) var title: String
     private(set) var detail: String
     private(set) var pictureName: String
@@ -44,31 +43,27 @@ class SpotContent: ObservableObject {
             }
         }
     }
+    
+    private func savePicture(data: Data, completion: @escaping (Bool) -> Void) {
+        
+    }
 
     private func getPictureData(imageName: String, completion: @escaping (Result<Data, Error>) -> Void) {
         let urlSession = URLSession(configuration: .default)
         var urlRequest = URLComponents(string: "\(urlAssets)/\(imageName).imageset/image@1x.png")!
         urlRequest.queryItems = [URLQueryItem(name: "raw", value: "true")]
-        print(urlRequest.url!.absoluteString)
         let dataTask = urlSession.dataTask(with: urlRequest.url!) { (data, response, error) in
             guard let data = data, error == nil else {
-                completion(.failure(NetworkError.test))
+                completion(.failure(NiceSpotError.failLoadingPictureData))
                 return
             }
             guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-                completion(.failure(NetworkError.test))
+                completion(.failure(NiceSpotError.wrongUrlSessionStatus))
                 return
             }
             completion(.success(data))
         }
         dataTask.resume()
-        
-        
     }
-
-    enum NetworkError: Error {
-        case test
-    }
-
     
 }
