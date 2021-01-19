@@ -10,24 +10,10 @@ import SwiftUI
 struct HomeView: View {
     @State private var searchText: String = ""
     @State private var isSearching: Bool = false
-
-    @Environment(\.managedObjectContext) private var viewContext
-    @FetchRequest(entity: Spot.entity(), sortDescriptors: []) var spots: FetchedResults<Spot>
     
-    func fetch() {
-        HomeContent.fetchSpots(quantity: 1) { (result) in
-            switch result {
-            case .failure(let error):
-                print("ERROR \(error.localizedDescription)")
-            case .success(let spots):
-                print("success \(spots.count)")
-            }
-        }
+    @EnvironmentObject var content: HomeContent
 
-    }
-    
     var body: some View {
-        
         NavigationView {
             VStack(alignment: .leading) {
                 HStack {
@@ -51,8 +37,6 @@ struct HomeView: View {
                         .animation(.default)
                     }
                 }
-
-
                 HStack {
                     Text("Populaire")
                         .font(.title2)
@@ -67,9 +51,10 @@ struct HomeView: View {
                 .padding(.bottom, -10)
                 ScrollView(.horizontal, showsIndicators: true, content: {
                     HStack {
-                        ForEach(spots, id: \.self) { spot in
+                        ForEach(content.allSpots(), id: \.self) { spot in
                             NavigationLink(destination: Text(spot.title)) {
-                                    SpotItem(spot: spot)
+                                let content = SpotContent(spot: spot)
+                                SpotView(newContent: content)
                                     .frame(width: 300)
                                     .padding(.trailing, 20.0)
                             }
@@ -79,7 +64,6 @@ struct HomeView: View {
                 })
                 .padding()
                 Spacer()
-
             }
             .navigationTitle("Recommendations")
         }
@@ -88,6 +72,7 @@ struct HomeView: View {
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        HomeView()
+            .environmentObject(HomeContent(context: PersistenceController.preview.container.viewContext))
     }
 }

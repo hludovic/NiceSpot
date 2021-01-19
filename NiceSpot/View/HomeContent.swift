@@ -7,16 +7,23 @@
 
 import Foundation
 import CloudKit.CKRecord
+import CoreData
 
-class HomeContent {
-    let container: CKContainer
-    let publicDB: CKDatabase
+class HomeContent: ObservableObject {
+    let publicDB: CKDatabase = CKContainer(identifier: "iCloud.fr.hludovic.container1").publicCloudDatabase
+    let context: NSManagedObjectContext
 
     private var fetchedSpots: [FetchedSpot] = []
+    
+    func allSpots() -> [Spot] {
+        let allItemsFetchRequest: NSFetchRequest<Spot> = Spot.fetchRequest()
+        guard let result = try? context.fetch(allItemsFetchRequest) else { return [] }
+//        objectWillChange.send()
+        return result
+    }
 
-    init() {
-        container = CKContainer(identifier: "iCloud.fr.hludovic.container1")
-        publicDB = container.publicCloudDatabase
+    init(context: NSManagedObjectContext) {
+        self.context = context
     }
     
     func fetchSpots(completion: @escaping (Result<[FetchedSpot], Error>) -> Void) {
@@ -36,7 +43,7 @@ class HomeContent {
                 let location = record["location"] as? CLLocation,
                 let pictureName = record["pictureName"] as? String,
                 let municipality = record["municipality"] as? String
-            else { completion(.failure(ErrorSpot.test)); return }
+            else { completion(.failure(NiceSpotError.test)); return }
             
             let spotFetched = FetchedSpot(recordID: record.recordID, title: title, detail: detail, category: category, location: location, pictureName: pictureName, municipality: municipality)
             newSpotsCK.append(spotFetched)
@@ -52,10 +59,8 @@ class HomeContent {
         publicDB.add(operation)
     }
     
-    static func getPicture(id: CKRecord.ID, completion: @escaping (Result<URL, Error>) -> Void) {
-    }
     
-    enum ErrorSpot: Error {
+    enum NiceSpotError: Error {
         case test
     }
 
