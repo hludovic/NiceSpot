@@ -6,15 +6,26 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct SpotDetailView: View {
+    @ObservedObject var content: SpotDetailContent
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            Text(content.title)
+            content.imageLarge
+        }
+
     }
 }
 
 struct SpotDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        SpotDetailView()
+        let context = PersistenceController.preview.container.viewContext
+        let request: NSFetchRequest<Spot> = Spot.fetchRequest()
+        let result = try! context.fetch(request)
+        let spotDetailContent = SpotDetailContent(spot: result.first!)
+        SpotDetailView(content: spotDetailContent)
     }
 }

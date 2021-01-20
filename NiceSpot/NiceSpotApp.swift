@@ -9,12 +9,12 @@ import SwiftUI
 
 @main
 struct NiceSpotApp: App {
-    let homeContent = HomeContent(context: PersistenceController.shared.container.viewContext)
+    let persistenceController = PersistenceController.shared
 
     var body: some Scene {
         WindowGroup {
             HomeView()
-                .environmentObject(homeContent)
+                .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
 }

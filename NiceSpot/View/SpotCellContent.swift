@@ -15,6 +15,7 @@ class SpotCellContent: ObservableObject {
     private(set) var municipality: String
     @Published var image: Image = Image("placeholder")
     private let imageName: String
+//    @Environment(\.managedObjectContext) private var viewContext
     private let urlAssets = "https://github.com/hludovic/NiceSpot_Assets/blob/master/"
 
     init(spot: Spot) {

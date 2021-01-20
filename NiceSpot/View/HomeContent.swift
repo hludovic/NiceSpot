@@ -12,38 +12,20 @@ import CoreData
 class HomeContent: ObservableObject {
     private let publicDB: CKDatabase = CKContainer(identifier: "iCloud.fr.hludovic.container1").publicCloudDatabase
     private let context: NSManagedObjectContext
-    @Published var spots: [Spot]
     @Published var errorMessage: String = ""
 
     init(context: NSManagedObjectContext) {
         self.context = context
-        spots = []
-        refreshSpots { (succes) in
-            print("Refreshed")
-        }
     }
-    
-    private func loadSpots() {
-        let allItemsFetchRequest: NSFetchRequest<Spot> = Spot.fetchRequest()
-        if let result = try? context.fetch(allItemsFetchRequest) {
-            DispatchQueue.main.async {
-                self.spots = result
-            }
-        } else {
-            self.spots = []
-        }
-    }
-    
+
     private func refreshSpots (completion: @escaping (Bool) -> Void) {
         fetchSpots { [unowned self] (result) in
             switch result {
             case .success(let fetchedSpots):
-                print("OKER\(fetchedSpots.count)")
                 self.clearSpots { [unowned self] (cleared) in
                     if cleared {
                         self.convertFetchedSpotsToSpots(fetchedSpots: fetchedSpots) {(converted) in
                             if converted {
-                                loadSpots()
                                 completion(true)
                             } else {
                                 errorMessage = "ERROR: Not converted"
@@ -60,7 +42,6 @@ class HomeContent: ObservableObject {
                 completion(false)
             }
         }
-        
     }
     
     private func clearSpots(completion: @escaping (Bool) -> Void) {

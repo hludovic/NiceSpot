@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct SpotCellView: View {
     @ObservedObject var content: SpotCellContent
@@ -35,9 +36,9 @@ struct SpotCellView: View {
 struct viewPointItem_Previews: PreviewProvider {
     static var previews: some View {
         let context = PersistenceController.preview.container.viewContext
-        let homeContent = HomeContent(context: context)
-        
-        let spotContent = SpotCellContent(spot: homeContent.spots.first!)
-        SpotCellView(content: spotContent)
+        let request: NSFetchRequest<Spot> = Spot.fetchRequest()
+        let result = try! context.fetch(request)
+        let spotCellContent = SpotCellContent(spot: result.first!)
+        SpotCellView(content: spotCellContent)
     }
 }

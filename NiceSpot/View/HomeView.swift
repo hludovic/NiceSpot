@@ -10,8 +10,9 @@ import SwiftUI
 struct HomeView: View {
     @State private var searchText: String = ""
     @State private var isSearching: Bool = false
-    
+    @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject var content: HomeContent
+    @FetchRequest(entity: Spot.entity(), sortDescriptors: []) var spots: FetchedResults<Spot>
 
     var body: some View {
         NavigationView {
@@ -51,10 +52,9 @@ struct HomeView: View {
                 .padding(.bottom, -10)
                 ScrollView(.horizontal, showsIndicators: true, content: {
                     HStack {
-                        ForEach(content.spots, id: \.self) { spot in
-                            NavigationLink(destination: Text(spot.title)) {
-                                let content = SpotCellContent(spot: spot)
-                                SpotCellView(content: content)
+                        ForEach(spots, id: \.self) { (result: Spot) in
+                            NavigationLink(destination: SpotDetailView(content: SpotDetailContent(spot: result))) {
+                                SpotCellView(content: SpotCellContent(spot: result))
                                     .frame(width: 300)
                                     .padding(.trailing, 20.0)
                             }
@@ -73,6 +73,6 @@ struct HomeView: View {
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         HomeView()
-            .environmentObject(HomeContent(context: PersistenceController.preview.container.viewContext))
+            .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
 }

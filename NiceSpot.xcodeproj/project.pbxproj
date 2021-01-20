@@ -18,6 +18,7 @@
 		438BEF2025B47EBF00CA5042 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 438BEF1F25B47EBF00CA5042 /* Persistence.swift */; };
 		438BEF2325B47EBF00CA5042 /* NiceSpot.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 438BEF2125B47EBF00CA5042 /* NiceSpot.xcdatamodeld */; };
 		43B1CA4125B48AA900B9E5EE /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43B1CA4025B48AA900B9E5EE /* HomeView.swift */; };
+		43D0648425B7E27900AC69A6 /* SpotDetailContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43D0648325B7E27900AC69A6 /* SpotDetailContent.swift */; };
 		43FD6AD425B49BC10077E5D8 /* Spot+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43FD6AD225B49BC10077E5D8 /* Spot+CoreDataClass.swift */; };
 		43FD6AD525B49BC10077E5D8 /* Spot+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43FD6AD325B49BC10077E5D8 /* Spot+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
@@ -37,6 +38,7 @@
 		438BEF2225B47EBF00CA5042 /* NiceSpot.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = NiceSpot.xcdatamodel; sourceTree = "<group>"; };
 		438BEF2425B47EBF00CA5042 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		43B1CA4025B48AA900B9E5EE /* HomeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		43D0648325B7E27900AC69A6 /* SpotDetailContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotDetailContent.swift; sourceTree = "<group>"; };
 		43FD6AD225B49BC10077E5D8 /* Spot+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Spot+CoreDataClass.swift"; sourceTree = "<group>"; };
 		43FD6AD325B49BC10077E5D8 /* Spot+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Spot+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -104,6 +106,7 @@
 			isa = PBXGroup;
 			children = (
 				4334894725B7AB310063AB77 /* SpotDetailView.swift */,
+				43D0648325B7E27900AC69A6 /* SpotDetailContent.swift */,
 				43218A1A25B4804800B7C28B /* SpotCellView.swift */,
 				436B580525B5FE5B0020883B /* SpotCellContent.swift */,
 				43B1CA4025B48AA900B9E5EE /* HomeView.swift */,
@@ -200,6 +203,7 @@
 				438BEF2325B47EBF00CA5042 /* NiceSpot.xcdatamodeld in Sources */,
 				438BEF1725B47EBE00CA5042 /* NiceSpotApp.swift in Sources */,
 				43B1CA4125B48AA900B9E5EE /* HomeView.swift in Sources */,
+				43D0648425B7E27900AC69A6 /* SpotDetailContent.swift in Sources */,
 				436E0A5425B5154000BD456D /* HomeContent.swift in Sources */,
 				43FD6AD425B49BC10077E5D8 /* Spot+CoreDataClass.swift in Sources */,
 			);

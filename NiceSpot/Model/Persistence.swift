@@ -13,8 +13,9 @@ class PersistenceController: ObservableObject {
     static var preview: PersistenceController = {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
-        for _ in 0..<3 {
+        for i in 0..<3 {
             let newItem = Spot(context: viewContext)
+            newItem.id = UUID(uuidString: "E621E\(i)F8-C36C-495A-93FC-0C247A3E6E5F")!
             newItem.title = "La plage de l’Anse Rifflet"
             newItem.detail = """
                 La plage de l’Anse Rifflet se situe au nord de la belle Basse Terre. A une poignée de kilomètres de la bourgade de Deshaies, il faut tourner à gauche, dans une descente (panneau) pour y accéder.
