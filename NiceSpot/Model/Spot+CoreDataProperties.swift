@@ -53,5 +53,6 @@ enum Municipality: String {
     case deshaie = "Deshaie"
     case sainterose = "Sainte-Rose"
     case lamentin = "Lamentin"
+    case SaintClaude = "Saint-Claude"
 }
 

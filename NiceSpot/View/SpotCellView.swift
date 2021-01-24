@@ -12,23 +12,26 @@ struct SpotCellView: View {
     @ObservedObject var content: SpotCellContent
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 10.0) {
-            content.image
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(width: 300.0, height: 170.0)
-                .clipped()
-                .cornerRadius(10.0)
-                .shadow(radius: 10)
-
-            VStack(alignment: .leading, spacing: 5.0) {
+        VStack(alignment: .center, spacing: 10.0) {
+            ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
+                content.image
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 250.0, height: 150.0)
+                    .clipped()
+                
                 Text(content.title)
-                    .font(.headline)
-                    .foregroundColor(Color.primary)
-                Text(content.detail)
-                    .foregroundColor(Color.secondary)
-                    .lineLimit(2)
+                    .padding(.top, 5)
+                    .padding(.bottom, 5)
+                    .foregroundColor(.white)
+                    .frame(width: 250.0)
+                    .background(Color.black.opacity(0.5))
+                    .font(.footnote)
             }
+            .cornerRadius(10.0)
+        }
+        .onAppear() {
+            content.loadImage()
         }
     }
 }
