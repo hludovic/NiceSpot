@@ -9,7 +9,7 @@ import SwiftUI
 
 struct HomeView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @FetchRequest(entity: Spot.entity(), sortDescriptors: []) var spots: FetchedResults<Spot>
+    @ObservedObject var content: HomeContent
 
     var body: some View {
         NavigationView {
@@ -22,7 +22,7 @@ struct HomeView: View {
                         .padding(.bottom, -10)
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack {
-                            ForEach(spots, id: \.self) { (result: Spot) in
+                            ForEach(content.spots, id: \.self) { (result: Spot) in
                                 NavigationLink(destination: SpotDetailView(content: SpotDetailContent(spot: result))) {
                                     SpotCellView(content: SpotCellContent(spot: result))
                                         .frame(width: 250)
@@ -42,7 +42,7 @@ struct HomeView: View {
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView()
-            .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        let content = HomeContent(context: PersistenceController.preview.container.viewContext)
+        HomeView(content: content)
     }
 }

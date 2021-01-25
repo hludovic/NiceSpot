@@ -20,8 +20,6 @@
 		43B1CA4125B48AA900B9E5EE /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43B1CA4025B48AA900B9E5EE /* HomeView.swift */; };
 		43B538E825BA421E00321B05 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43B538E725BA421E00321B05 /* MapView.swift */; };
 		43D0648425B7E27900AC69A6 /* SpotDetailContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43D0648325B7E27900AC69A6 /* SpotDetailContent.swift */; };
-		43FD6AD425B49BC10077E5D8 /* Spot+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43FD6AD225B49BC10077E5D8 /* Spot+CoreDataClass.swift */; };
-		43FD6AD525B49BC10077E5D8 /* Spot+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43FD6AD325B49BC10077E5D8 /* Spot+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,8 +39,6 @@
 		43B1CA4025B48AA900B9E5EE /* HomeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		43B538E725BA421E00321B05 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		43D0648325B7E27900AC69A6 /* SpotDetailContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotDetailContent.swift; sourceTree = "<group>"; };
-		43FD6AD225B49BC10077E5D8 /* Spot+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Spot+CoreDataClass.swift"; sourceTree = "<group>"; };
-		43FD6AD325B49BC10077E5D8 /* Spot+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Spot+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,8 +127,6 @@
 			children = (
 				438BEF2125B47EBF00CA5042 /* NiceSpot.xcdatamodeld */,
 				438BEF1F25B47EBF00CA5042 /* Persistence.swift */,
-				43FD6AD225B49BC10077E5D8 /* Spot+CoreDataClass.swift */,
-				43FD6AD325B49BC10077E5D8 /* Spot+CoreDataProperties.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -206,7 +200,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				43FD6AD525B49BC10077E5D8 /* Spot+CoreDataProperties.swift in Sources */,
 				43B538E825BA421E00321B05 /* MapView.swift in Sources */,
 				436B580625B5FE5B0020883B /* SpotCellContent.swift in Sources */,
 				438BEF2025B47EBF00CA5042 /* Persistence.swift in Sources */,
@@ -217,7 +210,6 @@
 				43B1CA4125B48AA900B9E5EE /* HomeView.swift in Sources */,
 				43D0648425B7E27900AC69A6 /* SpotDetailContent.swift in Sources */,
 				436E0A5425B5154000BD456D /* HomeContent.swift in Sources */,
-				43FD6AD425B49BC10077E5D8 /* Spot+CoreDataClass.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

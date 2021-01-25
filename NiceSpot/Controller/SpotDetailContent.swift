@@ -14,25 +14,23 @@ class SpotDetailContent: ObservableObject {
     let detail: String
     let pictureName: String
     let municipality: String
-    let location: SpotLocation
-    let imageData: Data?
     let category: String
+    let location: SpotLocation
     let mapLink: URL
+    let imageData: Data?
     @Published var imageLarge: Image = Image("placeholder")
     private let urlAssets = "https://github.com/hludovic/NiceSpot_Assets/blob/main"
 
     init(spot: Spot) {
-        self.title = spot.title
-        self.detail = spot.detail
-        self.pictureName = spot.pictureName
-        self.municipality = spot.municipality
-        self.location = SpotLocation(coordinate: CLLocationCoordinate2D(
-                                        latitude: spot.latitude,
-                                        longitude: spot.longitude)
-        )
+        let coodinate = CLLocationCoordinate2D(latitude: spot.longitude, longitude: spot.latitude)
+        self.title = spot.title!
+        self.detail = spot.detail!
+        self.pictureName = spot.pictureName!
+        self.municipality = spot.municipality!
+        self.category = spot.category!
+        self.location = SpotLocation(coordinate: coodinate)
         self.mapLink = URL(string: "maps://?ll=\(spot.latitude),\(spot.longitude)")!
         self.imageData = spot.pictureData
-        self.category = spot.category
         loadPicture { (success) in
             if success {
                 print("YEAH")
@@ -43,6 +41,7 @@ class SpotDetailContent: ObservableObject {
     }
 
     private func loadPicture(completion: @escaping (Bool) -> Void) {
+        
         if let imageData = imageData {
             let newImage = UIImage(data: imageData)
             if let largeData = newImage {

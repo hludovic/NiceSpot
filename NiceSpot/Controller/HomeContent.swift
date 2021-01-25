@@ -10,11 +10,18 @@ import CloudKit.CKRecord
 import CoreData
 
 class HomeContent: ObservableObject {
-    static let shared = HomeContent()
     private let publicDB: CKDatabase = CKContainer(identifier: "iCloud.fr.hludovic.container1").publicCloudDatabase
+    private let context: NSManagedObjectContext
+    @Published var spots: [Spot] =  []
     @Published var errorMessage: String = ""
 
-    private init() {}
+    init(context: NSManagedObjectContext) {
+        self.context = context
+        let request: NSFetchRequest<Spot> = Spot.fetchRequest()
+        if let result = try? context.fetch(request) {
+            spots = result
+        } else { spots = [] }
+    }
 
     func refreshSpots (context: NSManagedObjectContext, completion: @escaping (Bool) -> Void) {
         fetchSpots { [unowned self] (result) in
@@ -56,8 +63,7 @@ class HomeContent: ObservableObject {
     private func saveFetchedSpots(context: NSManagedObjectContext, fetchedSpots: [FetchedSpot], completion: @escaping (Bool) -> Void) {
         for fetchedSpot in fetchedSpots {
             let spot = Spot(context: context)
-            guard let uuid = UUID(uuidString: fetchedSpot.recordID.recordName) else { completion(false); return }
-            spot.id = uuid
+            spot.id = fetchedSpot.recordID.recordName
             spot.title = fetchedSpot.title
             spot.detail = fetchedSpot.detail
             spot.category = fetchedSpot.category

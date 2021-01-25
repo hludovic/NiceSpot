@@ -6,15 +6,15 @@
 //
 
 import SwiftUI
+import MapKit
 
 @main
 struct NiceSpotApp: App {
-    let persistenceController = PersistenceController.shared
+    let content = HomeContent(context: PersistenceController.shared.container.viewContext)
 
     var body: some Scene {
         WindowGroup {
-            HomeView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+            HomeView(content: content)
         }
     }
 }

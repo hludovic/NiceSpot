@@ -11,15 +11,16 @@ import CoreData
 
 class SpotCellContent: ObservableObject {
     private let urlAssets = "https://github.com/hludovic/NiceSpot_Assets/blob/master/"
-    private let imageName: String
-    private let spotId: UUID
     private(set) var title: String
+    private let imageName: String
+//    private let spotId: String
     @Published var image: Image = Image("placeholder")
 
     init(spot: Spot) {
-        self.title = spot.title
-        self.imageName = spot.pictureName
-        self.spotId = spot.id
+//        guard let spotId = spot.id else { return nil }
+        self.title = spot.title!
+        self.imageName = spot.pictureName!
+//        self.spotId = spotId
     }
 
     func loadImage() {
