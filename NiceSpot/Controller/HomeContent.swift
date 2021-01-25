@@ -55,9 +55,10 @@ class HomeContent: ObservableObject {
     private func loadSpots() {
         let request: NSFetchRequest<Spot> = Spot.fetchRequest()
         if let result = try? context.fetch(request) {
-            DispatchQueue.main.async { self.spots = result }
+            DispatchQueue.main.async {
+                self.spots = result
+            }
         } else { self.spots = [] }
-
     }
 
     private func clearSpots(completion: @escaping (Bool) -> Void) {
@@ -84,11 +85,11 @@ class HomeContent: ObservableObject {
             spot.longitude = fetchedSpot.location.coordinate.longitude
             do {
                 try context.save()
-                completion(true)
             } catch {
                 completion(false)
             }
         }
+        completion(true)
     }
 
     private func fetchSpots(completion: @escaping (Result<[FetchedSpot], Error>) -> Void) {
@@ -99,7 +100,6 @@ class HomeContent: ObservableObject {
         let operation = CKQueryOperation(query: querry)
         operation.desiredKeys = ["title", "detail", "category", "location", "municipality", "pictureName"]
         var newSpotsCK: [FetchedSpot] = []
-
         operation.recordFetchedBlock = { record in
             guard
                 let title = record["title"] as? String,

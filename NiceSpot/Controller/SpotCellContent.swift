@@ -13,7 +13,6 @@ class SpotCellContent: ObservableObject {
     private let urlAssets = "https://github.com/hludovic/NiceSpot_Assets/blob/master/"
     private let context: NSManagedObjectContext
     private let spotId: String
-    //UIIMAGE TO NSDATA
     private let cache = NSCache<NSString, UIImage>()
     @Published var isRedacted: Bool = true
     @Published private(set) var title: String = ""
@@ -22,13 +21,8 @@ class SpotCellContent: ObservableObject {
     init(spotId: String, context: NSManagedObjectContext) {
         self.spotId = spotId
         self.context = context
-        loadContent { (success) in
-            DispatchQueue.main.async {
-                self.isRedacted = false
-            }
-        }
     }
-    
+
     func loadContent(success: @escaping (Bool) -> Void) {
         getSpot(id: spotId) { (result) in
             guard let spot = result else {
@@ -42,29 +36,51 @@ class SpotCellContent: ObservableObject {
                 success (true)
                 return
             }
-
         }
     }
-    
-    func getImage(imageName: String, completion: @escaping (Image) -> Void) {
+
+    private func getImage(imageName: String, completion: @escaping (Image) -> Void) {
         if let imageCached = cache.object(forKey: NSString(string: imageName)) {
             print("--- Get Image Cached ---")
             completion(Image(uiImage: imageCached))
         } else {
-            getPictureData(imageName: imageName) {(result) in
+            getPictureData(imageName: imageName) { (result) in
                 switch result {
                 case .failure(let error):
                     print(error.localizedDescription)
                     completion(Image("placeholder"))
                 case .success(let data):
                     let uiImage = UIImage(data: data)
+                    self.saveImage(spotId: self.spotId, imageData: data) { (success) in
+                        DispatchQueue.main.async {
+                            print("Saved \(success) \(self.spotId)")
+                        }
+                    }
                     self.cache.setObject(uiImage!, forKey: NSString(string: imageName))
                     completion(Image(uiImage: uiImage!))
                 }
             }
         }
     }
-    
+
+    private func saveImage(spotId: String, imageData: Data, success: @escaping (Bool) -> Void) {
+        getSpot(id: spotId) {(spot) in
+            guard let spot = spot else {
+                print(" >> Error Saving")
+                success(false)
+                return
+            }
+            spot.setValue(imageData, forKey: "imageData")
+            do {
+                try self.context.save()
+                success(true)
+            } catch {
+                print(" > Error Saving")
+                success(false)
+            }
+        }
+    }
+
     private func getSpot(id: String, completion: @escaping (Spot?) -> Void) {
         let fetch = NSFetchRequest<Spot>(entityName: "Spot")
         fetch.predicate = NSPredicate(format: "id == %@", spotId)

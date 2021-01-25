@@ -35,6 +35,13 @@ struct SpotCellView: View {
             }
             .cornerRadius(10.0)
         }
+        .onAppear {
+            content.loadContent { (success) in
+                DispatchQueue.main.async {
+                    content.isRedacted = false
+                }
+            }
+        }
         .redacted(reason: content.isRedacted ? .placeholder: .init())
     }
 }

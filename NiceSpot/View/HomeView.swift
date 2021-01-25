@@ -17,7 +17,7 @@ struct HomeView: View {
                 VStack(alignment: .leading) {
                     Button(action: {
                         content.refreshSpots { (success) in
-                            print(success)
+                            DispatchQueue.main.async { print("REFRESHED") }
                         }
                     }, label: {
                         Text("TODO: Pull to Refresh")
