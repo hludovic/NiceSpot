@@ -13,34 +13,35 @@ class SpotCellContent: ObservableObject {
     private let urlAssets = "https://github.com/hludovic/NiceSpot_Assets/blob/master/"
     private(set) var title: String
     private let imageName: String
-//    private let spotId: String
+    private let cache = NSCache<NSString, UIImage>()
     @Published var image: Image = Image("placeholder")
 
     init(spot: Spot) {
-//        guard let spotId = spot.id else { return nil }
         self.title = spot.title!
-        self.imageName = spot.pictureName!
-//        self.spotId = spotId
+        self.imageName = spot.imageName!
+        loadImage()
     }
 
     func loadImage() {
-        getPictureData(imageName: imageName) { (result) in
-            switch result {
-            case .failure(let error):
-                print("❌ \(error.localizedDescription)")
-            case .success(let data):
-                let newImage = UIImage(data: data)
-                DispatchQueue.main.async { self.image = Image(uiImage: newImage!) }
+        if let imageCached = cache.object(forKey: NSString(string: imageName)) {
+            image = Image(uiImage: imageCached)
+        } else {
+            getPictureData(imageName: imageName) {(result) in
+                switch result {
+                case .failure(let error):
+                    DispatchQueue.main.async {
+                        self.image = Image("placeholder")
+                        print(error.localizedDescription)
+                    }
+                case .success(let data):
+                    DispatchQueue.main.async {
+                        let uiImage = UIImage(data: data)
+                        self.image = Image(uiImage: uiImage!)
+                        self.cache.setObject(uiImage!, forKey: NSString(string: self.imageName))
+                    }
+                }
             }
         }
-    }
-
-    private func getSpot(id: String, completion: @escaping (Result<Data, Error>) -> Void) {
-        
-    }
-
-    private func savePicture(data: Data, completion: @escaping (Bool) -> Void) {
-        
     }
 
     private func getPictureData(imageName: String, completion: @escaping (Result<Data, Error>) -> Void) {

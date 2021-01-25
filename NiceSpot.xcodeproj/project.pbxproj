@@ -95,9 +95,9 @@
 				438BEF1625B47EBE00CA5042 /* NiceSpotApp.swift */,
 				43B1CA4325B48B0A00B9E5EE /* View */,
 				438AED8625BDFAFC005EF804 /* Controller */,
+				43B1CA4525B48B9600B9E5EE /* Model */,
 				438BEF1A25B47EBF00CA5042 /* Assets.xcassets */,
 				438BEF2425B47EBF00CA5042 /* Info.plist */,
-				43B1CA4525B48B9600B9E5EE /* Model */,
 				438BEF1C25B47EBF00CA5042 /* Preview Content */,
 			);
 			path = NiceSpot;

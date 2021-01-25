@@ -30,9 +30,6 @@ struct SpotCellView: View {
             }
             .cornerRadius(10.0)
         }
-        .onAppear() {
-            content.loadImage()
-        }
     }
 }
 

@@ -12,29 +12,32 @@ import CoreData
 class HomeContent: ObservableObject {
     private let publicDB: CKDatabase = CKContainer(identifier: "iCloud.fr.hludovic.container1").publicCloudDatabase
     private let context: NSManagedObjectContext
-    @Published var spots: [Spot] =  []
+    @Published var spots: [Spot] = []
     @Published var errorMessage: String = ""
 
     init(context: NSManagedObjectContext) {
         self.context = context
         let request: NSFetchRequest<Spot> = Spot.fetchRequest()
         if let result = try? context.fetch(request) {
-            spots = result
-        } else { spots = [] }
+            self.spots = result
+        } else { self.spots = [] }
     }
 
-    func refreshSpots (context: NSManagedObjectContext, completion: @escaping (Bool) -> Void) {
+    func refreshSpots (completion: @escaping (Bool) -> Void) {
         fetchSpots { [unowned self] (result) in
             switch result {
             case .success(let fetchedSpots):
-                clearSpots(context: context) { (cleared) in
+                clearSpots() { (cleared) in
                     if cleared {
-                        saveFetchedSpots(context: context, fetchedSpots: fetchedSpots) { (saved) in
+                        saveFetchedSpots(fetchedSpots: fetchedSpots) { (saved) in
                             if saved {
+                                loadSpots()
                                 completion(true)
+                                return
                             } else {
                                 errorMessage = "ERROR: Not converted"
                                 completion(false)
+                                return
                             }
                         }
                     } else {
@@ -48,8 +51,16 @@ class HomeContent: ObservableObject {
             }
         }
     }
+    
+    private func loadSpots() {
+        let request: NSFetchRequest<Spot> = Spot.fetchRequest()
+        if let result = try? context.fetch(request) {
+            DispatchQueue.main.async { self.spots = result }
+        } else { self.spots = [] }
 
-    private func clearSpots(context: NSManagedObjectContext, completion: @escaping (Bool) -> Void) {
+    }
+
+    private func clearSpots(completion: @escaping (Bool) -> Void) {
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = Spot.fetchRequest()
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
         do {
@@ -60,7 +71,7 @@ class HomeContent: ObservableObject {
         }
     }
 
-    private func saveFetchedSpots(context: NSManagedObjectContext, fetchedSpots: [FetchedSpot], completion: @escaping (Bool) -> Void) {
+    private func saveFetchedSpots(fetchedSpots: [FetchedSpot], completion: @escaping (Bool) -> Void) {
         for fetchedSpot in fetchedSpots {
             let spot = Spot(context: context)
             spot.id = fetchedSpot.recordID.recordName
@@ -68,7 +79,7 @@ class HomeContent: ObservableObject {
             spot.detail = fetchedSpot.detail
             spot.category = fetchedSpot.category
             spot.municipality = fetchedSpot.municipality
-            spot.pictureName = fetchedSpot.pictureName
+            spot.imageName = fetchedSpot.pictureName
             spot.latitude = fetchedSpot.location.coordinate.latitude
             spot.longitude = fetchedSpot.location.coordinate.longitude
             do {

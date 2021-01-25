@@ -14,10 +14,10 @@ struct SpotDetailView: View {
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
             NavigationLink(
-                destination: content.imageLarge
+                destination: content.image
                     .navigationTitle(content.title),
                 label: {
-                    content.imageLarge
+                    content.image
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                 })
@@ -78,6 +78,7 @@ struct SpotDetailView: View {
                 })
 
         }
+        .onAppear{ content.loadImage()}
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal ) {

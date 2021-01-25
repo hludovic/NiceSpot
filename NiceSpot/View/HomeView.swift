@@ -8,13 +8,19 @@
 import SwiftUI
 
 struct HomeView: View {
-    @Environment(\.managedObjectContext) private var viewContext
     @ObservedObject var content: HomeContent
 
     var body: some View {
         NavigationView {
             ScrollView(.vertical, showsIndicators: true) {
                 VStack(alignment: .leading) {
+                    Button(action: {
+                        content.refreshSpots { (success) in
+                            print(success)
+                        }
+                    }, label: {
+                        Text("TODO: Pull to Refresh")
+                    })
                     Text("Récent")
                         .font(.title2)
                         .fontWeight(.bold)
