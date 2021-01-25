@@ -11,10 +11,12 @@ import MapKit
 @main
 struct NiceSpotApp: App {
     let content = HomeContent(context: PersistenceController.shared.container.viewContext)
+    let context = PersistenceController.shared.container.viewContext
 
     var body: some Scene {
         WindowGroup {
             HomeView(content: content)
+                .environment(\.managedObjectContext, context)
         }
     }
 }

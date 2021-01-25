@@ -9,6 +9,7 @@ import SwiftUI
 
 struct HomeView: View {
     @ObservedObject var content: HomeContent
+    @Environment(\.managedObjectContext) private var viewContext
 
     var body: some View {
         NavigationView {
@@ -30,7 +31,7 @@ struct HomeView: View {
                         HStack {
                             ForEach(content.spots, id: \.self) { (result: Spot) in
                                 NavigationLink(destination: SpotDetailView(content: SpotDetailContent(spot: result))) {
-                                    SpotCellView(content: SpotCellContent(spot: result))
+                                    SpotCellView(spotId: result.id!, context: viewContext)
                                         .frame(width: 250)
                                         .padding(.trailing, 10.0)
                                 }
@@ -41,7 +42,7 @@ struct HomeView: View {
                     Spacer()
                 }
             }
-            .navigationTitle("Découvrir")
+            .navigationTitle(Text("Découvrir"))
         }
     }
 }
@@ -50,5 +51,6 @@ struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         let content = HomeContent(context: PersistenceController.preview.container.viewContext)
         HomeView(content: content)
+            .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
 }

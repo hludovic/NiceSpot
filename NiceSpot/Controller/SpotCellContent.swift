@@ -11,37 +11,72 @@ import CoreData
 
 class SpotCellContent: ObservableObject {
     private let urlAssets = "https://github.com/hludovic/NiceSpot_Assets/blob/master/"
-    private(set) var title: String
-    private let imageName: String
+    private let context: NSManagedObjectContext
+    private let spotId: String
+    //UIIMAGE TO NSDATA
     private let cache = NSCache<NSString, UIImage>()
-    @Published var image: Image = Image("placeholder")
+    @Published var isRedacted: Bool = true
+    @Published private(set) var title: String = ""
+    @Published private(set) var image: Image = Image("placeholder")
 
-    init(spot: Spot) {
-        self.title = spot.title!
-        self.imageName = spot.imageName!
-        loadImage()
+    init(spotId: String, context: NSManagedObjectContext) {
+        self.spotId = spotId
+        self.context = context
+        loadContent { (success) in
+            DispatchQueue.main.async {
+                self.isRedacted = false
+            }
+        }
     }
+    
+    func loadContent(success: @escaping (Bool) -> Void) {
+        getSpot(id: spotId) { (result) in
+            guard let spot = result else {
+                print("--- ERROR LOADING SPOT ---")
+                success(false)
+                return
+            }
+            DispatchQueue.main.async { self.title = spot.title! }
+            self.getImage(imageName: spot.imageName!) { (image) in
+                DispatchQueue.main.async { self.image = image }
+                success (true)
+                return
+            }
 
-    func loadImage() {
+        }
+    }
+    
+    func getImage(imageName: String, completion: @escaping (Image) -> Void) {
         if let imageCached = cache.object(forKey: NSString(string: imageName)) {
-            image = Image(uiImage: imageCached)
+            print("--- Get Image Cached ---")
+            completion(Image(uiImage: imageCached))
         } else {
             getPictureData(imageName: imageName) {(result) in
                 switch result {
                 case .failure(let error):
-                    DispatchQueue.main.async {
-                        self.image = Image("placeholder")
-                        print(error.localizedDescription)
-                    }
+                    print(error.localizedDescription)
+                    completion(Image("placeholder"))
                 case .success(let data):
-                    DispatchQueue.main.async {
-                        let uiImage = UIImage(data: data)
-                        self.image = Image(uiImage: uiImage!)
-                        self.cache.setObject(uiImage!, forKey: NSString(string: self.imageName))
-                    }
+                    let uiImage = UIImage(data: data)
+                    self.cache.setObject(uiImage!, forKey: NSString(string: imageName))
+                    completion(Image(uiImage: uiImage!))
                 }
             }
         }
+    }
+    
+    private func getSpot(id: String, completion: @escaping (Spot?) -> Void) {
+        let fetch = NSFetchRequest<Spot>(entityName: "Spot")
+        fetch.predicate = NSPredicate(format: "id == %@", spotId)
+        guard let result = try? context.fetch(fetch) else {
+            completion(nil)
+            return
+        }
+        guard let spot = result.first else {
+            completion(nil)
+            return
+        }
+        completion(spot)
     }
 
     private func getPictureData(imageName: String, completion: @escaping (Result<Data, Error>) -> Void) {
