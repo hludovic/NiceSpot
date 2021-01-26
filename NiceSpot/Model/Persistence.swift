@@ -15,7 +15,7 @@ class PersistenceController: ObservableObject {
         let viewContext = result.container.viewContext
         for i in 0..<3 {
             let newItem = Spot(context: viewContext)
-            newItem.category = Category.beach.rawValue
+            newItem.category = Spot.Category.beach.rawValue
             newItem.detail = """
                 La plage de l’Anse Rifflet se situe au nord de la belle Basse Terre. A une poignée de kilomètres de la bourgade de Deshaies, il faut tourner à gauche, dans une descente (panneau) pour y accéder.
                 
@@ -26,7 +26,7 @@ class PersistenceController: ObservableObject {
             newItem.id = "E621E\(i)F8-C36C-495A-93FC-0C247A3E6E5F"
             newItem.latitude = 16.336675
             newItem.longitude = -61.785863
-            newItem.municipality = Municipality.deshaie.rawValue
+            newItem.municipality = Spot.Municipality.deshaie.rawValue
             newItem.imageName = "rifflet"
             newItem.title = "La plage de l’Anse Rifflet"
         }
@@ -54,19 +54,3 @@ class PersistenceController: ObservableObject {
     }
     
 }
-
-enum Category: String {
-    case unknown = "Unknown"
-    case beach = "Beach"
-    case mountain = "Mountain"
-    case river = "River"
-}
-
-enum Municipality: String {
-    case unknown = "Unknown"
-    case deshaie = "Deshaie"
-    case sainterose = "Sainte-Rose"
-    case lamentin = "Lamentin"
-    case SaintClaude = "Saint-Claude"
-}
-

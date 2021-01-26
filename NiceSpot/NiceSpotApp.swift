@@ -12,6 +12,7 @@ import MapKit
 struct NiceSpotApp: App {
     let content = HomeContent(context: PersistenceController.shared.container.viewContext)
     let context = PersistenceController.shared.container.viewContext
+    static let imageCache = NSCache<NSString, UIImage>()
 
     var body: some Scene {
         WindowGroup {

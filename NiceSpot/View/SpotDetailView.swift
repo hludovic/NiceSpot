@@ -25,12 +25,6 @@ struct SpotDetailView: View {
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                     })
-                Rectangle()
-                    .foregroundColor(.white)
-                    .frame(height: 50)
-                    .cornerRadius(30)
-                    .offset(y: -30)
-                    .padding(.bottom, -50)
                 VStack {
                     HStack {
                         Text(content.title)
@@ -83,8 +77,6 @@ struct SpotDetailView: View {
             }
             BackButton()
                 .padding([.top, .leading], 5.0)
-
-            
         }
         .onAppear{ content.loadImage()}
         .navigationBarHidden(true)
@@ -100,12 +92,11 @@ struct BackButton: View {
             Image(systemName: "arrow.backward.circle.fill")
                 .resizable()
                 .frame(width: 35, height: 35)
-                .foregroundColor(Color(red: 0, green: 0, blue: 0, opacity: 0.3))
+                .foregroundColor(Color.gray.opacity(0.5))
             
         })
     }
 }
-
 
 struct SpotDetailView_Previews: PreviewProvider {
     static var previews: some View {

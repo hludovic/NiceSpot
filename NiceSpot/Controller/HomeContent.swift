@@ -10,11 +10,13 @@ import CloudKit.CKRecord
 import CoreData
 
 class HomeContent: ObservableObject {
+    // MARK: Properties
     private let publicDB: CKDatabase = CKContainer(identifier: "iCloud.fr.hludovic.container1").publicCloudDatabase
     private let context: NSManagedObjectContext
     @Published var spots: [Spot] = []
     @Published var errorMessage: String = ""
 
+    // MARK: - Init Method
     init(context: NSManagedObjectContext) {
         self.context = context
         let request: NSFetchRequest<Spot> = Spot.fetchRequest()
@@ -23,43 +25,41 @@ class HomeContent: ObservableObject {
         } else { self.spots = [] }
     }
 
-    func refreshSpots (completion: @escaping (Bool) -> Void) {
+    func refreshSpots (success: @escaping (Bool) -> Void) {
         fetchSpots { [unowned self] (result) in
             switch result {
             case .success(let fetchedSpots):
-                clearSpots() { (cleared) in
+                self.clearSpots() { [unowned self] (cleared) in
                     if cleared {
-                        saveFetchedSpots(fetchedSpots: fetchedSpots) { (saved) in
+                        self.saveFetchedSpots(fetchedSpots: fetchedSpots) { [unowned self] (saved) in
                             if saved {
-                                loadSpots()
-                                completion(true)
-                                return
+                                Spot.allSpots(context: self.context) { [unowned self] (result) in
+                                    DispatchQueue.main.async {
+                                        self.spots = result
+                                        success(true)
+                                    }
+                                }
                             } else {
-                                errorMessage = "ERROR: Not converted"
-                                completion(false)
-                                return
+                                self.errorMessage = "ERROR: Not converted"
+                                success(false)
                             }
                         }
                     } else {
-                        errorMessage = "ERROR: Not cleared"
-                        completion(false)
+                        self.errorMessage = "ERROR: Not cleared"
+                        success(false)
                     }
                 }
+                
             case.failure(let error):
-                errorMessage = "ERROR: Not fetched \(error.localizedDescription)"
-                completion(false)
+                self.errorMessage = "ERROR: Not fetched \(error.localizedDescription)"
+                success(false)
             }
         }
     }
-    
-    private func loadSpots() {
-        let request: NSFetchRequest<Spot> = Spot.fetchRequest()
-        if let result = try? context.fetch(request) {
-            DispatchQueue.main.async {
-                self.spots = result
-            }
-        } else { self.spots = [] }
-    }
+}
+
+// MARK: - Private Methods
+private extension HomeContent {
 
     private func clearSpots(completion: @escaping (Bool) -> Void) {
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = Spot.fetchRequest()
@@ -70,6 +70,7 @@ class HomeContent: ObservableObject {
         } catch {
             completion(false)
         }
+        NiceSpotApp.imageCache.removeAllObjects()
     }
 
     private func saveFetchedSpots(fetchedSpots: [FetchedSpot], completion: @escaping (Bool) -> Void) {
@@ -109,7 +110,7 @@ class HomeContent: ObservableObject {
                 let pictureName = record["pictureName"] as? String,
                 let municipality = record["municipality"] as? String
             else { completion(.failure(NiceSpotError.failFetchingSpots)); return }
-
+            
             let spotFetched = FetchedSpot(recordID: record.recordID, title: title, detail: detail, category: category, location: location, pictureName: pictureName, municipality: municipality)
             newSpotsCK.append(spotFetched)
         }
@@ -133,10 +134,3 @@ class HomeContent: ObservableObject {
         var municipality: String
     }
 }
-
-enum NiceSpotError: Error {
-    case failFetchingSpots
-    case failLoadingPictureData
-    case wrongUrlSessionStatus
-}
-

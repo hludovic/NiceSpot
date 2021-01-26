@@ -13,7 +13,6 @@ class SpotCellContent: ObservableObject {
     private let urlAssets = "https://github.com/hludovic/NiceSpot_Assets/blob/master/"
     private let context: NSManagedObjectContext
     private let spotId: String
-    private let cache = NSCache<NSString, UIImage>()
     @Published var isRedacted: Bool = true
     @Published private(set) var title: String = ""
     @Published private(set) var image: Image = Image("placeholder")
@@ -24,14 +23,10 @@ class SpotCellContent: ObservableObject {
     }
 
     func loadContent(success: @escaping (Bool) -> Void) {
-        getSpot(id: spotId) { (result) in
-            guard let spot = result else {
-                print("--- ERROR LOADING SPOT ---")
-                success(false)
-                return
-            }
+        Spot.getSpot(spotId: spotId, context: context) { [unowned self] (result) in
+            guard let spot = result else { return success(false) }
             DispatchQueue.main.async { self.title = spot.title! }
-            self.getImage(imageName: spot.imageName!) { (image) in
+            self.getImage(imageName: spot.imageName!) { [unowned self] (image) in
                 DispatchQueue.main.async { self.image = image }
                 success (true)
                 return
@@ -40,62 +35,24 @@ class SpotCellContent: ObservableObject {
     }
 
     private func getImage(imageName: String, completion: @escaping (Image) -> Void) {
-        if let imageCached = cache.object(forKey: NSString(string: imageName)) {
-            print("--- Get Image Cached ---")
+        if let imageCached = NiceSpotApp.imageCache.object(forKey: NSString(string: imageName)) {
             completion(Image(uiImage: imageCached))
         } else {
-            getPictureData(imageName: imageName) { (result) in
+            fetchPictureData(imageName: imageName) {(result) in
                 switch result {
                 case .failure(let error):
                     print(error.localizedDescription)
                     completion(Image("placeholder"))
                 case .success(let data):
                     let uiImage = UIImage(data: data)
-                    self.saveImage(spotId: self.spotId, imageData: data) { (success) in
-                        DispatchQueue.main.async {
-                            print("Saved \(success) \(self.spotId)")
-                        }
-                    }
-                    self.cache.setObject(uiImage!, forKey: NSString(string: imageName))
+                    NiceSpotApp.imageCache.setObject(uiImage!, forKey: NSString(string: imageName))
                     completion(Image(uiImage: uiImage!))
                 }
             }
         }
     }
 
-    private func saveImage(spotId: String, imageData: Data, success: @escaping (Bool) -> Void) {
-        getSpot(id: spotId) {(spot) in
-            guard let spot = spot else {
-                print(" >> Error Saving")
-                success(false)
-                return
-            }
-            spot.setValue(imageData, forKey: "imageData")
-            do {
-                try self.context.save()
-                success(true)
-            } catch {
-                print(" > Error Saving")
-                success(false)
-            }
-        }
-    }
-
-    private func getSpot(id: String, completion: @escaping (Spot?) -> Void) {
-        let fetch = NSFetchRequest<Spot>(entityName: "Spot")
-        fetch.predicate = NSPredicate(format: "id == %@", spotId)
-        guard let result = try? context.fetch(fetch) else {
-            completion(nil)
-            return
-        }
-        guard let spot = result.first else {
-            completion(nil)
-            return
-        }
-        completion(spot)
-    }
-
-    private func getPictureData(imageName: String, completion: @escaping (Result<Data, Error>) -> Void) {
+    private func fetchPictureData(imageName: String, completion: @escaping (Result<Data, Error>) -> Void) {
         let urlSession = URLSession(configuration: .default)
         var urlRequest = URLComponents(string: "\(urlAssets)/\(imageName).imageset/image@1x.jpg")!
         urlRequest.queryItems = [URLQueryItem(name: "raw", value: "true")]

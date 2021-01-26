@@ -28,14 +28,11 @@ class SpotDetailContent: ObservableObject {
         self.category = spot.category!
         self.location = SpotLocation(coordinate: coodinate)
         self.mapLink = URL(string: "maps://?ll=\(spot.latitude),\(spot.longitude)")!
-        loadImage()
     }
 
     func loadImage() {
+        if let imageCached = NiceSpotApp.imageCache.object(forKey: NSString(string: imageName)) {
+            image = Image(uiImage: imageCached)
+        }
     }
-}
-
-struct SpotLocation: Identifiable {
-    let id = UUID()
-    let coordinate: CLLocationCoordinate2D
 }

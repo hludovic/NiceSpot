@@ -4,7 +4,6 @@
         <attribute name="category" attributeType="String"/>
         <attribute name="detail" attributeType="String"/>
         <attribute name="id" attributeType="String"/>
-        <attribute name="imageData" optional="YES" attributeType="Binary"/>
         <attribute name="imageName" attributeType="String"/>
         <attribute name="latitude" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="longitude" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
@@ -12,6 +11,6 @@
         <attribute name="title" attributeType="String"/>
     </entity>
     <elements>
-        <element name="Spot" positionX="-20012.11328125" positionY="-5572.3203125" width="128" height="164"/>
+        <element name="Spot" positionX="-20012.11328125" positionY="-5572.3203125" width="128" height="149"/>
     </elements>
 </model>

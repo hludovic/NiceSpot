@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		43218A1E25B4804800B7C28B /* SpotCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43218A1A25B4804800B7C28B /* SpotCellView.swift */; };
+		4322557025BFB7720043E4E3 /* NiceSpotError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4322556F25BFB7720043E4E3 /* NiceSpotError.swift */; };
+		4322557425BFB7CF0043E4E3 /* Spot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4322557325BFB7CF0043E4E3 /* Spot.swift */; };
 		4334894825B7AB310063AB77 /* SpotDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4334894725B7AB310063AB77 /* SpotDetailView.swift */; };
 		4342798A25B5282300E0DE2D /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4342798925B5282300E0DE2D /* CloudKit.framework */; };
 		436B580625B5FE5B0020883B /* SpotCellContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436B580525B5FE5B0020883B /* SpotCellContent.swift */; };
@@ -24,6 +26,8 @@
 
 /* Begin PBXFileReference section */
 		43218A1A25B4804800B7C28B /* SpotCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotCellView.swift; sourceTree = "<group>"; };
+		4322556F25BFB7720043E4E3 /* NiceSpotError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NiceSpotError.swift; sourceTree = "<group>"; };
+		4322557325BFB7CF0043E4E3 /* Spot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spot.swift; sourceTree = "<group>"; };
 		4334894725B7AB310063AB77 /* SpotDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotDetailView.swift; sourceTree = "<group>"; };
 		4342798725B5282000E0DE2D /* NiceSpot.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NiceSpot.entitlements; sourceTree = "<group>"; };
 		4342798925B5282300E0DE2D /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
@@ -125,8 +129,10 @@
 		43B1CA4525B48B9600B9E5EE /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				438BEF2125B47EBF00CA5042 /* NiceSpot.xcdatamodeld */,
 				438BEF1F25B47EBF00CA5042 /* Persistence.swift */,
+				4322557325BFB7CF0043E4E3 /* Spot.swift */,
+				438BEF2125B47EBF00CA5042 /* NiceSpot.xcdatamodeld */,
+				4322556F25BFB7720043E4E3 /* NiceSpotError.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -207,6 +213,8 @@
 				43218A1E25B4804800B7C28B /* SpotCellView.swift in Sources */,
 				438BEF2325B47EBF00CA5042 /* NiceSpot.xcdatamodeld in Sources */,
 				438BEF1725B47EBE00CA5042 /* NiceSpotApp.swift in Sources */,
+				4322557425BFB7CF0043E4E3 /* Spot.swift in Sources */,
+				4322557025BFB7720043E4E3 /* NiceSpotError.swift in Sources */,
 				43B1CA4125B48AA900B9E5EE /* HomeView.swift in Sources */,
 				43D0648425B7E27900AC69A6 /* SpotDetailContent.swift in Sources */,
 				436E0A5425B5154000BD456D /* HomeContent.swift in Sources */,
