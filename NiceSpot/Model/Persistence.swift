@@ -26,7 +26,7 @@ class PersistenceController: ObservableObject {
             newItem.id = "E621E\(i)F8-C36C-495A-93FC-0C247A3E6E5F"
             newItem.latitude = 16.336675
             newItem.longitude = -61.785863
-            newItem.municipality = Spot.Municipality.deshaie.rawValue
+            newItem.municipality = Spot.Municipality.deshaies.rawValue
             newItem.imageName = "rifflet"
             newItem.title = "La plage de l’Anse Rifflet"
         }
