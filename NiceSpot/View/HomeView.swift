@@ -1,6 +1,6 @@
 //
 //  HomeView.swift
-//  Guadeloupe
+//  NiceSpot
 //
 //  Created by Ludovic HENRY on 08/11/2020.
 //
@@ -30,7 +30,7 @@ struct HomeView: View {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack {
                             ForEach(content.spots, id: \.self) { (result: Spot) in
-                                NavigationLink(destination: SpotDetailView(content: SpotDetailContent(spot: result))) {
+                                NavigationLink(destination: DetailView(content: DetailContent(spot: result))) {
                                     SpotCellView(spotId: result.id!, context: viewContext)
                                         .frame(width: 250)
                                         .padding(.trailing, 10.0)

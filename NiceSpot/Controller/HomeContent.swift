@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import CloudKit.CKRecord
 import CoreData
 
 class HomeContent: ObservableObject {
@@ -110,7 +109,7 @@ private extension HomeContent {
                 let pictureName = record["pictureName"] as? String,
                 let municipality = record["municipality"] as? String
             else { completion(.failure(NiceSpotError.failFetchingSpots)); return }
-            
+            // Il y a dej la completion block ???
             let spotFetched = FetchedSpot(recordID: record.recordID, title: title, detail: detail, category: category, location: location, pictureName: pictureName, municipality: municipality)
             newSpotsCK.append(spotFetched)
         }

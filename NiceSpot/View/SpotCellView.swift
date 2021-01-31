@@ -1,6 +1,6 @@
 //
 //  viewPointItem.swift
-//  Guadeloupe
+//  NiceSpot
 //
 //  Created by Ludovic HENRY on 08/11/2020.
 //
