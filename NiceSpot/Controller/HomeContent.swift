@@ -32,7 +32,7 @@ class HomeContent: ObservableObject {
                     if cleared {
                         self.saveFetchedSpots(fetchedSpots: fetchedSpots) { [unowned self] (saved) in
                             if saved {
-                                Spot.allSpots(context: self.context) { [unowned self] (result) in
+                                Spot.getSpots(context: self.context) { [unowned self] (result) in
                                     DispatchQueue.main.async {
                                         self.spots = result
                                         success(true)
@@ -108,8 +108,7 @@ private extension HomeContent {
                 let location = record["location"] as? CLLocation,
                 let pictureName = record["pictureName"] as? String,
                 let municipality = record["municipality"] as? String
-            else { completion(.failure(NiceSpotError.failFetchingSpots)); return }
-            // Il y a dej la completion block ???
+            else { return completion(.failure(NiceSpotError.failFetchingSpots)) }
             let spotFetched = FetchedSpot(recordID: record.recordID, title: title, detail: detail, category: category, location: location, pictureName: pictureName, municipality: municipality)
             newSpotsCK.append(spotFetched)
         }

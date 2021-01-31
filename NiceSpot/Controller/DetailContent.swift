@@ -18,6 +18,7 @@ class DetailContent: ObservableObject {
     let category: String
     let location: SpotLocation
     let mapLink: URL
+    @Published var canComment: Bool = false
     @Published var image: Image = Image("placeholder")
     @Published var comments: [Comment.Item] = []
 
@@ -32,16 +33,27 @@ class DetailContent: ObservableObject {
         self.location = SpotLocation(coordinate: coodinate)
         self.mapLink = URL(string: "maps://?ll=\(spot.latitude),\(spot.longitude)")!
     }
-    
+
+    func canComment(comments: [Comment.Item]) {
+        guard comments.count > 0 else {
+            return DispatchQueue.main.async { self.canComment = true }
+        }
+        for comment in comments {
+            if comment.authorID == "__defaultOwner__" {
+                return DispatchQueue.main.async { self.canComment = false }
+            }
+        }
+        return DispatchQueue.main.async { self.canComment = true }
+    }
+
     func loadComments() {
         Comment.getComments(ckDatabase: Comment.publicDB, spotId: spotId) { (result) in
             switch result {
             case .failure(let error):
                 print(" ERROR LOADING COMMENTS \(error.localizedDescription)")
             case .success(let comments):
-                DispatchQueue.main.async {
-                    self.comments = comments
-                }
+                DispatchQueue.main.async { self.comments = comments }
+                self.canComment(comments: comments)
             }
         }
     }

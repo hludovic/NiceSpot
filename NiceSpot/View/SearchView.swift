@@ -13,7 +13,6 @@ struct SearchView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            
             HStack {
                 TextField("Rechercher...", text: $searchText)
                     .padding(7)
@@ -35,12 +34,9 @@ struct SearchView: View {
                     .animation(.default)
                 }
             }
-            
             Spacer()
-            
         }
         .navigationBarTitle(Text("Recherche"))
-        
     }
 }
 

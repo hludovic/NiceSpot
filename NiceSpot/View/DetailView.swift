@@ -59,29 +59,13 @@ struct DetailView: View {
                         .cornerRadius(10)
                 })
                 .padding(.horizontal, 10)
-            Text("Comments")
-            ScrollView(.horizontal, showsIndicators: true) {
-                HStack {
-                    ForEach(content.comments) { (comment: Comment.Item) in
-                        VStack(alignment: .leading) {
-                            HStack {
-                                Text(comment.title)
-                                    .font(.subheadline)
-                                Spacer()
-                            }
-                            Text(comment.detail)
-                                .font(.footnote)
-                                .lineLimit(3)
-                            Spacer()
-                        }
-                        .padding(.top)
-                        .frame(width: 240, height: 110)
-                    }
-                    .padding(.horizontal)
-                    .background(Color(.secondarySystemBackground))
-                    .cornerRadius(14.0)
-                }
-                .padding(.horizontal, 10)
+            if content.comments.count != 0 {
+                CommentsView(comments: content.comments)
+            }
+            if content.canComment == true {
+                AddCommentButton()
+            } else {
+                EditCommentButton()
             }
         }
         .onAppear{
@@ -92,6 +76,32 @@ struct DetailView: View {
     }
 }
 
+struct EditCommentButton: View {
+    var body: some View {
+        Button(action: {
+            print("AA")
+        }, label: {
+            HStack {
+                Image(systemName: "square.and.pencil")
+                Text("Edit your comment")
+            }
+        })
+    }
+}
+
+struct AddCommentButton: View {
+    var body: some View {
+        Button(action: {
+            print("BB")
+        }, label: {
+            HStack {
+                Image(systemName: "square.and.pencil")
+                Text("Write a comment")
+            }
+        })
+    }
+}
+
 struct SpotDetailView_Previews: PreviewProvider {
     static var previews: some View {
         let context = PersistenceController.preview.container.viewContext
@@ -99,6 +109,5 @@ struct SpotDetailView_Previews: PreviewProvider {
         let result = try! context.fetch(request)
         let spotDetailContent = DetailContent(spot: result.first!)
         DetailView(content: spotDetailContent)
-        //        spotDetailContent.comments = [Comment.Item(id: "", title: "Title", detail: "Detail", author: "Author")]
     }
 }

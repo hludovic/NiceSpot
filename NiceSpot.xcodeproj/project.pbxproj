@@ -24,6 +24,7 @@
 		43B1CA4125B48AA900B9E5EE /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43B1CA4025B48AA900B9E5EE /* HomeView.swift */; };
 		43B538E825BA421E00321B05 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43B538E725BA421E00321B05 /* MapView.swift */; };
 		43D0648425B7E27900AC69A6 /* DetailContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43D0648325B7E27900AC69A6 /* DetailContent.swift */; };
+		43F705AE25C757FD00F4A81B /* CommentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43F705AD25C757FD00F4A81B /* CommentsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +48,7 @@
 		43B1CA4025B48AA900B9E5EE /* HomeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		43B538E725BA421E00321B05 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		43D0648325B7E27900AC69A6 /* DetailContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailContent.swift; sourceTree = "<group>"; };
+		43F705AD25C757FD00F4A81B /* CommentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +127,7 @@
 				43B1CA4025B48AA900B9E5EE /* HomeView.swift */,
 				43218A1A25B4804800B7C28B /* SpotCellView.swift */,
 				4334894725B7AB310063AB77 /* DetailView.swift */,
+				43F705AD25C757FD00F4A81B /* CommentsView.swift */,
 				43A6D1F525C0E36D00D2DD61 /* SearchView.swift */,
 				43B538E725BA421E00321B05 /* MapView.swift */,
 			);
@@ -214,6 +217,7 @@
 			files = (
 				43B538E825BA421E00321B05 /* MapView.swift in Sources */,
 				436B580625B5FE5B0020883B /* SpotCellContent.swift in Sources */,
+				43F705AE25C757FD00F4A81B /* CommentsView.swift in Sources */,
 				438BEF2025B47EBF00CA5042 /* Persistence.swift in Sources */,
 				4334894825B7AB310063AB77 /* DetailView.swift in Sources */,
 				43218A1E25B4804800B7C28B /* SpotCellView.swift in Sources */,

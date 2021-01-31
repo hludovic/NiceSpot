@@ -12,11 +12,9 @@ class Comment {
     
     static let publicDB: CKDatabase = CKContainer(identifier: "iCloud.fr.hludovic.container1").publicCloudDatabase
 
-
     static func getComments(ckDatabase: CKDatabase, spotId: String, completion: @escaping (Result<[Comment.Item], Error>) -> Void) {
         let record = CKRecord.ID(recordName: spotId)
         let reference = CKRecord.Reference(recordID: record, action: .none)
-        
         let predicate = NSPredicate(format: "spot == %@", reference)
         let querry = CKQuery(recordType: "Comments", predicate: predicate)
         let operation = CKQueryOperation(query: querry)
@@ -30,16 +28,13 @@ class Comment {
                 let author = record.creatorUserRecordID?.recordName
             else { return }
             
-            let commentFetched = Item(id: record.recordID.recordName,title: title, detail: detail, author: author)
+            let commentFetched = Item(id: record.recordID.recordName,title: title, detail: detail, authorID: author)
             commentList.append(commentFetched)
         }
         
         operation.queryCompletionBlock = { cursor, error in
             if let error = error {
-                // ADD THE ERROR !!!
-                print("\(error.localizedDescription) >>>")
-                completion(.failure(NiceSpotError.wrongUrlSessionStatus))
-                print("ERROR")
+                completion(.failure(error))
             } else {
                 completion(.success(commentList))
             }
@@ -50,7 +45,6 @@ class Comment {
     static func postComment(ckDatabase: CKDatabase, spotId: String, title: String, content: String, success: @escaping (Bool) -> Void) {
         guard title != "", content != "" else { return success(false) }
         guard isICloudAvailable() else { return success(false) }
-        
         let commentRecord = CKRecord(recordType: "Comments")
         let reference = CKRecord.Reference(recordID: CKRecord.ID(recordName: spotId), action: .deleteSelf)
         commentRecord["title"] = title as CKRecordValue
@@ -61,9 +55,21 @@ class Comment {
             guard error == nil else {
                 print(error!.localizedDescription)
                 return success(false)
-                
             }
             success(true)
+        }
+    }
+
+    static func getUserRecordID(escaping: @escaping (String?) -> Void) {
+        CKContainer(identifier: "iCloud.fr.hludovic.container1").fetchUserRecordID { (recordID, error) in
+            if let name = recordID?.recordName {
+                escaping(name)
+            } else {
+                if let error = error {
+                    print(error.localizedDescription)
+                    escaping(nil)
+                }
+            }
         }
     }
 
@@ -79,8 +85,6 @@ class Comment {
         let id: String
         let title: String
         let detail: String
-        let author: String
+        let authorID: String
     }
-
-
 }

@@ -18,7 +18,7 @@ extension Spot {
         completion(spot)
     }
 
-    static func allSpots(context: NSManagedObjectContext, completion: @escaping ([Spot]) -> Void ) {
+    static func getSpots(context: NSManagedObjectContext, completion: @escaping ([Spot]) -> Void ) {
         let request: NSFetchRequest<Spot> = Spot.fetchRequest()
         if let result = try? context.fetch(request) {
             completion(result)
