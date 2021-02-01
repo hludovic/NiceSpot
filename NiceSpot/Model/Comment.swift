@@ -18,17 +18,18 @@ class Comment {
         let predicate = NSPredicate(format: "spot == %@", reference)
         let querry = CKQuery(recordType: "Comments", predicate: predicate)
         let operation = CKQueryOperation(query: querry)
-        operation.desiredKeys = ["title", "detail"]
+        operation.desiredKeys = ["title", "detail", "pseudo"]
         var commentList: [Item] = []
         
         operation.recordFetchedBlock = { record in
             guard
                 let title = record["title"] as? String,
                 let detail = record["detail"] as? String,
-                let author = record.creatorUserRecordID?.recordName
+                let authorPseudo = record["pseudo"] as? String,
+                let authorID = record.creatorUserRecordID?.recordName
             else { return }
             
-            let commentFetched = Item(id: record.recordID.recordName,title: title, detail: detail, authorID: author)
+            let commentFetched = Item(id: record.recordID.recordName,title: title, detail: detail, authorID: authorID, authorPseudo: authorPseudo)
             commentList.append(commentFetched)
         }
         
@@ -42,7 +43,7 @@ class Comment {
         ckDatabase.add(operation)
     }
 
-    static func postComment(spotId: String, title: String, content: String, success: @escaping (Bool) -> Void) {
+    static func postComment(spotId: String, title: String, content: String, pseudo: String, success: @escaping (Bool) -> Void) {
         guard title != "", content != "" else { return success(false) }
         guard isICloudAvailable() else { return success(false) }
         let commentRecord = CKRecord(recordType: "Comments")
@@ -50,6 +51,7 @@ class Comment {
         commentRecord["title"] = title as CKRecordValue
         commentRecord["detail"] = content as CKRecordValue
         commentRecord["spot"] = reference
+        commentRecord["pseudo"] = pseudo
         
         publicDB.save(commentRecord) { (record, error) in
             guard error == nil else {
@@ -86,5 +88,6 @@ class Comment {
         let title: String
         let detail: String
         let authorID: String
+        let authorPseudo: String
     }
 }

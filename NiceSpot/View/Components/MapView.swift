@@ -10,14 +10,17 @@ import MapKit
 
 struct MapView: View {
     var spotLocation : SpotLocation
-    @State private var region = MKCoordinateRegion(center: .init(latitude: 16.336675, longitude: -61.785863),
-                                                   latitudinalMeters: 1000,
-                                                   longitudinalMeters: 1000
+    @State private var region = MKCoordinateRegion(
+        center: CLLocationCoordinate2D(latitude: 16.336675, longitude: -61.785863),
+        latitudinalMeters: 1000,
+        longitudinalMeters: 1000
     )
+
     private func loadMap(spot: SpotLocation) {
-        region = MKCoordinateRegion(center: spot.coordinate,
-                                    latitudinalMeters: 1000,
-                                    longitudinalMeters: 1000
+        region = MKCoordinateRegion(
+            center: spot.coordinate,
+            latitudinalMeters: 1000,
+            longitudinalMeters: 1000
         )
     }
 

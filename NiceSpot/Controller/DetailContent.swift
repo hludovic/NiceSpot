@@ -10,28 +10,26 @@ import CoreLocation
 import SwiftUI
 
 class DetailContent: ObservableObject {
-    let spotId: String
-    let title: String
-    let detail: String
-    let imageName: String
-    let municipality: String
-    let category: String
-    let location: SpotLocation
-    let mapLink: URL
+    let spot: Item
+    @Published var userComment: UserComment? = nil
     @Published var canComment: Bool = false
     @Published var image: Image = Image("placeholder")
     @Published var comments: [Comment.Item] = []
+    @Published var errorMessage: String = ""
+    @Published var isSaving: Bool = false
 
     init(spot: Spot) {
         let coodinate = CLLocationCoordinate2D(latitude: spot.latitude, longitude: spot.longitude)
-        self.spotId = spot.id!
-        self.title = spot.title!
-        self.detail = spot.detail!
-        self.imageName = spot.imageName!
-        self.municipality = spot.municipality!
-        self.category = spot.category!
-        self.location = SpotLocation(coordinate: coodinate)
-        self.mapLink = URL(string: "maps://?ll=\(spot.latitude),\(spot.longitude)")!
+        let item = Item(id: spot.id!,
+                        title: spot.title!,
+                        detail: spot.detail!,
+                        imageName: spot.imageName!,
+                        municipality: spot.municipality!,
+                        category: spot.category!,
+                        location: SpotLocation(coordinate: coodinate),
+                        mapLink: URL(string: "maps://?ll=\(spot.latitude),\(spot.longitude)")!
+        )
+        self.spot = item
     }
 
     func canComment(comments: [Comment.Item]) {
@@ -47,20 +45,55 @@ class DetailContent: ObservableObject {
     }
 
     func loadComments() {
-        Comment.getComments(ckDatabase: Comment.publicDB, spotId: spotId) { (result) in
+        Comment.getComments(ckDatabase: Comment.publicDB, spotId: spot.id) { (result) in
             switch result {
             case .failure(let error):
                 print(" ERROR LOADING COMMENTS \(error.localizedDescription)")
             case .success(let comments):
                 DispatchQueue.main.async { self.comments = comments }
+                print(comments.count)
                 self.canComment(comments: comments)
             }
         }
     }
 
+//    func saveComment() {
+//        guard let comment = userComment else { return errorMessage = " " }
+//        isSaving = true
+//        Comment.postComment(spotId: spot.id, title: comment.title, content: comment.detail, pseudo: comment.pseudo) { [unowned self] (success) in
+//            guard success else {
+//                self.isSaving = false
+//                self.errorMessage = " "
+//                return
+//            }
+//            DispatchQueue.main.async {
+//                self.isSaving = false
+//            }
+//        }
+//    }
+
     func loadImage() {
-        if let imageCached = NiceSpotApp.imageCache.object(forKey: NSString(string: imageName)) {
+        if let imageCached = NiceSpotApp.imageCache.object(forKey: NSString(string: spot.imageName)) {
             image = Image(uiImage: imageCached)
         }
+    }
+}
+
+extension DetailContent {
+    struct Item {
+        let id: String
+        let title: String
+        let detail: String
+        let imageName: String
+        let municipality: String
+        let category: String
+        let location: SpotLocation
+        let mapLink: URL
+    }
+    
+    struct UserComment {
+        var title: String
+        var detail: String
+        var pseudo: String
     }
 }

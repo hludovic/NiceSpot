@@ -12,8 +12,10 @@
 		4322557425BFB7CF0043E4E3 /* Spot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4322557325BFB7CF0043E4E3 /* Spot.swift */; };
 		4334894825B7AB310063AB77 /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4334894725B7AB310063AB77 /* DetailView.swift */; };
 		4342798A25B5282300E0DE2D /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4342798925B5282300E0DE2D /* CloudKit.framework */; };
+		434CD2C225C856DD00544F5F /* CommentContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434CD2C125C856DD00544F5F /* CommentContent.swift */; };
 		436B580625B5FE5B0020883B /* SpotCellContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436B580525B5FE5B0020883B /* SpotCellContent.swift */; };
 		436E0A5425B5154000BD456D /* HomeContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436E0A5325B5154000BD456D /* HomeContent.swift */; };
+		438089BD25C85CF8002C9919 /* CommentSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 438089BC25C85CF8002C9919 /* CommentSheet.swift */; };
 		438A67F725C6438D00BB262B /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 438A67F625C6438D00BB262B /* Comment.swift */; };
 		438BEF1725B47EBE00CA5042 /* NiceSpotApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 438BEF1625B47EBE00CA5042 /* NiceSpotApp.swift */; };
 		438BEF1B25B47EBF00CA5042 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 438BEF1A25B47EBF00CA5042 /* Assets.xcassets */; };
@@ -24,7 +26,7 @@
 		43B1CA4125B48AA900B9E5EE /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43B1CA4025B48AA900B9E5EE /* HomeView.swift */; };
 		43B538E825BA421E00321B05 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43B538E725BA421E00321B05 /* MapView.swift */; };
 		43D0648425B7E27900AC69A6 /* DetailContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43D0648325B7E27900AC69A6 /* DetailContent.swift */; };
-		43F705AE25C757FD00F4A81B /* CommentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43F705AD25C757FD00F4A81B /* CommentsView.swift */; };
+		43F705AE25C757FD00F4A81B /* CommentsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43F705AD25C757FD00F4A81B /* CommentsListView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,8 +36,10 @@
 		4334894725B7AB310063AB77 /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
 		4342798725B5282000E0DE2D /* NiceSpot.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NiceSpot.entitlements; sourceTree = "<group>"; };
 		4342798925B5282300E0DE2D /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		434CD2C125C856DD00544F5F /* CommentContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentContent.swift; sourceTree = "<group>"; };
 		436B580525B5FE5B0020883B /* SpotCellContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotCellContent.swift; sourceTree = "<group>"; };
 		436E0A5325B5154000BD456D /* HomeContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeContent.swift; sourceTree = "<group>"; };
+		438089BC25C85CF8002C9919 /* CommentSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentSheet.swift; sourceTree = "<group>"; };
 		438A67F625C6438D00BB262B /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		438BEF1325B47EBE00CA5042 /* NiceSpot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NiceSpot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		438BEF1625B47EBE00CA5042 /* NiceSpotApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NiceSpotApp.swift; sourceTree = "<group>"; };
@@ -48,7 +52,7 @@
 		43B1CA4025B48AA900B9E5EE /* HomeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		43B538E725BA421E00321B05 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		43D0648325B7E27900AC69A6 /* DetailContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailContent.swift; sourceTree = "<group>"; };
-		43F705AD25C757FD00F4A81B /* CommentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsView.swift; sourceTree = "<group>"; };
+		43F705AD25C757FD00F4A81B /* CommentsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsListView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +81,7 @@
 				436E0A5325B5154000BD456D /* HomeContent.swift */,
 				436B580525B5FE5B0020883B /* SpotCellContent.swift */,
 				43D0648325B7E27900AC69A6 /* DetailContent.swift */,
+				434CD2C125C856DD00544F5F /* CommentContent.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -127,6 +132,8 @@
 				43F7A3A525C76F2C00E54DF7 /* Components */,
 				43B1CA4025B48AA900B9E5EE /* HomeView.swift */,
 				4334894725B7AB310063AB77 /* DetailView.swift */,
+				43F705AD25C757FD00F4A81B /* CommentsListView.swift */,
+				438089BC25C85CF8002C9919 /* CommentSheet.swift */,
 				43A6D1F525C0E36D00D2DD61 /* SearchView.swift */,
 			);
 			path = View;
@@ -149,7 +156,6 @@
 			children = (
 				43B538E725BA421E00321B05 /* MapView.swift */,
 				43218A1A25B4804800B7C28B /* SpotCellView.swift */,
-				43F705AD25C757FD00F4A81B /* CommentsView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -225,7 +231,8 @@
 			files = (
 				43B538E825BA421E00321B05 /* MapView.swift in Sources */,
 				436B580625B5FE5B0020883B /* SpotCellContent.swift in Sources */,
-				43F705AE25C757FD00F4A81B /* CommentsView.swift in Sources */,
+				43F705AE25C757FD00F4A81B /* CommentsListView.swift in Sources */,
+				438089BD25C85CF8002C9919 /* CommentSheet.swift in Sources */,
 				438BEF2025B47EBF00CA5042 /* Persistence.swift in Sources */,
 				4334894825B7AB310063AB77 /* DetailView.swift in Sources */,
 				43218A1E25B4804800B7C28B /* SpotCellView.swift in Sources */,
@@ -236,6 +243,7 @@
 				4322557025BFB7720043E4E3 /* NiceSpotError.swift in Sources */,
 				438A67F725C6438D00BB262B /* Comment.swift in Sources */,
 				43B1CA4125B48AA900B9E5EE /* HomeView.swift in Sources */,
+				434CD2C225C856DD00544F5F /* CommentContent.swift in Sources */,
 				43D0648425B7E27900AC69A6 /* DetailContent.swift in Sources */,
 				436E0A5425B5154000BD456D /* HomeContent.swift in Sources */,
 			);

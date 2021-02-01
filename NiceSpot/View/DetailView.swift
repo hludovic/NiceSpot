@@ -19,18 +19,18 @@ struct DetailView: View {
                     .aspectRatio(contentMode: .fit)
             }
             HStack {
-                Image("\(content.category)")
+                Image("\(content.spot.category)")
                     .resizable()
                     .frame(width: 24, height: 24)
                     .clipShape(Capsule())
-                Text(content.category)
+                Text(content.spot.category)
                     .font(.caption)
                     .fontWeight(.black)
                     .padding(5)
                     .background(Color.green)
                     .clipShape(Capsule())
                     .foregroundColor(.white)
-                Text(content.municipality)
+                Text(content.spot.municipality)
                     .font(.caption)
                     .fontWeight(.black)
                     .padding(5)
@@ -41,29 +41,29 @@ struct DetailView: View {
             }
             .padding(.horizontal)
             Divider()
-            Text(content.detail)
+            Text(content.spot.detail)
                 .font(.body)
                 .foregroundColor(Color.gray)
                 .padding()
             NavigationLink(
                 destination:
                     VStack {
-                        MapView(spotLocation: content.location)
-                        Link("Open in Maps", destination: content.mapLink)
+                        MapView(spotLocation: content.spot.location)
+                        Link("Open in Maps", destination: content.spot.mapLink)
                     }
-                    .navigationTitle(content.title)
+                    .navigationTitle(content.spot.title)
                 ,
                 label: {
-                    MapView(spotLocation: content.location)
+                    MapView(spotLocation: content.spot.location)
                         .frame(height: 300)
                         .cornerRadius(10)
                 })
                 .padding(.horizontal, 10)
             if content.comments.count != 0 {
-                CommentsView(comments: content.comments)
+                CommentsListView(comments: content.comments)
             }
             if content.canComment == true {
-                AddCommentButton(spotId: content.spotId)
+                AddCommentButton(spotId: content.spot.id)
             } else {
                 EditCommentButton()
             }
@@ -72,7 +72,7 @@ struct DetailView: View {
             content.loadImage()
             content.loadComments()
         }
-        .navigationTitle(content.title)
+        .navigationTitle(content.spot.title)
     }
 }
 
@@ -101,9 +101,9 @@ struct AddCommentButton: View {
                 Image(systemName: "square.and.pencil")
                 Text("Write a comment")
             }
-            .sheet(isPresented: $showingDetail, content: {
-                CommentSheet(spotId: spotId, showCommentSheetView: self.$showingDetail)
-            })
+            .sheet(isPresented: $showingDetail) {
+                CommentSheet(content: CommentContent(spotId: spotId), showCommentSheetView: $showingDetail)
+            }
         })
     }
 }
