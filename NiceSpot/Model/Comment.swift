@@ -28,7 +28,6 @@ class Comment {
                 let authorPseudo = record["pseudo"] as? String,
                 let authorID = record.creatorUserRecordID?.recordName
             else { return }
-            
             let commentFetched = Item(id: record.recordID.recordName,title: title, detail: detail, authorID: authorID, authorPseudo: authorPseudo)
             commentList.append(commentFetched)
         }

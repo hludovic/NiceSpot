@@ -63,7 +63,17 @@ struct DetailView: View {
                 CommentsListView(comments: content.comments)
             }
             if content.canComment == true {
-                AddCommentButton(spotId: content.spot.id)
+                Button(action: {
+                    content.showCommentSheet.toggle()
+                }, label: {
+                    HStack {
+                        Image(systemName: "square.and.pencil")
+                        Text("Write a comment")
+                    }
+                    .sheet(isPresented: self.$content.showCommentSheet) {
+                        CommentSheet(content: self.content)
+                    }
+                })
             } else {
                 EditCommentButton()
             }
@@ -84,25 +94,6 @@ struct EditCommentButton: View {
             HStack {
                 Image(systemName: "square.and.pencil")
                 Text("Edit your comment")
-            }
-        })
-    }
-}
-
-struct AddCommentButton: View {
-    @State var showingDetail = false
-    var spotId: String
-
-    var body: some View {
-        Button(action: {
-            showingDetail.toggle()
-        }, label: {
-            HStack {
-                Image(systemName: "square.and.pencil")
-                Text("Write a comment")
-            }
-            .sheet(isPresented: $showingDetail) {
-                CommentSheet(content: CommentContent(spotId: spotId), showCommentSheetView: $showingDetail)
             }
         })
     }

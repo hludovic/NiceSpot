@@ -11,12 +11,13 @@ import SwiftUI
 
 class DetailContent: ObservableObject {
     let spot: Item
-    @Published var userComment: UserComment? = nil
+    @Published var userComment: UserComment
     @Published var canComment: Bool = false
     @Published var image: Image = Image("placeholder")
     @Published var comments: [Comment.Item] = []
     @Published var errorMessage: String = ""
-    @Published var isSaving: Bool = false
+    @Published var saveCommentButtonDisabled = true
+    @Published var showCommentSheet: Bool = false
 
     init(spot: Spot) {
         let coodinate = CLLocationCoordinate2D(latitude: spot.latitude, longitude: spot.longitude)
@@ -30,6 +31,7 @@ class DetailContent: ObservableObject {
                         mapLink: URL(string: "maps://?ll=\(spot.latitude),\(spot.longitude)")!
         )
         self.spot = item
+        userComment = DetailContent.UserComment(title: "", detail: "", pseudo: "")
     }
 
     func canComment(comments: [Comment.Item]) {
@@ -56,21 +58,23 @@ class DetailContent: ObservableObject {
             }
         }
     }
+    
+    func loadUserComment() {
+    }
 
-//    func saveComment() {
-//        guard let comment = userComment else { return errorMessage = " " }
-//        isSaving = true
-//        Comment.postComment(spotId: spot.id, title: comment.title, content: comment.detail, pseudo: comment.pseudo) { [unowned self] (success) in
-//            guard success else {
-//                self.isSaving = false
-//                self.errorMessage = " "
-//                return
-//            }
-//            DispatchQueue.main.async {
-//                self.isSaving = false
-//            }
-//        }
-//    }
+    func saveComment() {
+        guard
+            userComment.title != "",
+            userComment.pseudo != "",
+            userComment.detail != ""
+        else { return errorMessage = " " }
+        Comment.postComment(spotId: spot.id, title: userComment.title, content: userComment.detail, pseudo: userComment.pseudo) { [unowned self] (success) in
+            guard success else { return self.errorMessage = " " }
+            DispatchQueue.main.async {
+                self.showCommentSheet = false
+            }
+        }
+    }
 
     func loadImage() {
         if let imageCached = NiceSpotApp.imageCache.object(forKey: NSString(string: spot.imageName)) {
