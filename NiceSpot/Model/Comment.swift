@@ -42,7 +42,7 @@ class Comment {
         ckDatabase.add(operation)
     }
 
-    static func postComment(ckDatabase: CKDatabase, spotId: String, title: String, content: String, success: @escaping (Bool) -> Void) {
+    static func postComment(spotId: String, title: String, content: String, success: @escaping (Bool) -> Void) {
         guard title != "", content != "" else { return success(false) }
         guard isICloudAvailable() else { return success(false) }
         let commentRecord = CKRecord(recordType: "Comments")
@@ -51,7 +51,7 @@ class Comment {
         commentRecord["detail"] = content as CKRecordValue
         commentRecord["spot"] = reference
         
-        ckDatabase.save(commentRecord) { (record, error) in
+        publicDB.save(commentRecord) { (record, error) in
             guard error == nil else {
                 print(error!.localizedDescription)
                 return success(false)

@@ -10,7 +10,7 @@ import CoreLocation
 import SwiftUI
 
 class DetailContent: ObservableObject {
-    private let spotId: String
+    let spotId: String
     let title: String
     let detail: String
     let imageName: String

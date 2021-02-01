@@ -46,20 +46,57 @@ struct CommentsView: View {
 }
 
 
-struct SaveComment: View {
-    @State var datas: String
+struct CommentSheet: View {
+    @State var title = ""
+    @State var detail = ""
+    @State var pseudo = ""
+    @State private var isLoading = false
+    var spotId: String
+    @Binding var showCommentSheetView: Bool
     
     var body: some View {
-        Text("Hello")
+        NavigationView {
+            Form {
+                Section(header: Text("Comment")) {
+                    TextField("Pseudonym", text: $pseudo)
+                    TextField("Title", text: $title)
+                    TextEditor(text: $detail)
+                        .frame(height: 100.0)
+                }
+            }
+            .navigationTitle("Write a comment")
+            .navigationBarItems(
+                leading: Button(action: { self.showCommentSheetView = false }) {
+                    Text("Cancel")
+                },
+                trailing: Button(action: {
+                    self.isLoading = true
+                    Comment.postComment(spotId: spotId, title: title, content: detail) { (success) in
+                        if success {
+                            self.isLoading = false
+                            print("ok")
+                        } else {
+                            self.isLoading = false
+                            showCommentSheetView = false
+                        }
+                    }
+                }) {
+                    Text("Save")
+                }
+            )
+            .navigationBarTitleDisplayMode(.inline)
+        }
     }
 }
 
 struct CommentsView_Previews: PreviewProvider {
     static var previews: some View {
-        let commentItem = Comment.Item(id: "AAA",
-                                       title: "C'était super",
-                                       detail: "J'ai beaucoup aimé, blabla géniale",
-                                       authorID: "AAA")
+        let commentItem = Comment.Item(
+            id: "",
+            title: "C'était super",
+            detail: "J'ai beaucoup aimé, blabla géniale",
+            authorID: ""
+        )
         CommentsView(comments: [commentItem, commentItem, commentItem])
             .previewLayout(.fixed(width: 450, height: 200))
     }

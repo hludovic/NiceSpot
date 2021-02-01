@@ -63,7 +63,7 @@ struct DetailView: View {
                 CommentsView(comments: content.comments)
             }
             if content.canComment == true {
-                AddCommentButton()
+                AddCommentButton(spotId: content.spotId)
             } else {
                 EditCommentButton()
             }
@@ -90,14 +90,20 @@ struct EditCommentButton: View {
 }
 
 struct AddCommentButton: View {
+    @State var showingDetail = false
+    var spotId: String
+
     var body: some View {
         Button(action: {
-            print("BB")
+            showingDetail.toggle()
         }, label: {
             HStack {
                 Image(systemName: "square.and.pencil")
                 Text("Write a comment")
             }
+            .sheet(isPresented: $showingDetail, content: {
+                CommentSheet(spotId: spotId, showCommentSheetView: self.$showingDetail)
+            })
         })
     }
 }
