@@ -60,7 +60,7 @@ struct DetailView: View {
                 })
                 .padding(.horizontal, 10)
             if content.comments.count != 0 {
-                CommentsListView(comments: content.comments)
+                CommentsView(comments: content.comments)
             }
             if content.canComment == true {
                 Button(action: {
