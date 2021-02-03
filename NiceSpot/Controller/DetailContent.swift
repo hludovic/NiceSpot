@@ -11,12 +11,16 @@ import SwiftUI
 
 class DetailContent: ObservableObject {
     let spot: Item
-    @Published var userComment: UserComment
+    @Published var userComment = UserComment(title: "", detail: "", pseudo: "") {
+        didSet {
+            saveButtonDisabled = (userComment.title == "" || userComment.pseudo == "") || userComment.detail == ""
+        }
+    }
     @Published var canComment: Bool = false
     @Published var image: Image = Image("placeholder")
     @Published var comments: [Comment.Item] = []
     @Published var errorMessage: String = ""
-    @Published var saveCommentButtonDisabled = true
+    @Published var saveButtonDisabled = true
     @Published var showCommentSheet: Bool = false
 
     init(spot: Spot) {
@@ -47,13 +51,12 @@ class DetailContent: ObservableObject {
     }
 
     func loadComments() {
-        Comment.getComments(ckDatabase: Comment.publicDB, spotId: spot.id) { (result) in
+        Comment.getComments(ckDatabase: Comment.publicDB, spotId: spot.id) { [unowned self] (result) in
             switch result {
             case .failure(let error):
-                print(" ERROR LOADING COMMENTS \(error.localizedDescription)")
+                print("ERROR LOADING COMMENTS \(error.localizedDescription)")
             case .success(let comments):
                 DispatchQueue.main.async { self.comments = comments }
-                print(comments.count)
                 self.canComment(comments: comments)
             }
         }
@@ -71,6 +74,7 @@ class DetailContent: ObservableObject {
         Comment.postComment(spotId: spot.id, title: userComment.title, content: userComment.detail, pseudo: userComment.pseudo) { [unowned self] (success) in
             guard success else { return self.errorMessage = " " }
             DispatchQueue.main.async {
+                self.saveButtonDisabled = true
                 self.showCommentSheet = false
             }
         }
@@ -83,6 +87,7 @@ class DetailContent: ObservableObject {
     }
 }
 
+// MARK: - Nested Struct
 extension DetailContent {
     struct Item {
         let id: String

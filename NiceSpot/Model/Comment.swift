@@ -42,6 +42,9 @@ class Comment {
         ckDatabase.add(operation)
     }
 
+    static func getUserComment(spotId: String, userId: String, result: @escaping ([Comment.Item]) -> Void ) {
+    }
+    
     static func postComment(spotId: String, title: String, content: String, pseudo: String, success: @escaping (Bool) -> Void) {
         guard title != "", content != "" else { return success(false) }
         guard isICloudAvailable() else { return success(false) }

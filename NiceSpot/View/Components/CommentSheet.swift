@@ -15,7 +15,7 @@ struct CommentSheet: View {
         NavigationView {
             Form {
                 Section(header: Text("Comment")) {
-                    TextField("Pseudonym", text: $content.userComment.pseudo)
+                    TextField("Pseudo", text: $content.userComment.pseudo)
                     TextField("Title", text: $content.userComment.title)
                     TextEditor(text: $content.userComment.detail)
                         .frame(height: 100.0)
@@ -26,10 +26,22 @@ struct CommentSheet: View {
                 leading: Button(action: { content.showCommentSheet = false }) {
                     Text("Cancel")
                 },
-                trailing: Button(action: { content.saveComment() }) {
+                trailing: Button(action: {
+                    content.saveButtonDisabled = true
+                    content.saveComment()
+                    content.comments.append(
+                        Comment.Item(
+                            id: "ID",
+                            title: content.userComment.title,
+                            detail: content.userComment.detail,
+                            authorID: "__defaultOwner__",
+                            authorPseudo: content.userComment.pseudo
+                        )
+                    )
+                }) {
                     Text("Save")
                 }
-                .disabled((content.userComment.title == "" || content.userComment.pseudo == "") || content.userComment.detail == "")
+                .disabled(content.saveButtonDisabled)
             )
             .navigationBarTitleDisplayMode(.inline)
         }
