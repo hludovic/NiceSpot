@@ -10,7 +10,7 @@ import CoreData
 
 struct DetailView: View {
     @ObservedObject var content: DetailContent
-    
+
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
             NavigationLink(destination: content.image) {
@@ -60,7 +60,7 @@ struct DetailView: View {
                 })
                 .padding(.horizontal, 10)
             if content.comments.count != 0 {
-                CommentsView(comments: content.comments)
+                CommentsListView(comments: content.comments)
             }
             if content.canComment == true {
                 Button(action: {

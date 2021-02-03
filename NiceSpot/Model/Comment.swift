@@ -87,9 +87,9 @@ class Comment {
 
     struct Item: Identifiable {
         let id: String
-        let title: String
-        let detail: String
+        var title: String
+        var detail: String
         let authorID: String
-        let authorPseudo: String
+        var authorPseudo: String
     }
 }

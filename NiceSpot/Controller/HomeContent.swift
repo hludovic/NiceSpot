@@ -11,28 +11,29 @@ import CoreData
 class HomeContent: ObservableObject {
     // MARK: Properties
     private let publicDB: CKDatabase = CKContainer(identifier: "iCloud.fr.hludovic.container1").publicCloudDatabase
-    private let context: NSManagedObjectContext
     @Published var spots: [Spot] = []
     @Published var errorMessage: String = ""
 
     // MARK: - Init Method
-    init(context: NSManagedObjectContext) {
-        self.context = context
+    init() {
+    }
+    
+    func loadSpots(context: NSManagedObjectContext) {
         let request: NSFetchRequest<Spot> = Spot.fetchRequest()
         if let result = try? context.fetch(request) {
             self.spots = result
         } else { self.spots = [] }
     }
 
-    func refreshSpots (success: @escaping (Bool) -> Void) {
+    func refreshSpots (context: NSManagedObjectContext, success: @escaping (Bool) -> Void) {
         fetchSpots { [unowned self] (result) in
             switch result {
             case .success(let fetchedSpots):
-                self.clearSpots() { [unowned self] (cleared) in
+                self.clearSpots(context: context) { [unowned self] (cleared) in
                     if cleared {
-                        self.saveFetchedSpots(fetchedSpots: fetchedSpots) { [unowned self] (saved) in
+                        self.saveFetchedSpots(context: context, fetchedSpots: fetchedSpots) { [unowned self] (saved) in
                             if saved {
-                                Spot.getSpots(context: self.context) { [unowned self] (result) in
+                                Spot.getSpots(context: context) { [unowned self] (result) in
                                     DispatchQueue.main.async {
                                         self.spots = result
                                         success(true)
@@ -59,8 +60,7 @@ class HomeContent: ObservableObject {
 
 // MARK: - Private Methods
 private extension HomeContent {
-
-    private func clearSpots(completion: @escaping (Bool) -> Void) {
+    private func clearSpots(context: NSManagedObjectContext, completion: @escaping (Bool) -> Void) {
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = Spot.fetchRequest()
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
         do {
@@ -72,7 +72,7 @@ private extension HomeContent {
         NiceSpotApp.imageCache.removeAllObjects()
     }
 
-    private func saveFetchedSpots(fetchedSpots: [FetchedSpot], completion: @escaping (Bool) -> Void) {
+    private func saveFetchedSpots(context: NSManagedObjectContext, fetchedSpots: [FetchedSpot], completion: @escaping (Bool) -> Void) {
         for fetchedSpot in fetchedSpots {
             let spot = Spot(context: context)
             spot.id = fetchedSpot.recordID.recordName

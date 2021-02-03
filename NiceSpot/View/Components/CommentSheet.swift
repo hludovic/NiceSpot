@@ -15,7 +15,7 @@ struct CommentSheet: View {
         NavigationView {
             Form {
                 Section(header: Text("Comment")) {
-                    TextField("Pseudo", text: $content.userComment.pseudo)
+                    TextField("Pseudo", text: $content.userComment.authorPseudo)
                     TextField("Title", text: $content.userComment.title)
                     TextEditor(text: $content.userComment.detail)
                         .frame(height: 100.0)
@@ -35,7 +35,7 @@ struct CommentSheet: View {
                             title: content.userComment.title,
                             detail: content.userComment.detail,
                             authorID: "__defaultOwner__",
-                            authorPseudo: content.userComment.pseudo
+                            authorPseudo: content.userComment.authorPseudo
                         )
                     )
                 }) {

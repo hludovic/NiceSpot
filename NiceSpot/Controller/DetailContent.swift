@@ -11,9 +11,9 @@ import SwiftUI
 
 class DetailContent: ObservableObject {
     let spot: Item
-    @Published var userComment = UserComment(title: "", detail: "", pseudo: "") {
+    @Published var userComment = Comment.Item(id: "", title: "", detail: "", authorID: "", authorPseudo: "") {
         didSet {
-            saveButtonDisabled = (userComment.title == "" || userComment.pseudo == "") || userComment.detail == ""
+            saveButtonDisabled = (userComment.title == "" || userComment.authorPseudo == "") || userComment.detail == ""
         }
     }
     @Published var canComment: Bool = false
@@ -35,7 +35,6 @@ class DetailContent: ObservableObject {
                         mapLink: URL(string: "maps://?ll=\(spot.latitude),\(spot.longitude)")!
         )
         self.spot = item
-        userComment = DetailContent.UserComment(title: "", detail: "", pseudo: "")
     }
 
     func canComment(comments: [Comment.Item]) {
@@ -56,8 +55,10 @@ class DetailContent: ObservableObject {
             case .failure(let error):
                 print("ERROR LOADING COMMENTS \(error.localizedDescription)")
             case .success(let comments):
-                DispatchQueue.main.async { self.comments = comments }
-                self.canComment(comments: comments)
+                DispatchQueue.main.async {
+                    self.comments = comments
+                    self.canComment(comments: comments)
+                }
             }
         }
     }
@@ -68,10 +69,10 @@ class DetailContent: ObservableObject {
     func saveComment() {
         guard
             userComment.title != "",
-            userComment.pseudo != "",
+            userComment.authorPseudo != "",
             userComment.detail != ""
         else { return errorMessage = " " }
-        Comment.postComment(spotId: spot.id, title: userComment.title, content: userComment.detail, pseudo: userComment.pseudo) { [unowned self] (success) in
+        Comment.postComment(spotId: spot.id, title: userComment.title, content: userComment.detail, pseudo: userComment.authorPseudo) { [unowned self] (success) in
             guard success else { return self.errorMessage = " " }
             DispatchQueue.main.async {
                 self.saveButtonDisabled = true
@@ -98,11 +99,5 @@ extension DetailContent {
         let category: String
         let location: SpotLocation
         let mapLink: URL
-    }
-    
-    struct UserComment {
-        var title: String
-        var detail: String
-        var pseudo: String
     }
 }

@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-struct CommentsView: View {
+struct CommentsListView: View {
     @State var comments: [Comment.Item]
-    
+
     var body: some View {
         VStack {
             Divider()
@@ -53,7 +53,7 @@ struct CommentsView_Previews: PreviewProvider {
             detail: "J'ai beaucoup aimé, blabla géniale",
             authorID: "", authorPseudo: "Moi"
         )
-        CommentsView(comments: [commentItem, commentItem, commentItem])
+        CommentsListView(comments: [commentItem, commentItem, commentItem])
             .previewLayout(.fixed(width: 450, height: 200))
     }
 }

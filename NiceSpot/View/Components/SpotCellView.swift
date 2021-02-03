@@ -9,13 +9,10 @@ import SwiftUI
 import CoreData
 
 struct SpotCellView: View {
+    var spotId: String
+    @ObservedObject var content: SpotCellContent = SpotCellContent()
     @Environment(\.managedObjectContext) private var viewContext
-    @ObservedObject var content: SpotCellContent
-    
-    init(spotId: String, context: NSManagedObjectContext) {
-        self.content = SpotCellContent(spotId: spotId, context: context)
-    }
-    
+
     var body: some View {
         VStack(alignment: .center, spacing: 10.0) {
             ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
@@ -36,7 +33,7 @@ struct SpotCellView: View {
             .cornerRadius(10.0)
         }
         .onAppear {
-            content.loadContent { (success) in
+            content.loadContent(spotId: spotId, context: viewContext) { (success) in
                 DispatchQueue.main.async {
                     content.isRedacted = false
                 }
@@ -51,6 +48,6 @@ struct viewPointItem_Previews: PreviewProvider {
         let context = PersistenceController.preview.container.viewContext
         let request: NSFetchRequest<Spot> = Spot.fetchRequest()
         let result = try! context.fetch(request)
-        SpotCellView(spotId: result.first!.id!, context: context)
+        SpotCellView(spotId: result.first!.id!)
     }
 }

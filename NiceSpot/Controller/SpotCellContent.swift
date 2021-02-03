@@ -11,18 +11,11 @@ import CoreData
 
 class SpotCellContent: ObservableObject {
     private let urlAssets = "https://github.com/hludovic/NiceSpot_Assets/blob/master/"
-    private let context: NSManagedObjectContext
-    private let spotId: String
     @Published var isRedacted: Bool = true
     @Published private(set) var title: String = ""
     @Published private(set) var image: Image = Image("placeholder")
 
-    init(spotId: String, context: NSManagedObjectContext) {
-        self.spotId = spotId
-        self.context = context
-    }
-
-    func loadContent(success: @escaping (Bool) -> Void) {
+    func loadContent(spotId: String, context: NSManagedObjectContext, success: @escaping (Bool) -> Void) {
         Spot.getSpot(spotId: spotId, context: context) { [unowned self] (result) in
             guard let spot = result else { return success(false) }
             DispatchQueue.main.async { self.title = spot.title! }

@@ -8,13 +8,10 @@
 import SwiftUI
 
 struct MainView: View {
-    let content = HomeContent(context: PersistenceController.shared.container.viewContext)
-    let context = PersistenceController.shared.container.viewContext
-    
+
     var body: some View {
         TabView {
-            HomeView(content: content)
-                .environment(\.managedObjectContext, context)
+            HomeView()
                 .tabItem {
                     Image(systemName: "house")
                     Text("Home")
@@ -29,7 +26,6 @@ struct MainView: View {
                     Image(systemName: "magnifyingglass")
                     Text("Search")
                 }.tag(1)
-
         }
     }
 }
@@ -37,5 +33,6 @@ struct MainView: View {
 struct MainVIew_Previews: PreviewProvider {
     static var previews: some View {
         MainView()
+            .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
 }

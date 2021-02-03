@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct HomeView: View {
-    @ObservedObject var content: HomeContent
+    @ObservedObject var content: HomeContent = HomeContent()
     @Environment(\.managedObjectContext) private var viewContext
 
     var body: some View {
@@ -16,7 +16,7 @@ struct HomeView: View {
             ScrollView(.vertical, showsIndicators: true) {
                 VStack(alignment: .leading) {
                     Button(action: {
-                        content.refreshSpots { (success) in
+                        content.refreshSpots(context: viewContext) { (success) in
                             DispatchQueue.main.async { print("REFRESHED") }
                         }
                     }, label: {
@@ -31,7 +31,7 @@ struct HomeView: View {
                         HStack {
                             ForEach(content.spots, id: \.self) { (result: Spot) in
                                 NavigationLink(destination: DetailView(content: DetailContent(spot: result))) {
-                                    SpotCellView(spotId: result.id!, context: viewContext)
+                                    SpotCellView(spotId: result.id!)
                                         .frame(width: 250)
                                         .padding(.trailing, 10.0)
                                 }
@@ -44,13 +44,15 @@ struct HomeView: View {
             }
             .navigationTitle(Text("Découvrir"))
         }
+        .onAppear {
+            content.loadSpots(context: viewContext)
+        }
     }
 }
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        let content = HomeContent(context: PersistenceController.preview.container.viewContext)
-        HomeView(content: content)
+        HomeView(content: HomeContent())
             .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
 }
