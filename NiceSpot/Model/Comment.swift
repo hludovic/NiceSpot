@@ -45,33 +45,41 @@ class Comment {
     }
     
     static func postComment(spotId: String, title: String, content: String, pseudo: String, success: @escaping (Bool) -> Void) {
-        guard title != "", content != "" else { return success(false) }
-        guard isICloudAvailable() else { return success(false) }
-        let commentRecord = CKRecord(recordType: "Comments")
-        let reference = CKRecord.Reference(recordID: CKRecord.ID(recordName: spotId), action: .deleteSelf)
-        commentRecord["title"] = title as CKRecordValue
-        commentRecord["detail"] = content as CKRecordValue
-        commentRecord["spot"] = reference
-        commentRecord["pseudo"] = pseudo
-        
-        publicDB.save(commentRecord) { (record, error) in
-            guard error == nil else {
-                print(error!.localizedDescription)
-                return success(false)
+        canPostComment(spotId: spotId, userId: "__defaultOwner__") { (canPostComment) in
+            guard canPostComment else { return success(false) }
+            guard title != "", content != "" else { return success(false) }
+            guard isICloudAvailable() else { return success(false) }
+            let commentRecord = CKRecord(recordType: "Comments")
+            let reference = CKRecord.Reference(recordID: CKRecord.ID(recordName: spotId), action: .deleteSelf)
+            commentRecord["title"] = title as CKRecordValue
+            commentRecord["detail"] = content as CKRecordValue
+            commentRecord["spot"] = reference
+            commentRecord["pseudo"] = pseudo
+            
+            publicDB.save(commentRecord) { (record, error) in
+                guard error == nil else {
+                    print(error!.localizedDescription)
+                    return success(false)
+                }
+                success(true)
             }
-            success(true)
         }
     }
 
-    static func getUserRecordID(escaping: @escaping (String?) -> Void) {
-        CKContainer(identifier: "iCloud.fr.hludovic.container1").fetchUserRecordID { (recordID, error) in
-            if let name = recordID?.recordName {
-                escaping(name)
-            } else {
-                if let error = error {
-                    print(error.localizedDescription)
-                    escaping(nil)
+    private static func canPostComment(spotId :String, userId: String, success: @escaping (Bool) -> Void) {
+        Comment.getComments(ckDatabase: publicDB, spotId: spotId) { (result) in
+            switch result {
+            case .success(let comments):
+                guard comments.count > 0 else { return success(true) }
+                for comment in comments {
+                    if comment.authorID == userId {
+                        success(true)
+                        break
+                    }
                 }
+                success(false)
+            case .failure( _):
+                success(false)
             }
         }
     }

@@ -27,7 +27,7 @@ struct CommentSheet: View {
                     Text("Cancel")
                 },
                 trailing: Button(action: {
-                    content.saveButtonDisabled = true
+                    content.saveButtonDisabled = false
                     content.saveComment()
                     content.comments.append(
                         Comment.Item(
@@ -44,6 +44,9 @@ struct CommentSheet: View {
                 .disabled(content.saveButtonDisabled)
             )
             .navigationBarTitleDisplayMode(.inline)
+            .alert(isPresented: $content.showAlert) {
+                Alert(title: Text("Error"), message: Text(content.errorMessage), dismissButton: .default(Text("Ok")))
+            }
         }
     }
 }

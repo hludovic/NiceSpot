@@ -12,16 +12,18 @@ import SwiftUI
 class DetailContent: ObservableObject {
     let spot: Item
     @Published var userComment = Comment.Item(id: "", title: "", detail: "", authorID: "", authorPseudo: "") {
-        didSet {
-            saveButtonDisabled = (userComment.title == "" || userComment.authorPseudo == "") || userComment.detail == ""
-        }
+        didSet { refreshSaveButton() }
     }
-    @Published var canComment: Bool = false
-    @Published var image: Image = Image("placeholder")
+    private var isLoading: Bool = false {
+        didSet { refreshSaveButton() }
+    }
     @Published var comments: [Comment.Item] = []
-    @Published var errorMessage: String = ""
+    @Published var showAlert: Bool = false
     @Published var saveButtonDisabled = true
     @Published var showCommentSheet: Bool = false
+    @Published private(set) var canComment: Bool = false
+    @Published private(set) var errorMessage: String = ""
+    @Published private(set) var image: Image = Image("placeholder")
 
     init(spot: Spot) {
         let coodinate = CLLocationCoordinate2D(latitude: spot.latitude, longitude: spot.longitude)
@@ -37,7 +39,7 @@ class DetailContent: ObservableObject {
         self.spot = item
     }
 
-    func canComment(comments: [Comment.Item]) {
+    private func canComment(comments: [Comment.Item]) {
         guard comments.count > 0 else {
             return DispatchQueue.main.async { self.canComment = true }
         }
@@ -47,6 +49,11 @@ class DetailContent: ObservableObject {
             }
         }
         return DispatchQueue.main.async { self.canComment = true }
+    }
+    
+    private func refreshSaveButton() {
+        let isNotFill = (userComment.title == "" || userComment.authorPseudo == "") || (userComment.detail == "")
+        saveButtonDisabled = isNotFill || isLoading
     }
 
     func loadComments() {
@@ -67,16 +74,30 @@ class DetailContent: ObservableObject {
     }
 
     func saveComment() {
+        isLoading = true
         guard
             userComment.title != "",
             userComment.authorPseudo != "",
             userComment.detail != ""
-        else { return errorMessage = " " }
+        else {
+            errorMessage = "ERROR ..."
+            showAlert = true
+            return
+        }
         Comment.postComment(spotId: spot.id, title: userComment.title, content: userComment.detail, pseudo: userComment.authorPseudo) { [unowned self] (success) in
-            guard success else { return self.errorMessage = " " }
+            guard success else {
+                DispatchQueue.main.async {
+                    print("ERROR SAVING")
+                    self.isLoading = false
+                    self.errorMessage = "ERROR SAVING"
+                    self.showAlert = true
+                }
+                return
+            }
             DispatchQueue.main.async {
-                self.saveButtonDisabled = true
+                self.isLoading = false
                 self.showCommentSheet = false
+                self.canComment = false
             }
         }
     }

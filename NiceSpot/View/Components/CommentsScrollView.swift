@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CommentsListView: View {
+struct CommentsScrollView: View {
     @State var comments: [Comment.Item]
 
     var body: some View {
@@ -53,7 +53,7 @@ struct CommentsView_Previews: PreviewProvider {
             detail: "J'ai beaucoup aimé, blabla géniale",
             authorID: "", authorPseudo: "Moi"
         )
-        CommentsListView(comments: [commentItem, commentItem, commentItem])
+        CommentsScrollView(comments: [commentItem, commentItem, commentItem])
             .previewLayout(.fixed(width: 450, height: 200))
     }
 }
