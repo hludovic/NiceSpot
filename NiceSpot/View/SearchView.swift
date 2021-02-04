@@ -12,31 +12,40 @@ struct SearchView: View {
     @State private var isSearching: Bool = false
     
     var body: some View {
-        VStack(alignment: .leading) {
-            HStack {
-                TextField("Rechercher...", text: $searchText)
-                    .padding(7)
-                    .padding(.horizontal, 25)
-                    .background(Color(.systemGray6))
-                    .cornerRadius(8)
-                    .padding()
-                    .onTapGesture {
-                        isSearching = true
+        NavigationView {
+            VStack(alignment: .leading) {
+                HStack {
+                    TextField("Rechercher...", text: $searchText)
+                        .padding(7)
+                        .padding(.horizontal, 25)
+                        .background(Color(.systemGray6))
+                        .cornerRadius(8)
+                        .padding()
+                        .onTapGesture {
+                            isSearching = true
+                        }
+                    
+                    if isSearching {
+                        Button("Annuler") {
+                            isSearching = false
+                            searchText = ""
+                        }
+                        .padding(.trailing, 20)
+                        .transition(.move(edge: .trailing))
+                        .animation(.default)
                     }
-                
-                if isSearching {
-                    Button("Annuler") {
-                        isSearching = false
-                        searchText = ""
+                }
+                Spacer()
+            }
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    VStack {
+                        Text("Rechercher").font(.headline)
                     }
-                    .padding(.trailing, 20)
-                    .transition(.move(edge: .trailing))
-                    .animation(.default)
                 }
             }
-            Spacer()
         }
-        .navigationBarTitle(Text("Recherche"))
     }
 }
 

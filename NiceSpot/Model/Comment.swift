@@ -9,7 +9,6 @@ import Foundation
 import CloudKit
 
 class Comment {
-    
     static let publicDB: CKDatabase = CKContainer(identifier: "iCloud.fr.hludovic.container1").publicCloudDatabase
 
     static func getComments(ckDatabase: CKDatabase, spotId: String, completion: @escaping (Result<[Comment.Item], Error>) -> Void) {

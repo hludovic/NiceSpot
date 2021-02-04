@@ -8,8 +8,9 @@
 import Foundation
 import CoreData
 
+// MARK: - Static Methods
 extension Spot {
-    // MARK: - Methods
+
     static func getSpot(spotId: String, context: NSManagedObjectContext, completion: @escaping (Spot?) -> Void) {
         let fetch = NSFetchRequest<Spot>(entityName: "Spot")
         fetch.predicate = NSPredicate(format: "id == %@", spotId)
@@ -25,7 +26,62 @@ extension Spot {
         } else { completion([]) }
     }
 
-    // MARK: - Enum
+    static func saveFetchedSpots(context: NSManagedObjectContext, fetchedSpots: [Fetched], completion: @escaping (Bool) -> Void) {
+        for fetchedSpot in fetchedSpots {
+            let spot = Spot(context: context)
+            spot.id = fetchedSpot.recordID.recordName
+            spot.title = fetchedSpot.title
+            spot.detail = fetchedSpot.detail
+            spot.category = fetchedSpot.category
+            spot.municipality = fetchedSpot.municipality
+            spot.imageName = fetchedSpot.pictureName
+            spot.latitude = fetchedSpot.location.coordinate.latitude
+            spot.longitude = fetchedSpot.location.coordinate.longitude
+            do {
+                try context.save()
+            } catch {
+                completion(false)
+            }
+        }
+        completion(true)
+    }
+
+    static func fetchSpots(completion: @escaping (Result<[Fetched], Error>) -> Void) {
+        let publicDB: CKDatabase = CKContainer(identifier: "iCloud.fr.hludovic.container1").publicCloudDatabase
+        let predicate = NSPredicate(value: true)
+        let sort = NSSortDescriptor(key: "creationDate", ascending: false)
+        let querry = CKQuery(recordType: "SpotCK", predicate: predicate)
+        querry.sortDescriptors = [sort]
+        let operation = CKQueryOperation(query: querry)
+        operation.desiredKeys = ["title", "detail", "category", "location", "municipality", "pictureName"]
+        var newSpotsCK: [Fetched] = []
+        operation.recordFetchedBlock = { record in
+            guard
+                let title = record["title"] as? String,
+                let detail = record["detail"] as? String,
+                let category = record["category"] as? String,
+                let location = record["location"] as? CLLocation,
+                let pictureName = record["pictureName"] as? String,
+                let municipality = record["municipality"] as? String
+            else { return completion(.failure(NiceSpotError.failFetchingSpots)) }
+            let spotFetched = Fetched(recordID: record.recordID, title: title, detail: detail, category: category, location: location, pictureName: pictureName, municipality: municipality)
+            newSpotsCK.append(spotFetched)
+        }
+        operation.queryCompletionBlock = { (cursor, error) in
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                completion(.success(newSpotsCK))
+            }
+        }
+        publicDB.add(operation)
+    }
+
+}
+
+// MARK: - Enum
+extension Spot {
+
     enum Category: String {
         case unknown = "Unknown"
         case beach = "Beach"
@@ -67,9 +123,27 @@ extension Spot {
         case vieuxFort = "Vieux-Fort"
         case vieuxHabitants = "Vieux-Habitants"
     }
+
 }
 
-struct SpotLocation: Identifiable {
-    let id = UUID()
-    let coordinate: CLLocationCoordinate2D
+// MARK: - Nested Struct
+extension Spot {
+    
+    struct Fetched {
+        let recordID: CKRecord.ID
+        let title: String
+        let detail: String
+        let category: String
+        let location: CLLocation
+        var pictureName: String
+        var municipality: String
+    }
+    
+    struct Location: Identifiable {
+        let id = UUID()
+        let coordinate: CLLocationCoordinate2D
+    }
+
 }
+
+

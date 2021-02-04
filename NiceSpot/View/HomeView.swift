@@ -47,6 +47,9 @@ struct HomeView: View {
                     )
                 }
             }
+            .alert(isPresented: $content.showAlert) {
+                Alert(title: Text("Error"), message: Text(content.errorMessage), dismissButton: .default(Text("Ok")))
+            }
         }
         .onAppear {
             content.loadSpots(context: viewContext)

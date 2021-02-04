@@ -31,7 +31,7 @@ class DetailContent: ObservableObject {
                         imageName: spot.imageName!,
                         municipality: spot.municipality!,
                         category: spot.category!,
-                        location: SpotLocation(coordinate: coodinate),
+                        location: Spot.Location(coordinate: coodinate),
                         mapLink: URL(string: "maps://?ll=\(spot.latitude),\(spot.longitude)")!
         )
         self.spot = item
@@ -97,7 +97,7 @@ extension DetailContent {
         let imageName: String
         let municipality: String
         let category: String
-        let location: SpotLocation
+        let location: Spot.Location
         let mapLink: URL
     }
 }
