@@ -15,34 +15,38 @@ struct HomeView: View {
         NavigationView {
             ScrollView(.vertical, showsIndicators: true) {
                 VStack(alignment: .leading) {
-                    Button(action: {
-                        content.refreshSpots(context: viewContext) { (success) in
-                            DispatchQueue.main.async { print("REFRESHED") }
-                        }
-                    }, label: {
-                        Text("TODO: Pull to Refresh")
-                    })
                     Text("Récent")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .padding(.horizontal)
-                        .padding(.bottom, -10)
+                        .font(.headline)
+                        .padding(.leading)
+                        .offset(y: 10.0)
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack {
                             ForEach(content.spots, id: \.self) { (result: Spot) in
                                 NavigationLink(destination: DetailView(content: DetailContent(spot: result))) {
                                     SpotCellView(spotId: result.id!)
-                                        .frame(width: 250)
-                                        .padding(.trailing, 10.0)
                                 }
                             }
                         }
+                        .padding(.horizontal)
                     }
-                    .padding()
                     Spacer()
                 }
             }
-            .navigationTitle(Text("Découvrir"))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    VStack {
+                        Text("Découvrir").font(.headline)
+                        Text(content.loadingIndicator).font(.subheadline)
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(
+                        action: { content.refreshSpots(context: viewContext) },
+                        label: { Image(systemName: "arrow.clockwise") }
+                    )
+                }
+            }
         }
         .onAppear {
             content.loadSpots(context: viewContext)

@@ -12,6 +12,16 @@ class HomeContent: ObservableObject {
     // MARK: Properties
     private let publicDB: CKDatabase = CKContainer(identifier: "iCloud.fr.hludovic.container1").publicCloudDatabase
     @Published var spots: [Spot] = []
+    @Published var loadingIndicator: String = ""
+    @Published var isSyncing: Bool = false {
+        didSet {
+            if isSyncing {
+                loadingIndicator = "Syncing..."
+            } else {
+                loadingIndicator = ""
+            }
+        }
+    }
     @Published var errorMessage: String = ""
 
     // MARK: - Init Method
@@ -24,8 +34,9 @@ class HomeContent: ObservableObject {
             self.spots = result
         } else { self.spots = [] }
     }
-
-    func refreshSpots (context: NSManagedObjectContext, success: @escaping (Bool) -> Void) {
+    
+    func refreshSpots (context: NSManagedObjectContext) {
+        isSyncing = true
         fetchSpots { [unowned self] (result) in
             switch result {
             case .success(let fetchedSpots):
@@ -36,23 +47,22 @@ class HomeContent: ObservableObject {
                                 Spot.getSpots(context: context) { [unowned self] (result) in
                                     DispatchQueue.main.async {
                                         self.spots = result
-                                        success(true)
+                                        isSyncing = false
                                     }
                                 }
                             } else {
                                 self.errorMessage = "ERROR: Not converted"
-                                success(false)
+                                isSyncing = false
                             }
                         }
                     } else {
                         self.errorMessage = "ERROR: Not cleared"
-                        success(false)
+                        isSyncing = false
                     }
                 }
-                
             case.failure(let error):
                 self.errorMessage = "ERROR: Not fetched \(error.localizedDescription)"
-                success(false)
+                isSyncing = false
             }
         }
     }

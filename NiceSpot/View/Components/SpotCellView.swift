@@ -49,5 +49,6 @@ struct viewPointItem_Previews: PreviewProvider {
         let request: NSFetchRequest<Spot> = Spot.fetchRequest()
         let result = try! context.fetch(request)
         SpotCellView(spotId: result.first!.id!)
+            .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
 }
