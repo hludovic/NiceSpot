@@ -8,7 +8,7 @@
 import SwiftUI
 import CoreData
 
-struct CommentSheet: View {
+struct PostCommentView: View {
     @ObservedObject var content: DetailContent
     
     var body: some View {
@@ -57,6 +57,6 @@ struct CommentSheet_Previews: PreviewProvider {
         let request: NSFetchRequest<Spot> = Spot.fetchRequest()
         let result = try! context.fetch(request)
         let spotDetailContent = DetailContent(spot: result.first!)
-        CommentSheet(content: spotDetailContent)
+        PostCommentView(content: spotDetailContent)
     }
 }

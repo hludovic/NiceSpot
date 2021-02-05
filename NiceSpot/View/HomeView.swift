@@ -21,9 +21,9 @@ struct HomeView: View {
                         .offset(y: 10.0)
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack {
-                            ForEach(content.spots, id: \.self) { (result: Spot) in
+                            ForEach(content.spots) { (result: Spot) in
                                 NavigationLink(destination: DetailView(content: DetailContent(spot: result))) {
-                                    SpotCellView(spotId: result.id!)
+                                    SpotCellView(spot: result)
                                 }
                             }
                         }

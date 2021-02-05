@@ -46,7 +46,7 @@ extension Spot {
         completion(true)
     }
 
-    static func fetchSpots(completion: @escaping (Result<[Fetched], Error>) -> Void) {
+    static func fetchSpots(completion: @escaping ([Fetched]?) -> Void) {
         let publicDB: CKDatabase = CKContainer(identifier: "iCloud.fr.hludovic.container1").publicCloudDatabase
         let predicate = NSPredicate(value: true)
         let sort = NSSortDescriptor(key: "creationDate", ascending: false)
@@ -63,16 +63,13 @@ extension Spot {
                 let location = record["location"] as? CLLocation,
                 let pictureName = record["pictureName"] as? String,
                 let municipality = record["municipality"] as? String
-            else { return completion(.failure(NiceSpotError.failFetchingSpots)) }
+            else { return completion(nil) }
             let spotFetched = Fetched(recordID: record.recordID, title: title, detail: detail, category: category, location: location, pictureName: pictureName, municipality: municipality)
             newSpotsCK.append(spotFetched)
         }
         operation.queryCompletionBlock = { (cursor, error) in
-            if let error = error {
-                completion(.failure(error))
-            } else {
-                completion(.success(newSpotsCK))
-            }
+            guard error == nil else { return completion(nil) }
+            completion(newSpotsCK)
         }
         publicDB.add(operation)
     }

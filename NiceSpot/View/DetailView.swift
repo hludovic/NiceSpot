@@ -60,7 +60,7 @@ struct DetailView: View {
                 })
                 .padding(.horizontal, 10)
             if content.comments.count != 0 {
-                CommentsScrollView(comments: content.comments)
+                CommentsView(comments: content.comments)
             }
             if content.canComment == true {
                 Button(action: {
@@ -71,7 +71,7 @@ struct DetailView: View {
                         Text("Write a comment")
                     }
                     .sheet(isPresented: self.$content.showCommentSheet) {
-                        CommentSheet(content: self.content)
+                        PostCommentView(content: self.content)
                     }
                 })
             } else {
