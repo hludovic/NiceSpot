@@ -106,7 +106,9 @@ class DetailContent: ObservableObject {
     func loadImage() {
         imageManager.getUIImage(imageName: spot.imageName) { (uiImage) in
             guard let uiImage = uiImage else { return }
-            self.image = Image(uiImage: uiImage)
+            DispatchQueue.main.async {
+                self.image = Image(uiImage: uiImage)
+            }
         }
     }
 }

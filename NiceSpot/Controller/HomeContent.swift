@@ -43,6 +43,7 @@ class HomeContent: ObservableObject {
                     }
                     return
                 }
+                DispatchQueue.main.async { self.spots = [] }
                 Spot.saveFetchedSpots(context: context, fetchedSpots: fetchedSpots) { [unowned self] (saved) in
                     guard saved else {
                         DispatchQueue.main.async {
