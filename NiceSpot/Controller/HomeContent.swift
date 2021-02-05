@@ -73,7 +73,7 @@ private extension HomeContent {
         } catch {
             completion(false)
         }
-        NiceSpotApp.imageCache.removeAllObjects()
+        ImageManager.imageCache.removeAllObjects()
     }
 
 }

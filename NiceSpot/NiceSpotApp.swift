@@ -9,7 +9,6 @@ import SwiftUI
 
 @main
 struct NiceSpotApp: App {
-    static let imageCache = NSCache<NSString, UIImage>()
     let persistenceController = PersistenceController.shared
 
     var body: some Scene {

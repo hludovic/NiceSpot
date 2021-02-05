@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		431249D825CD8DB7008CC1D0 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 431249D725CD8DB7008CC1D0 /* ImageManager.swift */; };
 		43218A1E25B4804800B7C28B /* SpotCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43218A1A25B4804800B7C28B /* SpotCellView.swift */; };
 		4322557025BFB7720043E4E3 /* NiceSpotError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4322556F25BFB7720043E4E3 /* NiceSpotError.swift */; };
 		4322557425BFB7CF0043E4E3 /* Spot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4322557325BFB7CF0043E4E3 /* Spot.swift */; };
@@ -30,6 +31,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		431249D725CD8DB7008CC1D0 /* ImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
 		43218A1A25B4804800B7C28B /* SpotCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotCellView.swift; sourceTree = "<group>"; };
 		4322556F25BFB7720043E4E3 /* NiceSpotError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NiceSpotError.swift; sourceTree = "<group>"; };
 		4322557325BFB7CF0043E4E3 /* Spot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spot.swift; sourceTree = "<group>"; };
@@ -143,6 +145,7 @@
 				438BEF1F25B47EBF00CA5042 /* Persistence.swift */,
 				4322557325BFB7CF0043E4E3 /* Spot.swift */,
 				438A67F625C6438D00BB262B /* Comment.swift */,
+				431249D725CD8DB7008CC1D0 /* ImageManager.swift */,
 				438BEF2125B47EBF00CA5042 /* NiceSpot.xcdatamodeld */,
 				4322556F25BFB7720043E4E3 /* NiceSpotError.swift */,
 			);
@@ -231,6 +234,7 @@
 			files = (
 				43B538E825BA421E00321B05 /* MapView.swift in Sources */,
 				436B580625B5FE5B0020883B /* SpotCellContent.swift in Sources */,
+				431249D825CD8DB7008CC1D0 /* ImageManager.swift in Sources */,
 				43F705AE25C757FD00F4A81B /* CommentsScrollView.swift in Sources */,
 				438089BD25C85CF8002C9919 /* CommentSheet.swift in Sources */,
 				438BEF2025B47EBF00CA5042 /* Persistence.swift in Sources */,

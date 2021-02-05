@@ -17,6 +17,7 @@ class DetailContent: ObservableObject {
     private var isLoading: Bool = false {
         didSet { refreshSaveButton() }
     }
+    private let imageManager = ImageManager()
     @Published var comments: [Comment.Item] = []
     @Published var showAlert: Bool = false
     @Published var saveButtonDisabled = true
@@ -103,8 +104,9 @@ class DetailContent: ObservableObject {
     }
 
     func loadImage() {
-        if let imageCached = NiceSpotApp.imageCache.object(forKey: NSString(string: spot.imageName)) {
-            image = Image(uiImage: imageCached)
+        imageManager.getUIImage(imageName: spot.imageName) { (uiImage) in
+            guard let uiImage = uiImage else { return }
+            self.image = Image(uiImage: uiImage)
         }
     }
 }
