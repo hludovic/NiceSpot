@@ -13,7 +13,7 @@ struct HomeView: View {
 
     var body: some View {
         NavigationView {
-            ScrollView(.vertical, showsIndicators: true) {
+            List {
                 VStack(alignment: .leading) {
                     Text("Récent")
                         .font(.headline)
@@ -27,10 +27,11 @@ struct HomeView: View {
                                 }
                             }
                         }
-                        .padding(.horizontal)
+                        .padding(.horizontal, 8)
                     }
-                    Spacer()
                 }
+                .padding(.bottom)
+                .listRowInsets(EdgeInsets())
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

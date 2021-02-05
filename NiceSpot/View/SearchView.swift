@@ -24,7 +24,6 @@ struct SearchView: View {
                         .onTapGesture {
                             isSearching = true
                         }
-                    
                     if isSearching {
                         Button("Annuler") {
                             isSearching = false

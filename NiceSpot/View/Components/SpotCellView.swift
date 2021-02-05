@@ -11,7 +11,7 @@ import CoreData
 struct SpotCellView: View {
     @ObservedObject var content: SpotCellContent
     @Environment(\.managedObjectContext) private var viewContext
-    
+
     init(spot: Spot) {
         self.content = SpotCellContent(spot: spot)
     }
@@ -24,7 +24,6 @@ struct SpotCellView: View {
                     .aspectRatio(contentMode: .fill)
                     .frame(width: 250.0, height: 150.0)
                     .clipped()
-                
                 Text(content.title)
                     .padding(.top, 5)
                     .padding(.bottom, 5)
@@ -35,7 +34,6 @@ struct SpotCellView: View {
             }
             .cornerRadius(10.0)
         }
-        .onAppear { content.loadContent() }
         .redacted(reason: content.isRedacted ? .placeholder: .init())
     }
 }

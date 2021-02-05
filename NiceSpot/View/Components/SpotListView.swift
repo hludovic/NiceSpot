@@ -49,9 +49,7 @@ struct SpotItemView: View {
                 .font(.subheadline)
             }
         }
-        .onAppear { content.loadContent() }
         .redacted(reason: content.isRedacted ? .placeholder: .init())
-        
     }
 }
 

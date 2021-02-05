@@ -12,6 +12,7 @@
 		43218A1E25B4804800B7C28B /* SpotCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43218A1A25B4804800B7C28B /* SpotCellView.swift */; };
 		4322557425BFB7CF0043E4E3 /* Spot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4322557325BFB7CF0043E4E3 /* Spot.swift */; };
 		4334894825B7AB310063AB77 /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4334894725B7AB310063AB77 /* DetailView.swift */; };
+		4338409025CDDA320057AE85 /* SearchContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4338408F25CDDA320057AE85 /* SearchContent.swift */; };
 		4342798A25B5282300E0DE2D /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4342798925B5282300E0DE2D /* CloudKit.framework */; };
 		436B1DD625C8BBA70004863A /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436B1DD525C8BBA70004863A /* MainView.swift */; };
 		436B580625B5FE5B0020883B /* SpotCellContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436B580525B5FE5B0020883B /* SpotCellContent.swift */; };
@@ -36,6 +37,7 @@
 		43218A1A25B4804800B7C28B /* SpotCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotCellView.swift; sourceTree = "<group>"; };
 		4322557325BFB7CF0043E4E3 /* Spot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spot.swift; sourceTree = "<group>"; };
 		4334894725B7AB310063AB77 /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
+		4338408F25CDDA320057AE85 /* SearchContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchContent.swift; sourceTree = "<group>"; };
 		4342798725B5282000E0DE2D /* NiceSpot.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NiceSpot.entitlements; sourceTree = "<group>"; };
 		4342798925B5282300E0DE2D /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		436B1DD525C8BBA70004863A /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -83,6 +85,7 @@
 				436E0A5325B5154000BD456D /* HomeContent.swift */,
 				436B580525B5FE5B0020883B /* SpotCellContent.swift */,
 				43D0648325B7E27900AC69A6 /* DetailContent.swift */,
+				4338408F25CDDA320057AE85 /* SearchContent.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -238,6 +241,7 @@
 				431249D825CD8DB7008CC1D0 /* ImageManager.swift in Sources */,
 				43F705AE25C757FD00F4A81B /* CommentsView.swift in Sources */,
 				438089BD25C85CF8002C9919 /* PostCommentView.swift in Sources */,
+				4338409025CDDA320057AE85 /* SearchContent.swift in Sources */,
 				438BEF2025B47EBF00CA5042 /* Persistence.swift in Sources */,
 				436B1DD625C8BBA70004863A /* MainView.swift in Sources */,
 				4334894825B7AB310063AB77 /* DetailView.swift in Sources */,
