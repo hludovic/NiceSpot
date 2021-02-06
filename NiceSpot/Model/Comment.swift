@@ -9,8 +9,18 @@ import Foundation
 import CloudKit
 
 class Comment {
+    // MARK: - Public Static Property
+
     static let publicDB: CKDatabase = CKContainer(identifier: "iCloud.fr.hludovic.container1").publicCloudDatabase
 
+    // MARK: - Public Static methods
+    
+    /// Retrieves all the comments posted on a Spot.
+    /// - Parameters:
+    ///   - ckDatabase: The CKDatabase used for this task.
+    ///   - spotId: The ID of the spot you wish to querry.
+    ///   - completion: The callback called after retrieval.
+    /// Returns a table of Comment.Item containing the result of the query, or an Error if the task failed.
     static func getComments(ckDatabase: CKDatabase, spotId: String, completion: @escaping (Result<[Comment.Item], Error>) -> Void) {
         let record = CKRecord.ID(recordName: spotId)
         let reference = CKRecord.Reference(recordID: record, action: .none)
@@ -19,7 +29,7 @@ class Comment {
         let operation = CKQueryOperation(query: querry)
         operation.desiredKeys = ["title", "detail", "pseudo"]
         var commentList: [Item] = []
-        
+
         operation.recordFetchedBlock = { record in
             guard
                 let title = record["title"] as? String,
@@ -30,7 +40,7 @@ class Comment {
             let commentFetched = Item(id: record.recordID.recordName,title: title, detail: detail, authorID: authorID, authorPseudo: authorPseudo)
             commentList.append(commentFetched)
         }
-        
+
         operation.queryCompletionBlock = { cursor, error in
             if let error = error {
                 completion(.failure(error))
@@ -40,10 +50,14 @@ class Comment {
         }
         ckDatabase.add(operation)
     }
-
-    static func getUserComment(spotId: String, userId: String, result: @escaping ([Comment.Item]) -> Void ) {
-    }
     
+    /// Post a comment on a spot.
+    /// - Parameters:
+    ///   - spotId: The ID of the spot to which this comment relates.
+    ///   - title: The title of the comment.
+    ///   - content: The content of the comment.
+    ///   - pseudo: The pseudonym of the author of the comment.
+    ///   - success: Dismiss if the task has been completed successfully.
     static func postComment(spotId: String, title: String, content: String, pseudo: String, success: @escaping (Bool) -> Void) {
         canPostComment(spotId: spotId, userId: "__defaultOwner__") { (canPostComment) in
             guard canPostComment else { return success(false) }
@@ -55,15 +69,17 @@ class Comment {
             commentRecord["detail"] = content as CKRecordValue
             commentRecord["spot"] = reference
             commentRecord["pseudo"] = pseudo
-            
             publicDB.save(commentRecord) { (record, error) in
                 guard error == nil else { return success(false) }
                 success(true)
             }
         }
     }
+}
 
-    private static func canPostComment(spotId :String, userId: String, success: @escaping (Bool) -> Void) {
+// MARK: - Private Static methods
+private extension Comment {
+    static func canPostComment(spotId :String, userId: String, success: @escaping (Bool) -> Void) {
         Comment.getComments(ckDatabase: publicDB, spotId: spotId) { (result) in
             switch result {
             case .success(let comments):
@@ -81,14 +97,18 @@ class Comment {
         }
     }
 
-    private static func isICloudAvailable() -> Bool{
+    static func isICloudAvailable() -> Bool{
         if let _ = FileManager.default.ubiquityIdentityToken{
             return true
         } else {
             return false
         }
     }
+}
 
+// MARK: - Nested Struct
+extension Comment {
+    /// Description
     struct Item: Identifiable {
         let id: String
         var title: String
@@ -96,4 +116,5 @@ class Comment {
         let authorID: String
         var authorPseudo: String
     }
+
 }

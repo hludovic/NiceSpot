@@ -8,24 +8,26 @@
 import Foundation
 import CoreData
 
-// MARK: - Static Methods
 extension Spot {
+    // MARK: - Static Methods
 
-    static func getSpot(spotId: String, context: NSManagedObjectContext, completion: @escaping (Spot?) -> Void) {
-        let fetch = NSFetchRequest<Spot>(entityName: "Spot")
-        fetch.predicate = NSPredicate(format: "id == %@", spotId)
-        guard let result = try? context.fetch(fetch) else { return completion(nil) }
-        guard let spot = result.first else { return completion(nil) }
-        completion(spot)
-    }
-
+    /// This static method returns all values contained in the Spot entity.
+    /// - Parameters:
+    ///   - context: The NSManagedObjectContext used for this task.
+    ///   - completion: Returns an array of Spot.
     static func getSpots(context: NSManagedObjectContext, completion: @escaping ([Spot]) -> Void) {
         let request: NSFetchRequest<Spot> = Spot.fetchRequest()
         if let result = try? context.fetch(request) {
             completion(result)
         } else { completion([]) }
     }
-
+    
+    /// Retrieves the Spots whose title contains the characters passed in parameter.
+    /// - Parameters:
+    ///   - context: The NSManagedObjectContext used for this task.
+    ///   - titleContains: The characters we are going to search for.
+    ///   - completion: The callback called after retrieval.
+    /// Returns a table of Spot.Fetched containing the result of the query, or an empty array if the task failed.
     static func searchSpots(context: NSManagedObjectContext, titleContains: String, completion: @escaping ([Spot]) -> Void) {
         let request: NSFetchRequest<Spot> = Spot.fetchRequest()
         let predicate = NSPredicate(format: "title CONTAINS[cd] %@", titleContains)
@@ -34,7 +36,12 @@ extension Spot {
             completion(result)
         } else { completion([])}
     }
-
+    
+    /// This static method saves a table of FetchedSpots in CoreData, using the Spot entity.
+    /// - Parameters:
+    ///   - context: The NSManagedObjectContext used for this task.
+    ///   - fetchedSpots: The FetchedSpot array to be saved in core data.
+    ///   - completion: Returns true if the task is performed with success.
     static func saveFetchedSpots(context: NSManagedObjectContext, fetchedSpots: [Fetched], completion: @escaping (Bool) -> Void) {
         for fetchedSpot in fetchedSpots {
             let spot = Spot(context: context)
@@ -54,7 +61,10 @@ extension Spot {
         }
         completion(true)
     }
-
+    
+    /// This static method downloads all values stored in the public CLoudKit database.
+    /// - Parameter completion: The callback called after retrieval.
+    /// Returns a table of Spot.Fetched containing the result of the query, or an empty array if the task failed.
     static func fetchSpots(completion: @escaping ([Fetched]) -> Void) {
         let publicDB: CKDatabase = CKContainer(identifier: "iCloud.fr.hludovic.container1").publicCloudDatabase
         let predicate = NSPredicate(value: true)
@@ -87,7 +97,7 @@ extension Spot {
 
 // MARK: - Enum
 extension Spot {
-
+    /// The list of categories in which a spot can be placed.
     enum Category: String {
         case unknown = "Unknown"
         case beach = "Beach"
@@ -95,6 +105,7 @@ extension Spot {
         case river = "River"
     }
 
+    /// The list of municipalities in which a spot can be found.
     enum Municipality: String, CaseIterable {
         case basseTerre = "Basse-Terre"
         case anseBertrand = "Anse-Bertrand"
@@ -134,7 +145,7 @@ extension Spot {
 
 // MARK: - Nested Struct
 extension Spot {
-    
+    /// A struct representing the result of a Spot request passed on CloudKit.
     struct Fetched {
         let recordID: CKRecord.ID
         let title: String
@@ -145,6 +156,7 @@ extension Spot {
         var municipality: String
     }
     
+    /// A structure representing a location that can also be used as annotationItems in a Map.
     struct Location: Identifiable {
         let id = UUID()
         let coordinate: CLLocationCoordinate2D
