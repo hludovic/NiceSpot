@@ -17,6 +17,7 @@
 		436B1DD625C8BBA70004863A /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436B1DD525C8BBA70004863A /* MainView.swift */; };
 		436B580625B5FE5B0020883B /* SpotCellContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436B580525B5FE5B0020883B /* SpotCellContent.swift */; };
 		436E0A5425B5154000BD456D /* HomeContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436E0A5325B5154000BD456D /* HomeContent.swift */; };
+		437A8EE125CF0F07000AB5EB /* HomeContentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 437A8EE025CF0F07000AB5EB /* HomeContentTests.swift */; };
 		438089BD25C85CF8002C9919 /* PostCommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 438089BC25C85CF8002C9919 /* PostCommentView.swift */; };
 		438A67F725C6438D00BB262B /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 438A67F625C6438D00BB262B /* Comment.swift */; };
 		438BEF1725B47EBE00CA5042 /* NiceSpotApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 438BEF1625B47EBE00CA5042 /* NiceSpotApp.swift */; };
@@ -31,6 +32,16 @@
 		43F705AE25C757FD00F4A81B /* CommentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43F705AD25C757FD00F4A81B /* CommentsView.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		437A8ED725CF0E8A000AB5EB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 438BEF0B25B47EBE00CA5042 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 438BEF1225B47EBE00CA5042;
+			remoteInfo = NiceSpot;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		431249D725CD8DB7008CC1D0 /* ImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
 		431249DD25CDA306008CC1D0 /* SearchSubView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchSubView.swift; sourceTree = "<group>"; };
@@ -43,6 +54,9 @@
 		436B1DD525C8BBA70004863A /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		436B580525B5FE5B0020883B /* SpotCellContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotCellContent.swift; sourceTree = "<group>"; };
 		436E0A5325B5154000BD456D /* HomeContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeContent.swift; sourceTree = "<group>"; };
+		437A8ED225CF0E8A000AB5EB /* NiceSpotTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NiceSpotTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		437A8ED625CF0E8A000AB5EB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		437A8EE025CF0F07000AB5EB /* HomeContentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeContentTests.swift; sourceTree = "<group>"; };
 		438089BC25C85CF8002C9919 /* PostCommentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCommentView.swift; sourceTree = "<group>"; };
 		438A67F625C6438D00BB262B /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		438BEF1325B47EBE00CA5042 /* NiceSpot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NiceSpot.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -60,6 +74,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		437A8ECF25CF0E8A000AB5EB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		438BEF1025B47EBE00CA5042 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -79,6 +100,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		437A8ED325CF0E8A000AB5EB /* NiceSpotTests */ = {
+			isa = PBXGroup;
+			children = (
+				437A8ED625CF0E8A000AB5EB /* Info.plist */,
+				437A8EE025CF0F07000AB5EB /* HomeContentTests.swift */,
+			);
+			path = NiceSpotTests;
+			sourceTree = "<group>";
+		};
 		438AED8625BDFAFC005EF804 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
@@ -94,6 +124,7 @@
 			isa = PBXGroup;
 			children = (
 				438BEF1525B47EBE00CA5042 /* NiceSpot */,
+				437A8ED325CF0E8A000AB5EB /* NiceSpotTests */,
 				438BEF1425B47EBE00CA5042 /* Products */,
 				4342798825B5282300E0DE2D /* Frameworks */,
 			);
@@ -103,6 +134,7 @@
 			isa = PBXGroup;
 			children = (
 				438BEF1325B47EBE00CA5042 /* NiceSpot.app */,
+				437A8ED225CF0E8A000AB5EB /* NiceSpotTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -169,6 +201,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		437A8ED125CF0E8A000AB5EB /* NiceSpotTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 437A8EDB25CF0E8A000AB5EB /* Build configuration list for PBXNativeTarget "NiceSpotTests" */;
+			buildPhases = (
+				437A8ECE25CF0E8A000AB5EB /* Sources */,
+				437A8ECF25CF0E8A000AB5EB /* Frameworks */,
+				437A8ED025CF0E8A000AB5EB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				437A8ED825CF0E8A000AB5EB /* PBXTargetDependency */,
+			);
+			name = NiceSpotTests;
+			productName = NiceSpotTests;
+			productReference = 437A8ED225CF0E8A000AB5EB /* NiceSpotTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		438BEF1225B47EBE00CA5042 /* NiceSpot */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 438BEF2725B47EBF00CA5042 /* Build configuration list for PBXNativeTarget "NiceSpot" */;
@@ -192,9 +242,14 @@
 		438BEF0B25B47EBE00CA5042 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1230;
+				LastSwiftUpdateCheck = 1240;
 				LastUpgradeCheck = 1230;
 				TargetAttributes = {
+					437A8ED125CF0E8A000AB5EB = {
+						CreatedOnToolsVersion = 12.4;
+						LastSwiftMigration = 1240;
+						TestTargetID = 438BEF1225B47EBE00CA5042;
+					};
 					438BEF1225B47EBE00CA5042 = {
 						CreatedOnToolsVersion = 12.3;
 					};
@@ -214,11 +269,19 @@
 			projectRoot = "";
 			targets = (
 				438BEF1225B47EBE00CA5042 /* NiceSpot */,
+				437A8ED125CF0E8A000AB5EB /* NiceSpotTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		437A8ED025CF0E8A000AB5EB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		438BEF1125B47EBE00CA5042 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -231,6 +294,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		437A8ECE25CF0E8A000AB5EB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				437A8EE125CF0F07000AB5EB /* HomeContentTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		438BEF0F25B47EBE00CA5042 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -259,7 +330,58 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		437A8ED825CF0E8A000AB5EB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 438BEF1225B47EBE00CA5042 /* NiceSpot */;
+			targetProxy = 437A8ED725CF0E8A000AB5EB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		437A8ED925CF0E8A000AB5EB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = W8A2PVHCN3;
+				INFOPLIST_FILE = NiceSpotTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = fr.hludovic.NiceSpotTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NiceSpot.app/NiceSpot";
+			};
+			name = Debug;
+		};
+		437A8EDA25CF0E8A000AB5EB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = W8A2PVHCN3;
+				INFOPLIST_FILE = NiceSpotTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = fr.hludovic.NiceSpotTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NiceSpot.app/NiceSpot";
+			};
+			name = Release;
+		};
 		438BEF2525B47EBF00CA5042 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -425,6 +547,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		437A8EDB25CF0E8A000AB5EB /* Build configuration list for PBXNativeTarget "NiceSpotTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				437A8ED925CF0E8A000AB5EB /* Debug */,
+				437A8EDA25CF0E8A000AB5EB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		438BEF0E25B47EBE00CA5042 /* Build configuration list for PBXProject "NiceSpot" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
