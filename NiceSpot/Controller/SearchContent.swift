@@ -13,9 +13,7 @@ class SearchContent: ObservableObject {
     @Published var spots: [Spot] = []
     @Published var isSearching: Bool = false
     @Published var searchText: String = "" {
-        didSet {
-            perform()
-        }
+        didSet { perform() }
     }
     
     init(context: NSManagedObjectContext) {
@@ -23,9 +21,8 @@ class SearchContent: ObservableObject {
     }
     
     func perform() {
-        Spot.searchSpots(context: context, titleContains: searchText) { (spots) in
+        Spot.searchSpots(context: context, titleContains: searchText) { [unowned self] (spots) in
             self.spots = spots
         }
     }
-    
 }

@@ -14,43 +14,7 @@ struct SearchView: View {
     
     var body: some View {
         NavigationView {
-            VStack {
-                HStack {
-                    TextField("Search...", text: $content.searchText)
-                        .padding(7)
-                        .padding(.horizontal, 25)
-                        .background(Color(.systemGray6))
-                        .cornerRadius(8)
-                        .padding()
-                        .onTapGesture {
-                            content.isSearching = true
-                        }
-                    if content.isSearching {
-                        Button("Cancel") {
-                            content.isSearching = false
-                            content.searchText = ""
-                        }
-                        .padding(.trailing, 20)
-                        .transition(.move(edge: .trailing))
-                        .animation(.default)
-                    }
-                }
-                
-                List {
-                    ForEach(content.spots) { spot in
-                        NavigationLink(
-                            destination:
-                                DetailView(content: DetailContent(spot: spot)),
-                            label: {
-                                SpotItemView(content: SpotCellContent(spot: spot))
-                            }
-                        )
-                    }
-                }
-                .listStyle(PlainListStyle())
-                
-                Spacer()
-            }
+            SearchSubView(content: SearchContent(context: viewContext))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
@@ -66,5 +30,6 @@ struct SearchView: View {
 struct SearchView_Previews: PreviewProvider {
     static var previews: some View {
         SearchView()
+            .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
 }

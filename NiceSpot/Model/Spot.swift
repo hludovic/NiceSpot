@@ -27,7 +27,6 @@ extension Spot {
     }
 
     static func searchSpots(context: NSManagedObjectContext, titleContains: String, completion: @escaping ([Spot]) -> Void) {
-        print(titleContains)
         let request: NSFetchRequest<Spot> = Spot.fetchRequest()
         let predicate = NSPredicate(format: "title CONTAINS[cd] %@", titleContains)
         request.predicate = predicate

@@ -70,8 +70,8 @@ struct DetailView: View {
                         Image(systemName: "square.and.pencil")
                         Text("Write a comment")
                     }
-                    .sheet(isPresented: self.$content.showCommentSheet) {
-                        PostCommentView(content: self.content)
+                    .sheet(isPresented: $content.showCommentSheet) {
+                        PostCommentView(content: content)
                     }
                 })
             } else {
@@ -89,7 +89,6 @@ struct DetailView: View {
 struct EditCommentButton: View {
     var body: some View {
         Button(action: {
-            print("AA")
         }, label: {
             HStack {
                 Image(systemName: "square.and.pencil")

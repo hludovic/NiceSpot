@@ -88,7 +88,6 @@ class DetailContent: ObservableObject {
         Comment.postComment(spotId: spot.id, title: userComment.title, content: userComment.detail, pseudo: userComment.authorPseudo) { [unowned self] (success) in
             guard success else {
                 DispatchQueue.main.async {
-                    print("ERROR SAVING")
                     self.isLoading = false
                     self.errorMessage = "ERROR SAVING"
                     self.showAlert = true

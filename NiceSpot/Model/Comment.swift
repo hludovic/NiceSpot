@@ -50,17 +50,14 @@ class Comment {
             guard title != "", content != "" else { return success(false) }
             guard isICloudAvailable() else { return success(false) }
             let commentRecord = CKRecord(recordType: "Comments")
-            let reference = CKRecord.Reference(recordID: CKRecord.ID(recordName: spotId), action: .deleteSelf)
+            let reference = CKRecord.Reference(recordID: CKRecord.ID(recordName: spotId), action: .none)
             commentRecord["title"] = title as CKRecordValue
             commentRecord["detail"] = content as CKRecordValue
             commentRecord["spot"] = reference
             commentRecord["pseudo"] = pseudo
             
             publicDB.save(commentRecord) { (record, error) in
-                guard error == nil else {
-                    print(error!.localizedDescription)
-                    return success(false)
-                }
+                guard error == nil else { return success(false) }
                 success(true)
             }
         }
