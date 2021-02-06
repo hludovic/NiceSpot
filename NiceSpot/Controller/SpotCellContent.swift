@@ -28,11 +28,12 @@ class SpotCellContent: ObservableObject {
     }
 
     private func loadImage(imageName: String) {
-        imageManager.getUIImage(imageName: imageName) { [unowned self] (uiImage) in
+        imageManager.getUIImage(imageName: imageName) { [weak self] (uiImage) in
+            guard let newObject = self else { return }
             guard let uiImage = uiImage else { return }
             DispatchQueue.main.async {
-                self.image = Image(uiImage: uiImage)
-                self.isRedacted = false
+                newObject.image = Image(uiImage: uiImage)
+                newObject.isRedacted = false
             }
         }
     }

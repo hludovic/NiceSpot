@@ -19,11 +19,21 @@ extension Spot {
         completion(spot)
     }
 
-    static func getSpots(context: NSManagedObjectContext, completion: @escaping ([Spot]) -> Void ) {
+    static func getSpots(context: NSManagedObjectContext, completion: @escaping ([Spot]) -> Void) {
         let request: NSFetchRequest<Spot> = Spot.fetchRequest()
         if let result = try? context.fetch(request) {
             completion(result)
         } else { completion([]) }
+    }
+
+    static func searchSpots(context: NSManagedObjectContext, titleContains: String, completion: @escaping ([Spot]) -> Void) {
+        print(titleContains)
+        let request: NSFetchRequest<Spot> = Spot.fetchRequest()
+        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", titleContains)
+        request.predicate = predicate
+        if let result = try? context.fetch(request) {
+            completion(result)
+        } else { completion([])}
     }
 
     static func saveFetchedSpots(context: NSManagedObjectContext, fetchedSpots: [Fetched], completion: @escaping (Bool) -> Void) {
@@ -46,7 +56,7 @@ extension Spot {
         completion(true)
     }
 
-    static func fetchSpots(completion: @escaping ([Fetched]?) -> Void) {
+    static func fetchSpots(completion: @escaping ([Fetched]) -> Void) {
         let publicDB: CKDatabase = CKContainer(identifier: "iCloud.fr.hludovic.container1").publicCloudDatabase
         let predicate = NSPredicate(value: true)
         let sort = NSSortDescriptor(key: "creationDate", ascending: false)
@@ -63,12 +73,12 @@ extension Spot {
                 let location = record["location"] as? CLLocation,
                 let pictureName = record["pictureName"] as? String,
                 let municipality = record["municipality"] as? String
-            else { return completion(nil) }
+            else { return completion([]) }
             let spotFetched = Fetched(recordID: record.recordID, title: title, detail: detail, category: category, location: location, pictureName: pictureName, municipality: municipality)
             newSpotsCK.append(spotFetched)
         }
         operation.queryCompletionBlock = { (cursor, error) in
-            guard error == nil else { return completion(nil) }
+            guard error == nil else { return completion([]) }
             completion(newSpotsCK)
         }
         publicDB.add(operation)

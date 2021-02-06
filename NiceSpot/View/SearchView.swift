@@ -6,34 +6,49 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct SearchView: View {
-    @State private var searchText: String = ""
-    @State private var isSearching: Bool = false
+    @Environment(\.managedObjectContext) private var viewContext
+    @ObservedObject var content = SearchContent(context: PersistenceController.shared.container.viewContext)
     
     var body: some View {
         NavigationView {
-            VStack(alignment: .leading) {
+            VStack {
                 HStack {
-                    TextField("Rechercher...", text: $searchText)
+                    TextField("Search...", text: $content.searchText)
                         .padding(7)
                         .padding(.horizontal, 25)
                         .background(Color(.systemGray6))
                         .cornerRadius(8)
                         .padding()
                         .onTapGesture {
-                            isSearching = true
+                            content.isSearching = true
                         }
-                    if isSearching {
-                        Button("Annuler") {
-                            isSearching = false
-                            searchText = ""
+                    if content.isSearching {
+                        Button("Cancel") {
+                            content.isSearching = false
+                            content.searchText = ""
                         }
                         .padding(.trailing, 20)
                         .transition(.move(edge: .trailing))
                         .animation(.default)
                     }
                 }
+                
+                List {
+                    ForEach(content.spots) { spot in
+                        NavigationLink(
+                            destination:
+                                DetailView(content: DetailContent(spot: spot)),
+                            label: {
+                                SpotItemView(content: SpotCellContent(spot: spot))
+                            }
+                        )
+                    }
+                }
+                .listStyle(PlainListStyle())
+                
                 Spacer()
             }
             .navigationBarTitleDisplayMode(.inline)

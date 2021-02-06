@@ -9,7 +9,7 @@ import SwiftUI
 import CoreData
 
 struct SpotListView: View {
-    var spots: [Spot]
+    @State var spots: [Spot]
 
     var body: some View {
         List {

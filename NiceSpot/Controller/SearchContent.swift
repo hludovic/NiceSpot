@@ -6,7 +6,26 @@
 //
 
 import Foundation
+import CoreData
 
-class SearchContent {
+class SearchContent: ObservableObject {
+    private let context: NSManagedObjectContext
+    @Published var spots: [Spot] = []
+    @Published var isSearching: Bool = false
+    @Published var searchText: String = "" {
+        didSet {
+            perform()
+        }
+    }
+    
+    init(context: NSManagedObjectContext) {
+        self.context = context
+    }
+    
+    func perform() {
+        Spot.searchSpots(context: context, titleContains: searchText) { (spots) in
+            self.spots = spots
+        }
+    }
     
 }

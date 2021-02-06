@@ -25,8 +25,8 @@ class HomeContent: ObservableObject {
 
     func refreshSpots (context: NSManagedObjectContext) {
         loadingIndicator = "Syncing..."
-        Spot.fetchSpots { [unowned self] (fetchedSpots) in
-            guard let fetchedSpots = fetchedSpots else {
+        Spot.fetchSpots() { [unowned self] (fetchedSpots) in
+            guard fetchedSpots.count != 0 else {
                 DispatchQueue.main.async {
                     errorMessage = "ERROR: Not fetched"
                     showAlert = true
