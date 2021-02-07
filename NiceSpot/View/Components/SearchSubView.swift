@@ -10,7 +10,7 @@ import CoreData
 
 struct SearchSubView: View {
     @ObservedObject var content: SearchContent
-
+    
     var body: some View {
         VStack {
             HStack {
@@ -80,13 +80,9 @@ struct SpotItemView: View {
 
 struct SpotsListView_Previews: PreviewProvider {
     static var previews: some View {
-        let context = PersistenceController.preview.container.viewContext
-        let request: NSFetchRequest<Spot> = Spot.fetchRequest()
-        let result = try! context.fetch(request)
-        SearchSubView(content: SearchContent(context: context))
-//        SearchSubView(spots: result)
-
-        SpotItemView(content: SpotCellContent(spot: result.first!))
+        SearchSubView(content: SearchContent(context: Preview.context))
+        
+        SpotItemView(content: SpotCellContent(spot: Preview.spot))
             .previewLayout(.fixed(width: 450, height: 100))
             .previewDisplayName("SpotCell")
     }

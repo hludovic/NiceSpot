@@ -9,7 +9,7 @@ import CoreData
 
 class PersistenceController: ObservableObject {
     static let shared = PersistenceController()
-
+    
     static var preview: PersistenceController = {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
@@ -38,9 +38,9 @@ class PersistenceController: ObservableObject {
         }
         return result
     }()
-
+    
     let container: NSPersistentContainer
-
+    
     init(inMemory: Bool = false) {
         container = NSPersistentContainer(name: "NiceSpot")
         if inMemory {

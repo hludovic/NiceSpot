@@ -10,7 +10,7 @@ import CoreData
 
 extension Spot {
     // MARK: - Static Methods
-
+    
     /// This static method returns all values contained in the Spot entity.
     /// - Parameters:
     ///   - context: The NSManagedObjectContext used for this task.
@@ -92,7 +92,7 @@ extension Spot {
         }
         publicDB.add(operation)
     }
-
+    
 }
 
 // MARK: - Enum
@@ -104,7 +104,7 @@ extension Spot {
         case mountain = "Mountain"
         case river = "River"
     }
-
+    
     /// The list of municipalities in which a spot can be found.
     enum Municipality: String, CaseIterable {
         case basseTerre = "Basse-Terre"
@@ -140,7 +140,6 @@ extension Spot {
         case vieuxFort = "Vieux-Fort"
         case vieuxHabitants = "Vieux-Habitants"
     }
-
 }
 
 // MARK: - Nested Struct
@@ -156,12 +155,6 @@ extension Spot {
         var municipality: String
     }
     
-    /// A structure representing a location that can also be used as annotationItems in a Map.
-    struct Location: Identifiable {
-        let id = UUID()
-        let coordinate: CLLocationCoordinate2D
-    }
-
 }
 
 

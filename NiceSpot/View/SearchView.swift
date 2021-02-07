@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import CoreData
 
 struct SearchView: View {
     @Environment(\.managedObjectContext) private var viewContext
@@ -15,14 +14,14 @@ struct SearchView: View {
     var body: some View {
         NavigationView {
             SearchSubView(content: SearchContent(context: viewContext))
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .principal) {
-                    VStack {
-                        Text("Rechercher").font(.headline)
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .principal) {
+                        VStack {
+                            Text("Rechercher").font(.headline)
+                        }
                     }
                 }
-            }
         }
     }
 }

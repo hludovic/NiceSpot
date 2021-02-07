@@ -10,9 +10,14 @@ import CloudKit
 
 class Comment {
     // MARK: - Public Static Property
-
+    
     static let publicDB: CKDatabase = CKContainer(identifier: "iCloud.fr.hludovic.container1").publicCloudDatabase
-
+    static var isICloudAvailable: Bool {
+        if let _ = FileManager.default.ubiquityIdentityToken{
+            return true
+        } else { return false }
+    }
+    
     // MARK: - Public Static methods
     
     /// Retrieves all the comments posted on a Spot.
@@ -29,7 +34,7 @@ class Comment {
         let operation = CKQueryOperation(query: querry)
         operation.desiredKeys = ["title", "detail", "pseudo"]
         var commentList: [Item] = []
-
+        
         operation.recordFetchedBlock = { record in
             guard
                 let title = record["title"] as? String,
@@ -40,7 +45,7 @@ class Comment {
             let commentFetched = Item(id: record.recordID.recordName,title: title, detail: detail, authorID: authorID, authorPseudo: authorPseudo)
             commentList.append(commentFetched)
         }
-
+        
         operation.queryCompletionBlock = { cursor, error in
             if let error = error {
                 completion(.failure(error))
@@ -62,7 +67,7 @@ class Comment {
         canPostComment(spotId: spotId, userId: "__defaultOwner__") { (canPostComment) in
             guard canPostComment else { return success(false) }
             guard title != "", content != "" else { return success(false) }
-            guard isICloudAvailable() else { return success(false) }
+            guard isICloudAvailable else { return success(false) }
             let commentRecord = CKRecord(recordType: "Comments")
             let reference = CKRecord.Reference(recordID: CKRecord.ID(recordName: spotId), action: .none)
             commentRecord["title"] = title as CKRecordValue
@@ -75,6 +80,7 @@ class Comment {
             }
         }
     }
+    
 }
 
 // MARK: - Private Static methods
@@ -96,14 +102,7 @@ private extension Comment {
             }
         }
     }
-
-    static func isICloudAvailable() -> Bool{
-        if let _ = FileManager.default.ubiquityIdentityToken{
-            return true
-        } else {
-            return false
-        }
-    }
+    
 }
 
 // MARK: - Nested Struct
@@ -116,5 +115,5 @@ extension Comment {
         let authorID: String
         var authorPseudo: String
     }
-
+    
 }

@@ -6,13 +6,12 @@
 //
 
 import SwiftUI
-import CoreData
 
 struct DetailView: View {
     @ObservedObject var content: DetailContent
-
+    
     var body: some View {
-        ScrollView(.vertical, showsIndicators: false) {
+        ScrollView(.vertical, showsIndicators: true) {
             NavigationLink(destination: content.image) {
                 content.image
                     .resizable()
@@ -45,38 +44,32 @@ struct DetailView: View {
                 .font(.body)
                 .foregroundColor(Color.gray)
                 .padding()
-            NavigationLink(
-                destination:
-                    VStack {
-                        MapView(spotLocation: content.spot.location)
-                        Link("Open in Maps", destination: content.spot.mapLink)
-                    }
-                    .navigationTitle(content.spot.title)
-                ,
-                label: {
-                    MapView(spotLocation: content.spot.location)
-                        .frame(height: 300)
-                        .cornerRadius(10)
-                })
-                .padding(.horizontal, 10)
-            if content.comments.count != 0 {
-                CommentsView(comments: content.comments)
+            Group {
+                HStack {
+                    Text("Location")
+                    Spacer()
+                    Link("Open in Maps", destination: content.spot.mapLink)
+                }
+                MapView(content: content)
+                    .frame(height: 300)
+                    .cornerRadius(10)
             }
-            if content.canComment == true {
-                Button(action: {
-                    content.showCommentSheet.toggle()
-                }, label: {
-                    HStack {
-                        Image(systemName: "square.and.pencil")
-                        Text("Write a comment")
+            .padding(.horizontal, 10)
+            VStack {
+                HStack {
+                    Text("Comments")
+                    Spacer()
+                    if Comment.isICloudAvailable {
+                        CommentButton(content: content)
                     }
-                    .sheet(isPresented: $content.showCommentSheet) {
-                        PostCommentView(content: content)
-                    }
-                })
-            } else {
-                EditCommentButton()
+                }
+                .padding(.horizontal)
+                if content.comments.count != 0 {
+                    CommentsView(comments: content.comments)
+                }
+
             }
+            Spacer()
         }
         .onAppear{
             content.loadImage()
@@ -86,24 +79,36 @@ struct DetailView: View {
     }
 }
 
-struct EditCommentButton: View {
-    var body: some View {
-        Button(action: {
-        }, label: {
-            HStack {
-                Image(systemName: "square.and.pencil")
-                Text("Edit your comment")
-            }
-        })
+struct CommentButton: View {
+    @ObservedObject var content: DetailContent
+    
+    var  body: some View {
+        if content.canComment {
+            Button(action: {
+                content.showCommentSheet.toggle()
+            }, label: {
+                HStack {
+                    Image(systemName: "square.and.pencil")
+                    Text("Write a comment")
+                }
+                .sheet(isPresented: $content.showCommentSheet) {
+                    PostCommentView(content: content)
+                }
+            })
+        } else {
+            Button(action: {
+            }, label: {
+                HStack {
+                    Image(systemName: "square.and.pencil")
+                    Text("Edit your comment")
+                }
+            })
+        }
     }
 }
 
 struct SpotDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        let context = PersistenceController.preview.container.viewContext
-        let request: NSFetchRequest<Spot> = Spot.fetchRequest()
-        let result = try! context.fetch(request)
-        let spotDetailContent = DetailContent(spot: result.first!)
-        DetailView(content: spotDetailContent)
+        DetailView(content: DetailContent(spot: Preview.spot))
     }
 }

@@ -11,11 +11,11 @@ import CoreData
 struct SpotCellView: View {
     @ObservedObject var content: SpotCellContent
     @Environment(\.managedObjectContext) private var viewContext
-
+    
     init(spot: Spot) {
         self.content = SpotCellContent(spot: spot)
     }
-
+    
     var body: some View {
         VStack(alignment: .center, spacing: 10.0) {
             ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {

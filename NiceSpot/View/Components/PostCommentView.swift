@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import CoreData
 
 struct PostCommentView: View {
     @ObservedObject var content: DetailContent
@@ -53,10 +52,7 @@ struct PostCommentView: View {
 
 struct CommentSheet_Previews: PreviewProvider {
     static var previews: some View {
-        let context = PersistenceController.preview.container.viewContext
-        let request: NSFetchRequest<Spot> = Spot.fetchRequest()
-        let result = try! context.fetch(request)
-        let spotDetailContent = DetailContent(spot: result.first!)
+        let spotDetailContent = DetailContent(spot: Preview.spot)
         PostCommentView(content: spotDetailContent)
     }
 }

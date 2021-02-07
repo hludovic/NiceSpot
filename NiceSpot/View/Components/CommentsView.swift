@@ -9,15 +9,9 @@ import SwiftUI
 
 struct CommentsView: View {
     @State var comments: [Comment.Item]
-
+    
     var body: some View {
         VStack {
-            Divider()
-            HStack {
-                Text("Comments")
-                Spacer()
-            }
-            .padding(.horizontal)
             ScrollView(.horizontal, showsIndicators: true) {
                 HStack {
                     ForEach(comments) { (comment: Comment.Item) in
