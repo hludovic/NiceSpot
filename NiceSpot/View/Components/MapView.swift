@@ -12,7 +12,7 @@ struct MapView: View {
     @ObservedObject var content: DetailContent
     
     var body: some View {
-        Map(coordinateRegion: $content.spot.mapRegion,
+        Map(coordinateRegion: $content.mapRegion,
             interactionModes: MapInteractionModes.zoom,
             annotationItems: [content.spot.location]) { spot in
             MapMarker(coordinate: spot.coordinate, tint: .red)

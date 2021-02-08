@@ -23,7 +23,7 @@ struct PostCommentView: View {
             }
             .navigationTitle(pageTitle)
             .navigationBarItems(
-                leading: Button(action: { content.showCommentSheet = false }) {
+                leading: Button(action: { content.displayCommentSheet = false }) {
                     Text("Cancel")
                 },
                 trailing: Button(action: {
@@ -35,7 +35,7 @@ struct PostCommentView: View {
                 }) {
                     Text("Save")
                 }
-                .disabled(content.saveButtonDisabled)
+                .disabled(content.isSaveButtonDisabled)
             )
             .navigationBarTitleDisplayMode(.inline)
             .alert(isPresented: $content.showAlert) {

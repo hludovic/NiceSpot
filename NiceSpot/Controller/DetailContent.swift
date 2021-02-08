@@ -11,27 +11,31 @@ import SwiftUI
 import MapKit
 
 class DetailContent: ObservableObject {
-    var spot: Item
-    @Published var userComment = Comment.Item(id: "", title: "", detail: "", authorID: "", authorPseudo: "", creationDate: Date()) {
-        didSet { refreshSaveButton() }
-    }
-    private var isLoading: Bool = false {
-        didSet { refreshSaveButton() }
-    }
-    private let imageManager = ImageManager()
+    // MARK: - Public Property
+    
+    let spot: Item
+    @Published var mapRegion : MKCoordinateRegion
     @Published var comments: [Comment.Item] = []
     @Published var showAlert: Bool = false
-    @Published var saveButtonDisabled = true
-    @Published var showCommentSheet: Bool = false {
-        didSet {
-            if showCommentSheet && canComment { clearUserLoadedComment() }
-        }
+    @Published var userComment : Comment.Item {
+        didSet { refreshSaveButtonStatus() }
     }
+    @Published private(set) var isSaveButtonDisabled = true
     @Published private(set) var canComment: Bool = false
+    @Published private(set) var image: Image = Image("placeholder")
     @Published private(set) var errorMessage: String = "" {
         didSet { showAlert = true }
     }
-    @Published private(set) var image: Image = Image("placeholder")
+    @Published var displayCommentSheet: Bool = false {
+        didSet { if displayCommentSheet && canComment { clearUserLoadedComment() } }
+    }
+    // MARK: - Private Property
+    
+    private let imageManager = ImageManager()
+    private var isLoading: Bool = false {
+        didSet { refreshSaveButtonStatus() }
+    }
+
     
     init(spot: Spot) {
         let coodinate = CLLocationCoordinate2D(latitude: spot.latitude, longitude: spot.longitude)
@@ -42,33 +46,20 @@ class DetailContent: ObservableObject {
                         municipality: spot.municipality!,
                         category: spot.category!,
                         location: Location(coordinate: coodinate),
-                        mapLink: URL(string: "maps://?ll=\(spot.latitude),\(spot.longitude)")!,
-                        mapRegion: MKCoordinateRegion(
-                            center: coodinate,
-                            span: MKCoordinateSpan(latitudeDelta: 0.002, longitudeDelta: 0.002)
-                        )
+                        mapLink: URL(string: "maps://?ll=\(spot.latitude),\(spot.longitude)")!
+        )
+        
+        self.mapRegion = MKCoordinateRegion(
+            center: coodinate,
+            span: MKCoordinateSpan(latitudeDelta: 0.002, longitudeDelta: 0.002)
         )
         self.spot = item
+        self.userComment = Comment.Item(id: "", title: "", detail: "", authorID: "", authorPseudo: "", creationDate: Date())
     }
     
-    private func canComment(comments: [Comment.Item]) {
-        guard comments.count > 0 else {
-            return DispatchQueue.main.async { self.canComment = true }
-        }
-        for comment in comments {
-            if comment.authorID == "__defaultOwner__" {
-                return DispatchQueue.main.async { self.canComment = false }
-            }
-        }
-        return DispatchQueue.main.async { self.canComment = true }
-    }
+    // MARK: - Public Methods
     
-    private func refreshSaveButton() {
-        let isNotFill = (userComment.title == "" || userComment.authorPseudo == "") || (userComment.detail == "")
-        saveButtonDisabled = isNotFill || isLoading
-    }
-    
-    func loadComments() {
+    func refreshComments() {
         Comment.getComments(ckDatabase: Comment.publicDB, spotId: spot.id) { [unowned self] (result) in
             switch result {
             case .failure(let error):
@@ -76,7 +67,7 @@ class DetailContent: ObservableObject {
             case .success(let comments):
                 DispatchQueue.main.async {
                     self.comments = comments
-                    self.canComment(comments: comments)
+                    self.refreshCanCommentStatus(comments: comments)
                 }
             }
         }
@@ -85,8 +76,8 @@ class DetailContent: ObservableObject {
     func loadUserComment(success: @escaping (Bool) -> Void) {
         Comment.getComments(ckDatabase: Comment.publicDB, spotId: spot.id) { [unowned self] (result) in
             switch result {
-            case .failure(let error):
-                print("ERROR LOADING COMMENT \(error.localizedDescription)")
+            case .failure(_ ):
+                errorMessage = "ERROR LOADING COMMENT"
             case .success(let comments):
                 for comment in comments {
                     if comment.authorID == "__defaultOwner__" {
@@ -123,11 +114,11 @@ class DetailContent: ObservableObject {
             }
             DispatchQueue.main.async {
                 self.isLoading = false
-                self.showCommentSheet = false
+                self.displayCommentSheet = false
                 self.canComment = false
-                self.saveButtonDisabled = false
+                self.isSaveButtonDisabled = false
             }
-            loadComments()
+            refreshComments()
         }
     }
     
@@ -152,11 +143,11 @@ class DetailContent: ObservableObject {
             }
             DispatchQueue.main.async {
                 self.isLoading = false
-                self.showCommentSheet = false
+                self.displayCommentSheet = false
                 self.canComment = false
-                self.saveButtonDisabled = false
+                self.isSaveButtonDisabled = false
             }
-            loadComments()
+            refreshComments()
         }
     }
     
@@ -169,16 +160,35 @@ class DetailContent: ObservableObject {
         }
     }
     
-    private func clearUserLoadedComment() {
+}
+
+// MARK: - Private Methods
+private extension DetailContent {
+    func refreshCanCommentStatus(comments: [Comment.Item]) {
+        guard comments.count > 0 else { return canComment = true }
+        for comment in comments {
+            if comment.authorID == "__defaultOwner__" {
+                canComment = false
+            } else {
+                canComment = true
+            }
+        }
+    }
+    
+    func clearUserLoadedComment() {
         userComment.title = ""
         userComment.authorPseudo = ""
         userComment.detail = ""
     }
     
+    func refreshSaveButtonStatus() {
+        let isNotFill = (userComment.title == "" || userComment.authorPseudo == "") || (userComment.detail == "")
+        isSaveButtonDisabled = isNotFill || isLoading
+    }
+    
 }
 
 // MARK: - Nested Struct
-
 extension DetailContent {
     struct Item {
         let id: String
@@ -189,7 +199,6 @@ extension DetailContent {
         let category: String
         let location: Location
         let mapLink: URL
-        var mapRegion : MKCoordinateRegion
     }
     
     /// A structure representing a location that can be used as annotationItems in a Map.

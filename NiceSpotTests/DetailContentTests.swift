@@ -28,7 +28,7 @@ class DetailContentTests: XCTestCase {
         //GIVEN
         XCTAssertEqual(spots.count, 3)
         
-        content.loadComments()
+        content.refreshComments()
         
         let expectation = XCTestExpectation(description: "Fetching spots")
         DispatchQueue.main.asyncAfter(wallDeadline: .now() + 5) {

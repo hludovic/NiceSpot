@@ -16,7 +16,7 @@ class HomeContentTests: XCTestCase {
     override func setUp() {
         super.setUp()
         content = HomeContent()
-        context = PersistenceController.preview.container.viewContext
+        context = Preview.context
         PersistenceHelper.clearSpots(context: context) { (_) in
             PersistenceHelper.saveFakeSpots(context: self.context)
         }

@@ -71,7 +71,7 @@ struct DetailView: View {
         }
         .onAppear{
             content.loadImage()
-            content.loadComments()
+            content.refreshComments()
         }
         .navigationTitle(content.spot.category)
     }
@@ -83,13 +83,13 @@ struct CommentButton: View {
     var  body: some View {
         if content.canComment {
             Button(action: {
-                content.showCommentSheet.toggle()
+                content.displayCommentSheet.toggle()
             }, label: {
                 HStack {
                     Image(systemName: "square.and.pencil")
                     Text("Write a comment")
                 }
-                .sheet(isPresented: $content.showCommentSheet) {
+                .sheet(isPresented: $content.displayCommentSheet) {
                     PostCommentView(content: content, pageTitle: "Write a comment")
                 }
             })
@@ -97,7 +97,7 @@ struct CommentButton: View {
             Button(action: {
                 content.loadUserComment { (success) in
                     if success {
-                        content.showCommentSheet.toggle()
+                        content.displayCommentSheet.toggle()
                     }
                 }
             }, label: {
@@ -105,7 +105,7 @@ struct CommentButton: View {
                     Image(systemName: "square.and.pencil")
                     Text("Edit your comment")
                 }
-                .sheet(isPresented: $content.showCommentSheet) {
+                .sheet(isPresented: $content.displayCommentSheet) {
                     PostCommentView(content: content, pageTitle: "Edit your comment")
                 }
             })
