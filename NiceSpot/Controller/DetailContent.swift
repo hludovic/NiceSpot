@@ -22,7 +22,11 @@ class DetailContent: ObservableObject {
     @Published var comments: [Comment.Item] = []
     @Published var showAlert: Bool = false
     @Published var saveButtonDisabled = true
-    @Published var showCommentSheet: Bool = false
+    @Published var showCommentSheet: Bool = false {
+        didSet {
+            if showCommentSheet && canComment { clearUserLoadedComment() }
+        }
+    }
     @Published private(set) var canComment: Bool = false
     @Published private(set) var errorMessage: String = "" {
         didSet { showAlert = true }
@@ -78,7 +82,7 @@ class DetailContent: ObservableObject {
         }
     }
     
-    func loadSelfComment(success: @escaping (Bool) -> Void) {
+    func loadUserComment(success: @escaping (Bool) -> Void) {
         Comment.getComments(ckDatabase: Comment.publicDB, spotId: spot.id) { [unowned self] (result) in
             switch result {
             case .failure(let error):
@@ -98,7 +102,7 @@ class DetailContent: ObservableObject {
         }
     }
     
-    func updateComment() {
+    func updateUserComment() {
         isLoading = true
         guard
             userComment.title != "",
@@ -122,13 +126,12 @@ class DetailContent: ObservableObject {
                 self.showCommentSheet = false
                 self.canComment = false
                 self.saveButtonDisabled = false
-                clearUserComment()
             }
             loadComments()
         }
     }
     
-    func saveComment() {
+    func saveUserComment() {
         isLoading = true
         guard
             userComment.title != "",
@@ -152,16 +155,8 @@ class DetailContent: ObservableObject {
                 self.showCommentSheet = false
                 self.canComment = false
                 self.saveButtonDisabled = false
-                self.comments.append( Comment.Item(
-                    id: "ID",
-                    title: userComment.title,
-                    detail: userComment.detail,
-                    authorID: "__defaultOwner__",
-                    authorPseudo: userComment.authorPseudo,
-                    creationDate: Date())
-                )
-                clearUserComment()
             }
+            loadComments()
         }
     }
     
@@ -174,7 +169,7 @@ class DetailContent: ObservableObject {
         }
     }
     
-    private func clearUserComment() {
+    private func clearUserLoadedComment() {
         userComment.title = ""
         userComment.authorPseudo = ""
         userComment.detail = ""

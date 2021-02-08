@@ -80,8 +80,7 @@ struct SpotItemView: View {
 
 struct SpotsListView_Previews: PreviewProvider {
     static var previews: some View {
-        SearchSubView(content: SearchContent(context: Preview.context))
-        
+        SearchSubView(content: Preview.searchContent)
         SpotItemView(content: SpotCellContent(spot: Preview.spot))
             .previewLayout(.fixed(width: 450, height: 100))
             .previewDisplayName("SpotCell")

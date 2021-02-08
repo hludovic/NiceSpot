@@ -64,7 +64,7 @@ struct DetailView: View {
                 .font(.subheadline)
                 .padding(.horizontal)
                 if content.comments.count != 0 {
-                    CommentsView(comments: content.comments)
+                    CommentsView(content: content)
                 }
             }
             Spacer(minLength: 50)
@@ -95,7 +95,7 @@ struct CommentButton: View {
             })
         } else {
             Button(action: {
-                content.loadSelfComment { (success) in
+                content.loadUserComment { (success) in
                     if success {
                         content.showCommentSheet.toggle()
                     }

@@ -16,21 +16,13 @@ struct MapView: View {
             interactionModes: MapInteractionModes.zoom,
             annotationItems: [content.spot.location]) { spot in
             MapMarker(coordinate: spot.coordinate, tint: .red)
-//            MapAnnotation(coordinate: spot.coordinate) {
-//                VStack {
-//                    Circle()
-//                        .stroke(Color.red)
-//                        .frame(width: 40, height: 40)
-//                }
-//            }
         }
     }
 }
 
 struct MapView_Previews: PreviewProvider {
     static var previews: some View {
-        let spotDetailContent = DetailContent(spot: Preview.spot)
-        MapView(content: spotDetailContent)
+        MapView(content: Preview.detailContent)
     }
 }
 

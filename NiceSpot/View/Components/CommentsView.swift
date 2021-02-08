@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct CommentsView: View {
-    @State var comments: [Comment.Item]
+    @ObservedObject var content: DetailContent
     
     var body: some View {
         VStack {
             ScrollView(.horizontal, showsIndicators: true) {
                 HStack {
-                    ForEach(comments) { (comment: Comment.Item) in
+                    ForEach(content.comments) { (comment: Comment.Item) in
                         VStack(alignment: .leading) {
                             HStack {
                                 Text(comment.title)
@@ -49,14 +49,7 @@ struct CommentsView: View {
 
 struct CommentsView_Previews: PreviewProvider {
     static var previews: some View {
-        let commentItem = Comment.Item(
-            id: "",
-            title: "C'était super",
-            detail: "J'ai beaucoup aimé. Bravo super cool",
-            authorID: "", authorPseudo: "Moi",
-            creationDate: Date()
-        )
-        CommentsView(comments: [commentItem, commentItem, commentItem])
+        CommentsView(content: Preview.detailContent)
             .previewLayout(.fixed(width: 450, height: 200))
     }
 }

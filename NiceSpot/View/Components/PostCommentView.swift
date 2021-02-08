@@ -28,9 +28,9 @@ struct PostCommentView: View {
                 },
                 trailing: Button(action: {
                     if content.canComment {
-                        content.saveComment()
+                        content.saveUserComment()
                     } else {
-                        content.updateComment()
+                        content.updateUserComment()
                     }
                 }) {
                     Text("Save")
@@ -47,7 +47,6 @@ struct PostCommentView: View {
 
 struct CommentSheet_Previews: PreviewProvider {
     static var previews: some View {
-        let spotDetailContent = DetailContent(spot: Preview.spot)
-        PostCommentView(content: spotDetailContent, pageTitle: "Write a comment")
+        PostCommentView(content: Preview.detailContent, pageTitle: "Write a comment")
     }
 }

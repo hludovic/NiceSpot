@@ -40,9 +40,6 @@ struct SpotCellView: View {
 
 struct viewPointItem_Previews: PreviewProvider {
     static var previews: some View {
-        let context = PersistenceController.preview.container.viewContext
-        let request: NSFetchRequest<Spot> = Spot.fetchRequest()
-        let result = try! context.fetch(request)
-        SpotCellView(spot: result.first!)
+        SpotCellView(spot: Preview.spot)
     }
 }
