@@ -12,34 +12,26 @@ struct DetailView: View {
     
     var body: some View {
         ScrollView(.vertical, showsIndicators: true) {
-            NavigationLink(destination: content.image) {
-                content.image
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
+            ZStack(alignment: Alignment(horizontal: .leading, vertical: .bottom)) {
+                NavigationLink(destination: content.image) {
+                    content.image
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                }
+                HStack {
+                    Image("\(content.spot.category)")
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                        .clipShape(Capsule())
+                    Text(content.spot.title)
+                    Spacer()
+                    Text(content.spot.municipality)
+                        .font(.caption)
+                }
+                .padding(.horizontal)
+                .foregroundColor(.white)
+                .background(Color.black.opacity(0.5))
             }
-            HStack {
-                Image("\(content.spot.category)")
-                    .resizable()
-                    .frame(width: 24, height: 24)
-                    .clipShape(Capsule())
-                Text(content.spot.category)
-                    .font(.caption)
-                    .fontWeight(.black)
-                    .padding(5)
-                    .background(Color.green)
-                    .clipShape(Capsule())
-                    .foregroundColor(.white)
-                Text(content.spot.municipality)
-                    .font(.caption)
-                    .fontWeight(.black)
-                    .padding(5)
-                    .background(Color.orange)
-                    .clipShape(Capsule())
-                    .foregroundColor(.white)
-                Spacer()
-            }
-            .padding(.horizontal)
-            Divider()
             Text(content.spot.detail)
                 .font(.body)
                 .foregroundColor(Color.gray)
@@ -47,35 +39,41 @@ struct DetailView: View {
             Group {
                 HStack {
                     Text("Location")
+                        .fontWeight(.medium)
                     Spacer()
                     Link("Open in Maps", destination: content.spot.mapLink)
                 }
+                .padding(.bottom, -5)
+                .font(.subheadline)
                 MapView(content: content)
+                    .padding(.bottom, 20)
                     .frame(height: 300)
                     .cornerRadius(10)
             }
-            .padding(.horizontal, 10)
+            .padding(.horizontal)
             VStack {
                 HStack {
                     Text("Comments")
+                        .fontWeight(.medium)
                     Spacer()
                     if Comment.isICloudAvailable {
                         CommentButton(content: content)
                     }
                 }
+                .padding(.bottom, -5)
+                .font(.subheadline)
                 .padding(.horizontal)
                 if content.comments.count != 0 {
                     CommentsView(comments: content.comments)
                 }
-
             }
-            Spacer()
+            Spacer(minLength: 50)
         }
         .onAppear{
             content.loadImage()
             content.loadComments()
         }
-        .navigationTitle(content.spot.title)
+        .navigationTitle(content.spot.category)
     }
 }
 

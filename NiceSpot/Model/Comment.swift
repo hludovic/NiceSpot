@@ -40,9 +40,10 @@ class Comment {
                 let title = record["title"] as? String,
                 let detail = record["detail"] as? String,
                 let authorPseudo = record["pseudo"] as? String,
-                let authorID = record.creatorUserRecordID?.recordName
+                let authorID = record.creatorUserRecordID?.recordName,
+                let creationDate = record.creationDate
             else { return }
-            let commentFetched = Item(id: record.recordID.recordName,title: title, detail: detail, authorID: authorID, authorPseudo: authorPseudo)
+            let commentFetched = Item(id: record.recordID.recordName,title: title, detail: detail, authorID: authorID, authorPseudo: authorPseudo, creationDate: creationDate)
             commentList.append(commentFetched)
         }
         
@@ -84,6 +85,7 @@ class Comment {
 }
 
 // MARK: - Private Static methods
+
 private extension Comment {
     static func canPostComment(spotId :String, userId: String, success: @escaping (Bool) -> Void) {
         Comment.getComments(ckDatabase: publicDB, spotId: spotId) { (result) in
@@ -106,14 +108,21 @@ private extension Comment {
 }
 
 // MARK: - Nested Struct
+
 extension Comment {
-    /// Description
+    /// A structure that represents the comments
     struct Item: Identifiable {
         let id: String
         var title: String
         var detail: String
         let authorID: String
         var authorPseudo: String
+        let creationDate: Date
+        var creationDateString: String {
+            let dateFormater = DateFormatter()
+            dateFormater.dateStyle = .medium
+            return dateFormater.string(from: creationDate)
+        }
     }
     
 }

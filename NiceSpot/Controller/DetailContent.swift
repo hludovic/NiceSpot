@@ -12,7 +12,7 @@ import MapKit
 
 class DetailContent: ObservableObject {
     var spot: Item
-    @Published var userComment = Comment.Item(id: "", title: "", detail: "", authorID: "", authorPseudo: "") {
+    @Published var userComment = Comment.Item(id: "", title: "", detail: "", authorID: "", authorPseudo: "", creationDate: Date()) {
         didSet { refreshSaveButton() }
     }
     private var isLoading: Bool = false {
@@ -115,6 +115,7 @@ class DetailContent: ObservableObject {
 }
 
 // MARK: - Nested Struct
+
 extension DetailContent {
     struct Item {
         let id: String

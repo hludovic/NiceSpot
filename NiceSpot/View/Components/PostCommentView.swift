@@ -34,7 +34,8 @@ struct PostCommentView: View {
                             title: content.userComment.title,
                             detail: content.userComment.detail,
                             authorID: "__defaultOwner__",
-                            authorPseudo: content.userComment.authorPseudo
+                            authorPseudo: content.userComment.authorPseudo,
+                            creationDate: Date()
                         )
                     )
                 }) {

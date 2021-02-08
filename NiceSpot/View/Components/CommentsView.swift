@@ -19,15 +19,23 @@ struct CommentsView: View {
                             HStack {
                                 Text(comment.title)
                                     .font(.subheadline)
-                                Spacer()
+                                    .fontWeight(.semibold)
                             }
+                            HStack {
+                                Text(comment.creationDateString)
+                                    .font(.caption)
+                                Spacer()
+                                Text(comment.authorPseudo)
+                                    .font(.caption)
+                            }
+                            Spacer()
                             Text(comment.detail)
                                 .font(.footnote)
                                 .lineLimit(3)
                             Spacer()
                         }
                         .padding(.top)
-                        .frame(width: 240, height: 110)
+                        .frame(width: 250, height: 120)
                     }
                     .padding(.horizontal)
                     .background(Color(.secondarySystemBackground))
@@ -44,8 +52,9 @@ struct CommentsView_Previews: PreviewProvider {
         let commentItem = Comment.Item(
             id: "",
             title: "C'était super",
-            detail: "J'ai beaucoup aimé, blabla géniale",
-            authorID: "", authorPseudo: "Moi"
+            detail: "J'ai beaucoup aimé. Bravo super cool",
+            authorID: "", authorPseudo: "Moi",
+            creationDate: Date()
         )
         CommentsView(comments: [commentItem, commentItem, commentItem])
             .previewLayout(.fixed(width: 450, height: 200))
