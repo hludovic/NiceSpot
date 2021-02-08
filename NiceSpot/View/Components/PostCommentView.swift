@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PostCommentView: View {
     @ObservedObject var content: DetailContent
+    let pageTitle: String
     
     var body: some View {
         NavigationView {
@@ -20,24 +21,17 @@ struct PostCommentView: View {
                         .frame(height: 100.0)
                 }
             }
-            .navigationTitle("Write a comment")
+            .navigationTitle(pageTitle)
             .navigationBarItems(
                 leading: Button(action: { content.showCommentSheet = false }) {
                     Text("Cancel")
                 },
                 trailing: Button(action: {
-                    content.saveButtonDisabled = false
-                    content.saveComment()
-                    content.comments.append(
-                        Comment.Item(
-                            id: "ID",
-                            title: content.userComment.title,
-                            detail: content.userComment.detail,
-                            authorID: "__defaultOwner__",
-                            authorPseudo: content.userComment.authorPseudo,
-                            creationDate: Date()
-                        )
-                    )
+                    if content.canComment {
+                        content.saveComment()
+                    } else {
+                        content.updateComment()
+                    }
                 }) {
                     Text("Save")
                 }
@@ -54,6 +48,6 @@ struct PostCommentView: View {
 struct CommentSheet_Previews: PreviewProvider {
     static var previews: some View {
         let spotDetailContent = DetailContent(spot: Preview.spot)
-        PostCommentView(content: spotDetailContent)
+        PostCommentView(content: spotDetailContent, pageTitle: "Write a comment")
     }
 }

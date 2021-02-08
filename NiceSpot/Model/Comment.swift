@@ -82,6 +82,21 @@ class Comment {
         }
     }
     
+    static func updateComment(commentId: String, title: String, comment: String, pseudo: String, success: @escaping (Bool) -> Void) {
+        let recordId = CKRecord.ID(recordName: commentId)
+        publicDB.fetch(withRecordID: recordId) { (record, error) in
+            guard let record = record else { return success(false) }
+            record["title"] = title
+            record["detail"] = comment
+            record["pseudo"] = pseudo
+            
+            self.publicDB.save(record) { ( _, error) in
+                guard error == nil else { return success(false) }
+                success(true)
+            }
+        }
+    }
+    
 }
 
 // MARK: - Private Static methods

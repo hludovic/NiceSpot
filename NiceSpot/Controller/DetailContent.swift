@@ -24,7 +24,9 @@ class DetailContent: ObservableObject {
     @Published var saveButtonDisabled = true
     @Published var showCommentSheet: Bool = false
     @Published private(set) var canComment: Bool = false
-    @Published private(set) var errorMessage: String = ""
+    @Published private(set) var errorMessage: String = "" {
+        didSet { showAlert = true }
+    }
     @Published private(set) var image: Image = Image("placeholder")
     
     init(spot: Spot) {
@@ -76,23 +78,42 @@ class DetailContent: ObservableObject {
         }
     }
     
-    func saveComment() {
+    func loadSelfComment(success: @escaping (Bool) -> Void) {
+        Comment.getComments(ckDatabase: Comment.publicDB, spotId: spot.id) { [unowned self] (result) in
+            switch result {
+            case .failure(let error):
+                print("ERROR LOADING COMMENT \(error.localizedDescription)")
+            case .success(let comments):
+                for comment in comments {
+                    if comment.authorID == "__defaultOwner__" {
+                        DispatchQueue.main.async {
+                            self.userComment = comment
+                            success(true)
+                        }
+                        break
+                    }
+                }
+                success(false)
+            }
+        }
+    }
+    
+    func updateComment() {
         isLoading = true
         guard
             userComment.title != "",
             userComment.authorPseudo != "",
             userComment.detail != ""
         else {
+            self.isLoading = false
             errorMessage = "ERROR ..."
-            showAlert = true
             return
         }
-        Comment.postComment(spotId: spot.id, title: userComment.title, content: userComment.detail, pseudo: userComment.authorPseudo) { [unowned self] (success) in
+        Comment.updateComment(commentId: userComment.id, title: userComment.title, comment: userComment.detail, pseudo: userComment.authorPseudo) { [unowned self] (success) in
             guard success else {
                 DispatchQueue.main.async {
                     self.isLoading = false
-                    self.errorMessage = "ERROR SAVING"
-                    self.showAlert = true
+                    self.errorMessage = "ERROR EDDITING"
                 }
                 return
             }
@@ -100,6 +121,46 @@ class DetailContent: ObservableObject {
                 self.isLoading = false
                 self.showCommentSheet = false
                 self.canComment = false
+                self.saveButtonDisabled = false
+                clearUserComment()
+            }
+            loadComments()
+        }
+    }
+    
+    func saveComment() {
+        isLoading = true
+        guard
+            userComment.title != "",
+            userComment.authorPseudo != "",
+            userComment.detail != ""
+        else {
+            self.isLoading = false
+            errorMessage = "ERROR ..."
+            return
+        }
+        Comment.postComment(spotId: spot.id, title: userComment.title, content: userComment.detail, pseudo: userComment.authorPseudo) { [unowned self] (success) in
+            guard success else {
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                    self.errorMessage = "ERROR SAVING"
+                }
+                return
+            }
+            DispatchQueue.main.async {
+                self.isLoading = false
+                self.showCommentSheet = false
+                self.canComment = false
+                self.saveButtonDisabled = false
+                self.comments.append( Comment.Item(
+                    id: "ID",
+                    title: userComment.title,
+                    detail: userComment.detail,
+                    authorID: "__defaultOwner__",
+                    authorPseudo: userComment.authorPseudo,
+                    creationDate: Date())
+                )
+                clearUserComment()
             }
         }
     }
@@ -112,6 +173,13 @@ class DetailContent: ObservableObject {
             }
         }
     }
+    
+    private func clearUserComment() {
+        userComment.title = ""
+        userComment.authorPseudo = ""
+        userComment.detail = ""
+    }
+    
 }
 
 // MARK: - Nested Struct
@@ -134,4 +202,5 @@ extension DetailContent {
         let id = UUID()
         let coordinate: CLLocationCoordinate2D
     }
+    
 }

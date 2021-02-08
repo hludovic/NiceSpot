@@ -90,15 +90,23 @@ struct CommentButton: View {
                     Text("Write a comment")
                 }
                 .sheet(isPresented: $content.showCommentSheet) {
-                    PostCommentView(content: content)
+                    PostCommentView(content: content, pageTitle: "Write a comment")
                 }
             })
         } else {
             Button(action: {
+                content.loadSelfComment { (success) in
+                    if success {
+                        content.showCommentSheet.toggle()
+                    }
+                }
             }, label: {
                 HStack {
                     Image(systemName: "square.and.pencil")
                     Text("Edit your comment")
+                }
+                .sheet(isPresented: $content.showCommentSheet) {
+                    PostCommentView(content: content, pageTitle: "Edit your comment")
                 }
             })
         }
