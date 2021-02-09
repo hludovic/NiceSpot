@@ -10,7 +10,7 @@ import UIKit
 
 class ImageManager {
     static let imageCache = NSCache<NSString, UIImage>()
-    private let urlAssets = "https://github.com/hludovic/NiceSpot_Assets/blob/master/"
+    private let urlAssets = "https://github.com/hludovic/NiceSpotAssets/blob/main/"
 
     func getUIImage(imageName: String, completion: @escaping (UIImage?) -> Void) {
         guard imageName != "placeholder", imageName != "" else { return completion(nil) }
@@ -28,7 +28,7 @@ class ImageManager {
 
     private func fetchImageData(imageName: String, completion: @escaping (Data?) -> Void) {
         let urlSession = URLSession(configuration: .default)
-        var urlRequest = URLComponents(string: "\(urlAssets)/\(imageName).imageset/image@1x.jpg")!
+        var urlRequest = URLComponents(string: "\(urlAssets)/\(imageName)/\(imageName)_1.jpg")!
         urlRequest.queryItems = [URLQueryItem(name: "raw", value: "true")]
         let dataTask = urlSession.dataTask(with: urlRequest.url!) { (data, response, error) in
             guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {

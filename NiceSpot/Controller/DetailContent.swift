@@ -35,7 +35,6 @@ class DetailContent: ObservableObject {
     private var isLoading: Bool = false {
         didSet { refreshSaveButtonStatus() }
     }
-
     
     init(spot: Spot) {
         let coodinate = CLLocationCoordinate2D(latitude: spot.latitude, longitude: spot.longitude)
@@ -62,8 +61,8 @@ class DetailContent: ObservableObject {
     func refreshComments() {
         Comment.getComments(ckDatabase: Comment.publicDB, spotId: spot.id) { [unowned self] (result) in
             switch result {
-            case .failure(let error):
-                print("ERROR LOADING COMMENTS \(error.localizedDescription)")
+            case .failure(_ ):
+                DispatchQueue.main.async { errorMessage = "ERROR LOADING COMMENTS" }
             case .success(let comments):
                 DispatchQueue.main.async {
                     self.comments = comments
@@ -73,22 +72,23 @@ class DetailContent: ObservableObject {
         }
     }
     
-    func loadUserComment(success: @escaping (Bool) -> Void) {
+    func loadUserComment() {
         Comment.getComments(ckDatabase: Comment.publicDB, spotId: spot.id) { [unowned self] (result) in
             switch result {
             case .failure(_ ):
-                errorMessage = "ERROR LOADING COMMENT"
+                DispatchQueue.main.async { errorMessage = "ERROR LOADING COMMENT" }
             case .success(let comments):
                 for comment in comments {
                     if comment.authorID == "__defaultOwner__" {
                         DispatchQueue.main.async {
                             self.userComment = comment
-                            success(true)
+                            self.displayCommentSheet.toggle()
                         }
                         break
+                    } else {
+                        DispatchQueue.main.async { errorMessage = "ERROR LOADING COMMENT" }
                     }
                 }
-                success(false)
             }
         }
     }
@@ -117,8 +117,8 @@ class DetailContent: ObservableObject {
                 self.displayCommentSheet = false
                 self.canComment = false
                 self.isSaveButtonDisabled = false
+                refreshComments()
             }
-            refreshComments()
         }
     }
     
@@ -146,8 +146,9 @@ class DetailContent: ObservableObject {
                 self.displayCommentSheet = false
                 self.canComment = false
                 self.isSaveButtonDisabled = false
+                refreshComments()
+
             }
-            refreshComments()
         }
     }
     

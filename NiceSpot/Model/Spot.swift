@@ -103,6 +103,7 @@ extension Spot {
         case beach = "Beach"
         case mountain = "Mountain"
         case river = "River"
+        case waterfall = "Waterfall"
     }
     
     /// The list of municipalities in which a spot can be found.

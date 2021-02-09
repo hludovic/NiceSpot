@@ -95,11 +95,7 @@ struct CommentButton: View {
             })
         } else {
             Button(action: {
-                content.loadUserComment { (success) in
-                    if success {
-                        content.displayCommentSheet.toggle()
-                    }
-                }
+                content.loadUserComment()
             }, label: {
                 HStack {
                     Image(systemName: "square.and.pencil")

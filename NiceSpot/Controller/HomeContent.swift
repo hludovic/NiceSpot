@@ -12,7 +12,9 @@ class HomeContent: ObservableObject {
     // MARK: Properties
     @Published var showAlert: Bool = false
     @Published private(set) var spots: [Spot] = []
-    @Published private(set) var errorMessage: String = ""
+    @Published private(set) var errorMessage: String = "" {
+        didSet { showAlert = true }
+    }
     @Published private(set) var loadingIndicator: String = ""
 
     // MARK: - Public Methods
@@ -29,7 +31,6 @@ class HomeContent: ObservableObject {
             guard fetchedSpots.count != 0 else {
                 DispatchQueue.main.async {
                     errorMessage = "ERROR: Not fetched"
-                    showAlert = true
                     loadingIndicator = ""
                 }
                 return
@@ -38,7 +39,6 @@ class HomeContent: ObservableObject {
                 guard cleared else {
                     DispatchQueue.main.async {
                         self.errorMessage = "ERROR: Not cleared"
-                        showAlert = true
                         loadingIndicator = ""
                     }
                     return
@@ -47,7 +47,6 @@ class HomeContent: ObservableObject {
                     guard saved else {
                         DispatchQueue.main.async {
                             errorMessage = "ERROR: Not converted"
-                            showAlert = true
                             loadingIndicator = ""
                         }
                         return
