@@ -24,6 +24,7 @@ class HomeContent: ObservableObject {
         if let result = try? context.fetch(request) {
             self.spots = result
         } else { self.spots = [] }
+        getUsedCategories()
     }
     
     func refreshSpots (context: NSManagedObjectContext) {
@@ -55,7 +56,6 @@ class HomeContent: ObservableObject {
                     Spot.getSpots(context: context) { [unowned self] (result) in
                         DispatchQueue.main.async {
                             self.spots = result
-                            self.getUsedCategories()
                             loadingIndicator = ""
                         }
                     }
