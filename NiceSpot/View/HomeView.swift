@@ -14,24 +14,15 @@ struct HomeView: View {
     var body: some View {
         NavigationView {
             List {
-                VStack(alignment: .leading) {
-                    Text("Récent")
-                        .font(.headline)
-                        .padding(.leading)
-                        .offset(y: 10.0)
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack {
-                            ForEach(content.spots) { (result: Spot) in
-                                NavigationLink(destination: DetailView(content: DetailContent(spot: result))) {
-                                    SpotCellView(spot: result)
-                                }
-                            }
-                        }
-                        .padding(.horizontal, 8)
-                    }
+                Rectangle()
+                    .frame(height: 250)
+                    .listRowInsets(EdgeInsets())
+                ForEach(content.usedCategories, id: \.self) { (category: String) in
+                    SpotListView(
+                        cathegory: category,
+                        spots: content.getSpotsBy(category: category)
+                    )
                 }
-                .padding(.bottom)
-                .listRowInsets(EdgeInsets())
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

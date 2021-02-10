@@ -16,7 +16,8 @@ class HomeContent: ObservableObject {
         didSet { showAlert = true }
     }
     @Published private(set) var loadingIndicator: String = ""
-
+    @Published private(set) var usedCategories: [String] = []
+    
     // MARK: - Public Methods
     func loadSpots(context: NSManagedObjectContext) {
         let request: NSFetchRequest<Spot> = Spot.fetchRequest()
@@ -24,7 +25,7 @@ class HomeContent: ObservableObject {
             self.spots = result
         } else { self.spots = [] }
     }
-
+    
     func refreshSpots (context: NSManagedObjectContext) {
         loadingIndicator = "Syncing..."
         Spot.fetchSpots() { [unowned self] (fetchedSpots) in
@@ -54,6 +55,7 @@ class HomeContent: ObservableObject {
                     Spot.getSpots(context: context) { [unowned self] (result) in
                         DispatchQueue.main.async {
                             self.spots = result
+                            self.getUsedCategories()
                             loadingIndicator = ""
                         }
                     }
@@ -61,7 +63,32 @@ class HomeContent: ObservableObject {
             }
         }
     }
-
+    
+    func getSpotsBy(category: String) -> [Spot] {
+        guard !spots.isEmpty else { return [] }
+        var spotList: [Spot] = []
+        for spot in spots {
+            guard let categoryString = spot.category else { return [] }
+            if categoryString == category {
+                spotList.append(spot)
+            }
+        }
+        return spotList
+    }
+    
+    private func getUsedCategories() {
+        usedCategories = []
+        for category in Spot.Category.allCases {
+            for spot in spots {
+                guard let categoryString = spot.category else { return }
+                if categoryString == category.rawValue {
+                    usedCategories.append(categoryString)
+                    break
+                }
+            }
+        }
+    }
+    
 }
 
 // MARK: - Private Methods

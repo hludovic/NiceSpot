@@ -98,7 +98,7 @@ extension Spot {
 // MARK: - Enum
 extension Spot {
     /// The list of categories in which a spot can be placed.
-    enum Category: String {
+    enum Category: String, CaseIterable {
         case unknown = "Unknown"
         case beach = "Beach"
         case mountain = "Mountain"

@@ -32,6 +32,7 @@
 		43B1CA4125B48AA900B9E5EE /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43B1CA4025B48AA900B9E5EE /* HomeView.swift */; };
 		43B538E825BA421E00321B05 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43B538E725BA421E00321B05 /* MapView.swift */; };
 		43D0648425B7E27900AC69A6 /* DetailContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43D0648325B7E27900AC69A6 /* DetailContent.swift */; };
+		43D33D3C25D329ED007B462D /* SpotListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43D33D3B25D329ED007B462D /* SpotListView.swift */; };
 		43F705AE25C757FD00F4A81B /* CommentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43F705AD25C757FD00F4A81B /* CommentsView.swift */; };
 /* End PBXBuildFile section */
 
@@ -76,6 +77,7 @@
 		43B1CA4025B48AA900B9E5EE /* HomeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		43B538E725BA421E00321B05 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		43D0648325B7E27900AC69A6 /* DetailContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailContent.swift; sourceTree = "<group>"; };
+		43D33D3B25D329ED007B462D /* SpotListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotListView.swift; sourceTree = "<group>"; };
 		43F705AD25C757FD00F4A81B /* CommentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -200,6 +202,7 @@
 			children = (
 				43B538E725BA421E00321B05 /* MapView.swift */,
 				43218A1A25B4804800B7C28B /* SpotCellView.swift */,
+				43D33D3B25D329ED007B462D /* SpotListView.swift */,
 				438089BC25C85CF8002C9919 /* PostCommentView.swift */,
 				43F705AD25C757FD00F4A81B /* CommentsView.swift */,
 				431249DD25CDA306008CC1D0 /* SearchSubView.swift */,
@@ -317,6 +320,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				43D33D3C25D329ED007B462D /* SpotListView.swift in Sources */,
 				432167FD25D16AA500B082EF /* Preview.swift in Sources */,
 				43B538E825BA421E00321B05 /* MapView.swift in Sources */,
 				431249DE25CDA306008CC1D0 /* SearchSubView.swift in Sources */,
