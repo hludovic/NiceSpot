@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SpotListView: View {
+struct SpotScrollView: View {
     let cathegory: String
     let spots: [Spot]
     
@@ -40,7 +40,7 @@ struct SpotListView: View {
 
 struct SpotListView_Previews: PreviewProvider {
     static var previews: some View {
-        SpotListView(
+        SpotScrollView(
             cathegory: Spot.Category.mountain.rawValue,
             spots: [Preview.spot, Preview.spot, Preview.spot]
         )

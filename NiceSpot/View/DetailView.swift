@@ -77,6 +77,8 @@ struct DetailView: View {
     }
 }
 
+// MARK: - Comment Button
+
 struct CommentButton: View {
     @ObservedObject var content: DetailContent
     

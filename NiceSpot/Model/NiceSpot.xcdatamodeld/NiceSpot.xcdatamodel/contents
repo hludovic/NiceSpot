@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17709" systemVersion="20C69" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17709" systemVersion="20D74" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Favorite" representedClassName="Favorite" syncable="YES" codeGenerationType="class">
+        <attribute name="spotId" optional="YES" attributeType="String"/>
+    </entity>
     <entity name="Spot" representedClassName="Spot" syncable="YES" codeGenerationType="class">
         <attribute name="category" attributeType="String"/>
         <attribute name="detail" attributeType="String"/>
@@ -12,5 +15,6 @@
     </entity>
     <elements>
         <element name="Spot" positionX="-20012.11328125" positionY="-5572.3203125" width="128" height="149"/>
+        <element name="Favorite" positionX="-20016" positionY="-5517" width="128" height="44"/>
     </elements>
 </model>

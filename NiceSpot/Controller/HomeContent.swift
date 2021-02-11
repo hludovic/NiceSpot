@@ -20,11 +20,11 @@ class HomeContent: ObservableObject {
     
     // MARK: - Public Methods
     func loadSpots(context: NSManagedObjectContext) {
-        let request: NSFetchRequest<Spot> = Spot.fetchRequest()
-        if let result = try? context.fetch(request) {
+        Spot.getSpots(context: context) { [unowned self] (result) in
             self.spots = result
-        } else { self.spots = [] }
-        getUsedCategories()
+            self.getUsedCategories()
+        }
+        
     }
     
     func refreshSpots (context: NSManagedObjectContext) {
@@ -76,7 +76,25 @@ class HomeContent: ObservableObject {
         return spotList
     }
     
-    private func getUsedCategories() {
+    
+}
+
+// MARK: - Private Methods
+
+private extension HomeContent {
+// Dans Spot <--
+    func clearSpots(context: NSManagedObjectContext, completion: @escaping (Bool) -> Void) {
+        Spot.removeAllSpots(context: context) { (success) in
+            if success {
+                ImageManager.imageCache.removeAllObjects()
+                completion(true)
+            } else {
+                completion(false)
+            }
+        }
+    }
+    
+    func getUsedCategories() {
         usedCategories = []
         for category in Spot.Category.allCases {
             for spot in spots {
@@ -89,21 +107,4 @@ class HomeContent: ObservableObject {
         }
     }
     
-}
-
-// MARK: - Private Methods
-private extension HomeContent {
-
-    func clearSpots(context: NSManagedObjectContext, completion: @escaping (Bool) -> Void) {
-        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = Spot.fetchRequest()
-        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
-        do {
-            try context.execute(deleteRequest)
-            completion(true)
-        } catch {
-            completion(false)
-        }
-        ImageManager.imageCache.removeAllObjects()
-    }
-
 }

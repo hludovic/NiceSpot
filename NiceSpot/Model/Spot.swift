@@ -9,6 +9,7 @@ import Foundation
 import CoreData
 
 extension Spot {
+    
     // MARK: - Static Methods
     
     /// This static method returns all values contained in the Spot entity.
@@ -42,7 +43,7 @@ extension Spot {
     ///   - context: The NSManagedObjectContext used for this task.
     ///   - fetchedSpots: The FetchedSpot array to be saved in core data.
     ///   - completion: Returns true if the task is performed with success.
-    static func saveFetchedSpots(context: NSManagedObjectContext, fetchedSpots: [Fetched], completion: @escaping (Bool) -> Void) {
+    static func saveFetchedSpots(context: NSManagedObjectContext, fetchedSpots: [Fetched], success: @escaping (Bool) -> Void) {
         for fetchedSpot in fetchedSpots {
             let spot = Spot(context: context)
             spot.id = fetchedSpot.recordID.recordName
@@ -56,10 +57,10 @@ extension Spot {
             do {
                 try context.save()
             } catch {
-                completion(false)
+                success(false)
             }
         }
-        completion(true)
+        success(true)
     }
     
     /// This static method downloads all values stored in the public CLoudKit database.
@@ -93,10 +94,23 @@ extension Spot {
         publicDB.add(operation)
     }
     
+    static func removeAllSpots(context: NSManagedObjectContext, completion: @escaping (Bool) -> Void) {
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = Spot.fetchRequest()
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        do {
+            try context.execute(deleteRequest)
+        } catch {
+            completion(false)
+        }
+        completion(true)
+    }
+    
 }
 
 // MARK: - Enum
+
 extension Spot {
+    
     /// The list of categories in which a spot can be placed.
     enum Category: String, CaseIterable {
         case unknown = "Unknown"
@@ -144,7 +158,9 @@ extension Spot {
 }
 
 // MARK: - Nested Struct
+
 extension Spot {
+    
     /// A struct representing the result of a Spot request passed on CloudKit.
     struct Fetched {
         let recordID: CKRecord.ID

@@ -15,10 +15,11 @@ struct HomeView: View {
         NavigationView {
             List {
                 Rectangle()
+                    .fill(Color.gray)
                     .frame(height: 250)
                     .listRowInsets(EdgeInsets())
                 ForEach(content.usedCategories, id: \.self) { (category: String) in
-                    SpotListView(
+                    SpotScrollView(
                         cathegory: category,
                         spots: content.getSpotsBy(category: category)
                     )
