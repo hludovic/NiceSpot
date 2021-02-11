@@ -16,7 +16,7 @@ struct MainView: View {
                     Image(systemName: "rectangle.stack")
                     Text("Spots")
                 }.tag(0)
-                FavoriteView()
+            FavoriteView()
                 .tabItem {
                     Image(systemName: "bookmark")
                     Text("Saved")
@@ -25,7 +25,7 @@ struct MainView: View {
                 .tabItem {
                     Image(systemName: "magnifyingglass")
                     Text("Search")
-                }.tag(1)
+                }.tag(2)
         }
     }
 }

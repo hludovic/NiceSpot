@@ -29,7 +29,7 @@ extension Favorite {
     
     static func isFavorite(context: NSManagedObjectContext, spotId: String, completion: @escaping (Bool) -> Void) {
         getFavorites(context: context) { (favorites) in
-            if favorites.count > 0 {
+            if !favorites.isEmpty {
                 for favorite in favorites {
                     guard let favoriteId = favorite.spotId else { return }
                     if favoriteId == spotId {
@@ -61,8 +61,13 @@ extension Favorite {
         getFavorite(context: context, spotId: spotId) { (favorite) in
             guard let favorite = favorite else { return success(false) }
             context.delete(favorite)
+            
+            do {
+                try context.save()
+            } catch {
+                success(false)
+            }
             success(true)
         }
     }
-
 }
