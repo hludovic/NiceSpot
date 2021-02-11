@@ -27,24 +27,25 @@ extension Favorite {
         } else { completion(nil) }
     }
     
-    static func isFavorite(context: NSManagedObjectContext, spotId: String, completion: @escaping (Bool?) -> Void) {
+    static func isFavorite(context: NSManagedObjectContext, spotId: String, completion: @escaping (Bool) -> Void) {
         getFavorites(context: context) { (favorites) in
-            guard !favorites.isEmpty else { return completion(true) }
-            for favorite in favorites {
-                guard let favoriteId = favorite.spotId else { return completion(nil) }
-                if favoriteId == spotId {
-                    completion(true)
-                    break
+            if favorites.count > 0 {
+                for favorite in favorites {
+                    guard let favoriteId = favorite.spotId else { return }
+                    if favoriteId == spotId {
+                        return completion(true)
+                    }
                 }
+                completion(false)
+            } else {
                 completion(false)
             }
         }
     }
-    
+        
     static func saveSpotId(context: NSManagedObjectContext, spotId: String, success: @escaping (Bool) -> Void) {
-        isFavorite(context: context, spotId: spotId) { (result) in
-            guard let result = result else { return success(false) }
-            guard result else { return success(false) }
+        isFavorite(context: context, spotId: spotId) { (isFavorite) in
+            guard !isFavorite else { return success(false) }
             let favorite = Favorite(context: context)
             favorite.spotId = spotId
             do {

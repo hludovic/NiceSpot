@@ -6,9 +6,9 @@
 //
 
 import Foundation
-import CoreLocation
 import SwiftUI
 import MapKit
+import CoreData
 
 class DetailContent: ObservableObject {
     // MARK: - Public Property
@@ -29,6 +29,8 @@ class DetailContent: ObservableObject {
     @Published var displayCommentSheet: Bool = false {
         didSet { if displayCommentSheet && canComment { clearUserLoadedComment() } }
     }
+//    @Published var isFavorite: Bool = false
+    
     // MARK: - Private Property
     
     private let imageManager = ImageManager()
@@ -157,6 +159,22 @@ class DetailContent: ObservableObject {
             guard let uiImage = uiImage else { return }
             DispatchQueue.main.async {
                 self.image = Image(uiImage: uiImage)
+            }
+        }
+    }
+    
+    func pressFavoriteButton(context: NSManagedObjectContext, completion: @escaping (_ iconName: String?) -> Void) {
+        Favorite.isFavorite(context: context, spotId: spot.id) { (isFavorite) in
+            if isFavorite {
+                Favorite.remove(context: context, spotId: self.spot.id) { (success) in
+                    guard success else { return completion(nil) }
+                    completion("bookmark")
+                }
+            } else {
+                Favorite.saveSpotId(context: context, spotId: self.spot.id) { (success) in
+                    guard success else { return completion(nil) }
+                    completion("bookmark.fill")
+                }
             }
         }
     }

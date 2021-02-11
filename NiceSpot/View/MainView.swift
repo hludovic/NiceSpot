@@ -13,13 +13,13 @@ struct MainView: View {
         TabView {
             HomeView()
                 .tabItem {
-                    Image(systemName: "house")
-                    Text("Home")
+                    Image(systemName: "rectangle.stack")
+                    Text("Spots")
                 }.tag(0)
-            Text("Second View")
+                FavoriteView()
                 .tabItem {
-                    Image(systemName: "star")
-                    Text("Favorite")
+                    Image(systemName: "bookmark")
+                    Text("Saved")
                 }.tag(1)
             SearchView()
                 .tabItem {

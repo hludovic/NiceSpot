@@ -56,6 +56,7 @@ class HomeContent: ObservableObject {
                     Spot.getSpots(context: context) { [unowned self] (result) in
                         DispatchQueue.main.async {
                             self.spots = result
+                            self.getUsedCategories()
                             loadingIndicator = ""
                         }
                     }

@@ -41,14 +41,14 @@ class FavoriteTests: XCTestCase {
             XCTAssertNil(favorite)
         }
     }
-    
-    func testGivenAnIdIsSaved_WhenIGetAGoodId_ThenItReturnsTrue() {
+
+    func testGivenAnIdIsSaved_WhenIGetThisFavorite_ThenItReturnsTrue() {
         Favorite.saveSpotId(context: self.viewContext, spotId: "__SPOT_ID__") { (success) in
             XCTAssertTrue(success)
         }
 
         Favorite.getFavorite(context: self.viewContext, spotId: "__SPOT_ID__") { (favorite) in
-            XCTAssertNotNil(favorite)
+            XCTAssertEqual(favorite!.spotId, "__SPOT_ID__")
         }
     }
     
@@ -56,34 +56,33 @@ class FavoriteTests: XCTestCase {
         Favorite.saveSpotId(context: self.viewContext, spotId: "__SPOT_ID__") { (success) in
             XCTAssertTrue(success)
         }
-
-        Favorite.isFavorite(context: viewContext, spotId: "__SPOT_ID__") { (success) in
-            XCTAssertNotNil(success)
-            XCTAssertTrue(success!)
+        
+        Favorite.isFavorite(context: viewContext, spotId: "__SPOT_ID__") { (isFavorite) in
+            XCTAssertTrue(isFavorite)
         }
+
     }
-    
+
     func testGivenAnIdIsSaved_WhenITestAWrongIdIfItIsFavorite_ThenItReturnsFalse() {
         Favorite.saveSpotId(context: self.viewContext, spotId: "__SPOT_ID__") { (success) in
             XCTAssertTrue(success)
         }
 
         Favorite.isFavorite(context: viewContext, spotId: "__NOT_STORED_SPOT_ID__") { (success) in
-            XCTAssertNotNil(success)
-            XCTAssertFalse(success!)
+            XCTAssertFalse(success)
         }
     }
-    
+
     func testGivenAnIdIsSaved_WhenIDeleteThisFavorite_ThenItReturnsTrue() {
         Favorite.saveSpotId(context: self.viewContext, spotId: "__SPOT_ID__") { (success) in
             XCTAssertTrue(success)
         }
-        
+
         Favorite.remove(context: viewContext, spotId: "__SPOT_ID__") { (success) in
             XCTAssertTrue(success)
         }
     }
-    
+
     func testGivenNothingIsSaved_WhenIDeleteAFavorite_ThenItReturnsFalse() {
         Favorite.getFavorites(context: viewContext) { (favorites) in
             XCTAssertEqual(favorites.count, 0)
@@ -94,16 +93,15 @@ class FavoriteTests: XCTestCase {
         }
     }
 
+    func testASpotIsInFavorite_WhenSaveThisSpotAgain_ThenItReturnsFalse() {
+        Favorite.saveSpotId(context: self.viewContext, spotId: "__SPOT_ID__") { (success) in
+            XCTAssertTrue(success)
+        }
 
-    
-    
-
-
-
-    
-    
-    
-    
+        Favorite.saveSpotId(context: self.viewContext, spotId: "__SPOT_ID__") { (success) in
+            XCTAssertFalse(success)
+        }
+    }
     
     func loadTestableContext() -> NSManagedObjectContext {
         let persistentStoreDescription = NSPersistentStoreDescription()

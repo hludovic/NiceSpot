@@ -12,30 +12,29 @@ struct DetailView: View {
     
     var body: some View {
         ScrollView(.vertical, showsIndicators: true) {
-            ZStack(alignment: Alignment(horizontal: .leading, vertical: .bottom)) {
-                NavigationLink(destination: content.image) {
-                    content.image
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                }
-                HStack {
-                    Image("\(content.spot.category)")
-                        .resizable()
-                        .frame(width: 24, height: 24)
-                        .clipShape(Capsule())
-                    Text(content.spot.title)
-                    Spacer()
-                    Text(content.spot.municipality)
-                        .font(.caption)
-                }
-                .padding(.horizontal)
-                .foregroundColor(.white)
-                .background(Color.black.opacity(0.5))
+            content.image
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+            HStack {
+                Image("\(content.spot.category)")
+                    .resizable()
+                    .frame(width: 24, height: 24)
+                    .clipShape(Capsule())
+                Text(content.spot.title)
+                Spacer()
+                Text(content.spot.municipality)
+                    .font(.caption)
+                FavoriteButton(content: content)
             }
+            .padding(.horizontal)
+            .foregroundColor(.white)
+            .background(Color.black.opacity(0.5))
+            .offset(y: -32.0)
+            .padding(.bottom, -32)
             Text(content.spot.detail)
                 .font(.body)
                 .foregroundColor(Color.gray)
-                .padding()
+                .padding([.leading, .bottom, .trailing])
             Group {
                 HStack {
                     Text("Location")
@@ -43,8 +42,9 @@ struct DetailView: View {
                     Spacer()
                     Link("Open in Maps", destination: content.spot.mapLink)
                 }
-                .padding(.bottom, -5)
                 .font(.subheadline)
+                .offset(y: -5)
+                .padding(.bottom, -5)
                 MapView(content: content)
                     .padding(.bottom, 20)
                     .frame(height: 300)
@@ -60,6 +60,7 @@ struct DetailView: View {
                         CommentButton(content: content)
                     }
                 }
+                .offset(y: -5)
                 .padding(.bottom, -5)
                 .font(.subheadline)
                 .padding(.horizontal)
@@ -74,6 +75,35 @@ struct DetailView: View {
             content.refreshComments()
         }
         .navigationTitle(content.spot.category)
+    }
+}
+
+// MARK: - Favorite Button
+
+struct FavoriteButton: View {
+    @ObservedObject var content: DetailContent
+    @State var buttonIcon: String = "bookmark"
+    @Environment(\.managedObjectContext) private var viewContext
+    
+    var  body: some View {
+        Button(action: {
+            content.pressFavoriteButton(context: viewContext) { (iconButton) in
+                guard let iconButton = iconButton else { return }
+                buttonIcon = iconButton
+            }
+        }, label: {
+            Image(systemName: buttonIcon)
+                .foregroundColor(.red)
+        })
+        .onAppear{
+            Favorite.isFavorite(context: viewContext, spotId: content.spot.id) { (isFavorite) in
+                if isFavorite {
+                    buttonIcon = "bookmark.fill"
+                } else {
+                    buttonIcon = "bookmark"
+                }
+            }
+        }
     }
 }
 
@@ -114,5 +144,6 @@ struct CommentButton: View {
 struct SpotDetailView_Previews: PreviewProvider {
     static var previews: some View {
         DetailView(content: DetailContent(spot: Preview.spot))
+            .environment(\.managedObjectContext, Preview.context)
     }
 }
