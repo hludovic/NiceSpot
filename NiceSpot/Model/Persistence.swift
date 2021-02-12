@@ -8,6 +8,19 @@
 import CoreData
 
 class PersistenceController: ObservableObject {
+    
+    // MARK: - CloudKit Static Property
+    
+    static let publicCKDB: CKDatabase = CKContainer(identifier: "iCloud.fr.hludovic.container1").publicCloudDatabase
+    
+    static var isICloudAvailable: Bool {
+        if let _ = FileManager.default.ubiquityIdentityToken{
+            return true
+        } else { return false }
+    }
+    
+    // MARK: - CoreData Static Property
+    
     static let shared = PersistenceController()
     
     let container: NSPersistentContainer

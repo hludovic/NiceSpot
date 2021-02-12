@@ -61,7 +61,6 @@ extension Favorite {
         getFavorite(context: context, spotId: spotId) { (favorite) in
             guard let favorite = favorite else { return success(false) }
             context.delete(favorite)
-            
             do {
                 try context.save()
             } catch {

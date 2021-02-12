@@ -14,6 +14,7 @@ class DetailContentTests: XCTestCase {
     var spots: [Spot] = []
     
     override func setUp() {
+        super.setUp()
         PersistenceHelper.clearSpots(context: context) { (_) in
             PersistenceHelper.saveFakeSpots(context: self.context)
             self.spots = PersistenceHelper.getFakeSpots(context: self.context)

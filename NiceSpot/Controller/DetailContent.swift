@@ -61,7 +61,7 @@ class DetailContent: ObservableObject {
     // MARK: - Public Methods
     
     func refreshComments() {
-        Comment.getComments(ckDatabase: Comment.publicDB, spotId: spot.id) { [unowned self] (result) in
+        Comment.getComments(spotId: spot.id) { [unowned self] (result) in
             switch result {
             case .failure(_ ):
                 DispatchQueue.main.async { errorMessage = "ERROR LOADING COMMENTS" }
@@ -75,7 +75,7 @@ class DetailContent: ObservableObject {
     }
     
     func loadUserComment() {
-        Comment.getComments(ckDatabase: Comment.publicDB, spotId: spot.id) { [unowned self] (result) in
+        Comment.getComments(spotId: spot.id) { [unowned self] (result) in
             switch result {
             case .failure(_ ):
                 DispatchQueue.main.async { errorMessage = "ERROR LOADING COMMENT" }

@@ -56,7 +56,7 @@ struct DetailView: View {
                     Text("Comments")
                         .fontWeight(.medium)
                     Spacer()
-                    if Comment.isICloudAvailable {
+                    if PersistenceController.isICloudAvailable {
                         CommentButton(content: content)
                     }
                 }
