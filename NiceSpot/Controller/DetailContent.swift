@@ -114,10 +114,7 @@ class DetailContent: ObservableObject {
                 return
             }
             DispatchQueue.main.async {
-                self.isLoading = false
-                self.displayCommentSheet = false
-                self.canComment = false
-                self.isSaveButtonDisabled = false
+                successOperation()
                 refreshComments()
             }
         }
@@ -143,12 +140,15 @@ class DetailContent: ObservableObject {
                 return
             }
             DispatchQueue.main.async {
-                self.isLoading = false
-                self.displayCommentSheet = false
-                self.canComment = false
-                self.isSaveButtonDisabled = false
-                refreshComments()
-
+                successOperation()
+                self.comments.append(Comment.Item(
+                    id: "",
+                    title: userComment.title,
+                    detail: userComment.detail,
+                    authorID: "",
+                    authorPseudo: userComment.authorPseudo,
+                    creationDate: Date())
+                )
             }
         }
     }
@@ -164,14 +164,17 @@ class DetailContent: ObservableObject {
     
     func pressFavoriteButton(context: NSManagedObjectContext, completion: @escaping (_ iconName: String?) -> Void) {
         Favorite.isFavorite(context: context, spotId: spot.id) { (isFavorite) in
+            let generator = UINotificationFeedbackGenerator()
             if isFavorite {
                 Favorite.remove(context: context, spotId: self.spot.id) { (success) in
                     guard success else { return completion(nil) }
+                    generator.notificationOccurred(.success)
                     completion("bookmark")
                 }
             } else {
                 Favorite.saveSpotId(context: context, spotId: self.spot.id) { (success) in
                     guard success else { return completion(nil) }
+                    generator.notificationOccurred(.success)
                     completion("bookmark.fill")
                 }
             }
@@ -182,6 +185,15 @@ class DetailContent: ObservableObject {
 
 // MARK: - Private Methods
 private extension DetailContent {
+    func successOperation() {
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(.success)
+        isLoading = false
+        displayCommentSheet = false
+        canComment = false
+        isSaveButtonDisabled = false
+    }
+    
     func refreshCanCommentStatus(comments: [Comment.Item]) {
         guard comments.count > 0 else { return canComment = true }
         for comment in comments {

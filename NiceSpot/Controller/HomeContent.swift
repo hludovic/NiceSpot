@@ -77,7 +77,6 @@ class HomeContent: ObservableObject {
         return spotList
     }
     
-    
 }
 
 // MARK: - Private Methods

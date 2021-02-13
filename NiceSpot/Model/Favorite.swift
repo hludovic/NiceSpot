@@ -12,9 +12,13 @@ extension Favorite {
     
     static func getFavorites(context: NSManagedObjectContext, completion: @escaping([Favorite]) -> Void ) {
         let request: NSFetchRequest<Favorite> = Favorite.fetchRequest()
-        if let result = try? context.fetch(request) {
+        do {
+            let result = try context.fetch(request)
             completion(result)
-        } else { completion([]) }
+        } catch {
+            print("error GetFavorites")
+            completion([])
+        }
     }
     
     static func getFavorite(context: NSManagedObjectContext, spotId: String, completion: @escaping (Favorite?) -> Void ) {
