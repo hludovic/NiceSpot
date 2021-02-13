@@ -21,9 +21,7 @@
 		436B1DD625C8BBA70004863A /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436B1DD525C8BBA70004863A /* MainView.swift */; };
 		436B580625B5FE5B0020883B /* SpotCellContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436B580525B5FE5B0020883B /* SpotCellContent.swift */; };
 		436E0A5425B5154000BD456D /* HomeContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436E0A5325B5154000BD456D /* HomeContent.swift */; };
-		437A8EE125CF0F07000AB5EB /* HomeContentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 437A8EE025CF0F07000AB5EB /* HomeContentTests.swift */; };
 		437A8EEB25CF23B1000AB5EB /* PersistenceHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 437A8EEA25CF23B1000AB5EB /* PersistenceHelper.swift */; };
-		437A8EF125CF2865000AB5EB /* DetailContentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 437A8EF025CF2865000AB5EB /* DetailContentTests.swift */; };
 		438089BD25C85CF8002C9919 /* PostCommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 438089BC25C85CF8002C9919 /* PostCommentView.swift */; };
 		438A67F725C6438D00BB262B /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 438A67F625C6438D00BB262B /* Comment.swift */; };
 		438BEF1725B47EBE00CA5042 /* NiceSpotApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 438BEF1625B47EBE00CA5042 /* NiceSpotApp.swift */; };
@@ -69,9 +67,7 @@
 		4371872325D0831800E6B269 /* Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preview.swift; sourceTree = "<group>"; };
 		437A8ED225CF0E8A000AB5EB /* NiceSpotTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NiceSpotTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		437A8ED625CF0E8A000AB5EB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		437A8EE025CF0F07000AB5EB /* HomeContentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeContentTests.swift; sourceTree = "<group>"; };
 		437A8EEA25CF23B1000AB5EB /* PersistenceHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceHelper.swift; sourceTree = "<group>"; };
-		437A8EF025CF2865000AB5EB /* DetailContentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailContentTests.swift; sourceTree = "<group>"; };
 		438089BC25C85CF8002C9919 /* PostCommentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCommentView.swift; sourceTree = "<group>"; };
 		438A67F625C6438D00BB262B /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		438BEF1325B47EBE00CA5042 /* NiceSpot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NiceSpot.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -123,13 +119,11 @@
 		437A8ED325CF0E8A000AB5EB /* NiceSpotTests */ = {
 			isa = PBXGroup;
 			children = (
-				437A8ED625CF0E8A000AB5EB /* Info.plist */,
 				43B6A31A25D76E56001BB331 /* SpotTests.swift */,
 				4330F0D825D4917C00CCF814 /* FavoriteTests.swift */,
 				43EB058625D4EE8C00E2803C /* CommentTests.swift */,
-				437A8EE025CF0F07000AB5EB /* HomeContentTests.swift */,
-				437A8EF025CF2865000AB5EB /* DetailContentTests.swift */,
 				437A8EEA25CF23B1000AB5EB /* PersistenceHelper.swift */,
+				437A8ED625CF0E8A000AB5EB /* Info.plist */,
 			);
 			path = NiceSpotTests;
 			sourceTree = "<group>";
@@ -328,11 +322,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				437A8EE125CF0F07000AB5EB /* HomeContentTests.swift in Sources */,
 				43EB058725D4EE8C00E2803C /* CommentTests.swift in Sources */,
 				4330F0D925D4917C00CCF814 /* FavoriteTests.swift in Sources */,
 				437A8EEB25CF23B1000AB5EB /* PersistenceHelper.swift in Sources */,
-				437A8EF125CF2865000AB5EB /* DetailContentTests.swift in Sources */,
 				43B6A31B25D76E56001BB331 /* SpotTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

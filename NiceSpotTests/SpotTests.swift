@@ -16,23 +16,64 @@ class SpotTests: XCTestCase {
         super.setUp()
         self.viewContext = loadTestableContext()
     }
-
     
+    func testGetspots() {
+        //Given Spots Saved
+        PersistenceHelper.saveFakeSpots(context: viewContext)
+        //When GetSpots
+        Spot.getSpots(context: viewContext) { (spots) in
+            //Then
+            XCTAssertEqual(spots.count, 3)
+        }
+    }
     
-    
-    
-
-    func loadTestableContext() -> NSManagedObjectContext {
-        let persistentStoreDescription = NSPersistentStoreDescription()
-        persistentStoreDescription.type = NSInMemoryStoreType
-        let container = NSPersistentContainer(name: "NiceSpot")
-        container.persistentStoreDescriptions = [persistentStoreDescription]
-        container.loadPersistentStores { _, error in
-            if let error = error as NSError? {
-                fatalError("Unresolved error \(error), \(error.userInfo)")
+    func testGivenSpotAreSaved_WhenSearchAWordThatExists_ThenSuccess() {
+        //Given
+        PersistenceHelper.saveFakeSpots(context: viewContext)
+        
+        //When
+        Spot.searchSpots(context: viewContext, titleContains: "plage") { (spots) in
+            XCTAssertEqual(spots.count, 2)
+            for spot in spots {
+                XCTAssertTrue(spot.title!.contains("Plage"))
             }
         }
-        return container.newBackgroundContext()
+    }
+    
+    func testGivenSpotAreSaved_WhenSearchAWordThatNotExists_ThenFailure() {
+        //Given
+        PersistenceHelper.saveFakeSpots(context: viewContext)
+        
+        //When
+        Spot.searchSpots(context: viewContext, titleContains: "Palge") { (spots) in
+            //Then
+            XCTAssertEqual(spots.count, 0)
+        }
+    }
+    
+    func testGiventSpotsAreSaved_WhenRefresh_ThenNewSpots() {
+        //Given
+        PersistenceHelper.saveFakeSpots(context: viewContext)
+        
+        // When
+        let expectation = XCTestExpectation(description: "Refreshing spots")
+        Spot.refreshSpots(context: viewContext) { (success) in
+            XCTAssertTrue(success)
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 5.0)
+        
+        //Then
+        Spot.getSpots(context: viewContext) { (spots) in
+            XCTAssertEqual(spots.count, 9)
+        }
+        
+    }
+
+    func loadTestableContext() -> NSManagedObjectContext {
+        let persistenceController = PersistenceController(inMemory: true)
+        let viewContext = persistenceController.container.viewContext
+        return viewContext
     }
 
 }

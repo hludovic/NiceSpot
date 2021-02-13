@@ -9,7 +9,9 @@ import Foundation
 import CoreData
 
 class HomeContent: ObservableObject {
+    
     // MARK: Properties
+    
     @Published var showAlert: Bool = false
     @Published private(set) var spots: [Spot] = []
     @Published private(set) var errorMessage: String = "" {
@@ -19,47 +21,29 @@ class HomeContent: ObservableObject {
     @Published private(set) var usedCategories: [String] = []
     
     // MARK: - Public Methods
+    
     func loadSpots(context: NSManagedObjectContext) {
         Spot.getSpots(context: context) { [unowned self] (result) in
             self.spots = result
             self.getUsedCategories()
         }
-        
     }
     
     func refreshSpots (context: NSManagedObjectContext) {
         loadingIndicator = "Syncing..."
-        Spot.fetchSpots() { [unowned self] (fetchedSpots) in
-            guard fetchedSpots.count != 0 else {
+        Spot.refreshSpots(context: context) { [unowned self] (success) in
+            guard success else {
                 DispatchQueue.main.async {
-                    errorMessage = "ERROR: Not fetched"
                     loadingIndicator = ""
+                    errorMessage = "Error: Not refreshed"
                 }
                 return
             }
-            self.clearSpots(context: context) { [unowned self] (cleared) in
-                guard cleared else {
-                    DispatchQueue.main.async {
-                        self.errorMessage = "ERROR: Not cleared"
-                        loadingIndicator = ""
-                    }
-                    return
-                }
-                Spot.saveFetchedSpots(context: context, fetchedSpots: fetchedSpots) { [unowned self] (saved) in
-                    guard saved else {
-                        DispatchQueue.main.async {
-                            errorMessage = "ERROR: Not converted"
-                            loadingIndicator = ""
-                        }
-                        return
-                    }
-                    Spot.getSpots(context: context) { [unowned self] (result) in
-                        DispatchQueue.main.async {
-                            self.spots = result
-                            self.getUsedCategories()
-                            loadingIndicator = ""
-                        }
-                    }
+            Spot.getSpots(context: context) { [unowned self] (spots) in
+                DispatchQueue.main.async {
+                    self.spots = spots
+                    self.getUsedCategories()
+                    loadingIndicator = ""
                 }
             }
         }
@@ -79,20 +63,9 @@ class HomeContent: ObservableObject {
     
 }
 
-// MARK: - Private Methods
+// MARK: - Private Method
 
 private extension HomeContent {
-// Dans Spot <--
-    func clearSpots(context: NSManagedObjectContext, completion: @escaping (Bool) -> Void) {
-        Spot.removeAllSpots(context: context) { (success) in
-            if success {
-                ImageManager.imageCache.removeAllObjects()
-                completion(true)
-            } else {
-                completion(false)
-            }
-        }
-    }
     
     func getUsedCategories() {
         usedCategories = []

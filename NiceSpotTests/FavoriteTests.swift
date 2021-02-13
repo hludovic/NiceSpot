@@ -12,7 +12,7 @@ import CoreData
 
 class FavoriteTests: XCTestCase {
     var viewContext: NSManagedObjectContext!
-    
+
     override func setUp() {
         super.setUp()
         self.viewContext = loadTestableContext()
@@ -110,15 +110,8 @@ class FavoriteTests: XCTestCase {
     }
     
     func loadTestableContext() -> NSManagedObjectContext {
-        let persistentStoreDescription = NSPersistentStoreDescription()
-        persistentStoreDescription.type = NSInMemoryStoreType
-        let container = NSPersistentContainer(name: "NiceSpot")
-        container.persistentStoreDescriptions = [persistentStoreDescription]
-        container.loadPersistentStores { _, error in
-            if let error = error as NSError? {
-                fatalError("Unresolved error \(error), \(error.userInfo)")
-            }
-        }
-        return container.newBackgroundContext()
+        let persistenceController = PersistenceController(inMemory: true)
+        let viewContext = persistenceController.container.viewContext
+        return viewContext
     }
 }

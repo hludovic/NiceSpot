@@ -10,7 +10,7 @@ import CoreData
 
 extension Spot {
     
-    // MARK: - Static Methods
+    // MARK: - Public Static Methods
     
     /// This static method returns all values contained in the Spot entity.
     /// - Parameters:
@@ -38,35 +38,25 @@ extension Spot {
         } else { completion([])}
     }
     
-    /// This static method saves a table of FetchedSpots in CoreData, using the Spot entity.
-    /// - Parameters:
-    ///   - context: The NSManagedObjectContext used for this task.
-    ///   - fetchedSpots: The FetchedSpot array to be saved in core data.
-    ///   - completion: Returns true if the task is performed with success.
-    static func saveFetchedSpots(context: NSManagedObjectContext, fetchedSpots: [Fetched], success: @escaping (Bool) -> Void) {
-        for fetchedSpot in fetchedSpots {
-            let spot = Spot(context: context)
-            spot.id = fetchedSpot.recordID.recordName
-            spot.title = fetchedSpot.title
-            spot.detail = fetchedSpot.detail
-            spot.category = fetchedSpot.category
-            spot.municipality = fetchedSpot.municipality
-            spot.imageName = fetchedSpot.pictureName
-            spot.latitude = fetchedSpot.location.coordinate.latitude
-            spot.longitude = fetchedSpot.location.coordinate.longitude
-            do {
-                try context.save()
-            } catch {
-                success(false)
+    static func refreshSpots(context: NSManagedObjectContext, success: @escaping (Bool) -> Void) {
+        fetchSpots { (spots) in
+            guard !spots.isEmpty else { return success(false) }
+            removeAllSpots(context: context) { (removed) in
+                guard removed else { return success(false) }
+                saveFetchedSpots(context: context, fetchedSpots: spots) { (saved) in
+                    return success(saved)
+                }
             }
         }
-        success(true)
     }
     
-    /// This static method downloads all values stored in the public CLoudKit database.
-    /// - Parameter completion: The callback called after retrieval.
-    /// Returns a table of Spot.Fetched containing the result of the query, or an empty array if the task failed.
-    static func fetchSpots(completion: @escaping ([Fetched]) -> Void) {
+}
+
+// MARK: - Private Static Methods
+
+private extension Spot {
+    
+    private static func fetchSpots(completion: @escaping ([Fetched]) -> Void) {
         let publicDB: CKDatabase = CKContainer(identifier: "iCloud.fr.hludovic.container1").publicCloudDatabase
         let predicate = NSPredicate(value: true)
         let sort = NSSortDescriptor(key: "creationDate", ascending: false)
@@ -94,6 +84,26 @@ extension Spot {
         publicDB.add(operation)
     }
     
+    static func saveFetchedSpots(context: NSManagedObjectContext, fetchedSpots: [Fetched], success: @escaping (Bool) -> Void) {
+        for fetchedSpot in fetchedSpots {
+            let spot = Spot(context: context)
+            spot.id = fetchedSpot.recordID.recordName
+            spot.title = fetchedSpot.title
+            spot.detail = fetchedSpot.detail
+            spot.category = fetchedSpot.category
+            spot.municipality = fetchedSpot.municipality
+            spot.imageName = fetchedSpot.pictureName
+            spot.latitude = fetchedSpot.location.coordinate.latitude
+            spot.longitude = fetchedSpot.location.coordinate.longitude
+            do {
+                try context.save()
+            } catch {
+                success(false)
+            }
+        }
+        success(true)
+    }
+    
     static func removeAllSpots(context: NSManagedObjectContext, completion: @escaping (Bool) -> Void) {
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = Spot.fetchRequest()
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
@@ -104,8 +114,8 @@ extension Spot {
         }
         completion(true)
     }
-    
 }
+
 
 // MARK: - Enum
 
@@ -171,7 +181,6 @@ extension Spot {
         var pictureName: String
         var municipality: String
     }
-    
 }
 
 
