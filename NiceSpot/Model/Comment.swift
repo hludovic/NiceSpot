@@ -48,6 +48,22 @@ class Comment {
         PersistenceController.publicCKDB.add(operation)
     }
     
+    static func getUserComment(spotId: String, userId: String, completion: @escaping (Comment.Item?) -> Void) {
+        getComments(spotId: spotId) { (result) in
+            switch result {
+            case .failure(_ ):
+                completion(nil)
+            case .success(let comments):
+                for comment in comments {
+                    if comment.authorID == userId {
+                        return completion(comment)
+                    }
+                }
+                completion(nil)
+            }
+        }
+    }
+    
     /// Post a comment on a spot.
     /// - Parameters:
     ///   - spotId: The ID of the spot to which this comment relates.
@@ -72,46 +88,27 @@ class Comment {
             }
         }
     }
-    
-    static func updateComment(commentId: String, title: String, comment: String, pseudo: String, success: @escaping (Bool) -> Void) {
-        let recordId = CKRecord.ID(recordName: commentId)
-        PersistenceController.publicCKDB.fetch(withRecordID: recordId) { (record, error) in
-            guard let record = record else { return success(false) }
-            record["title"] = title
-            record["detail"] = comment
-            record["pseudo"] = pseudo
-            PersistenceController.publicCKDB.save(record) { (_ , error) in
-                guard error == nil else { return success(false) }
-                success(true)
+        
+    static func editComment(spotId: String, title: String, detail: String, pseudo: String, success: @escaping (Bool) -> Void) {
+        guard PersistenceController.isICloudAvailable else { return success(false) }
+        getUserComment(spotId: spotId, userId: "__defaultOwner__") { (comment) in
+            guard let comment = comment else { return success(false) }
+            let recordId = CKRecord.ID(recordName: comment.id)
+            PersistenceController.publicCKDB.fetch(withRecordID: recordId) { (record, errors) in
+                guard let record = record else { return success(false) }
+                record["title"] = title
+                record["detail"] = detail
+                record["pseudo"] = pseudo
+                PersistenceController.publicCKDB.save(record) { (_ , error) in
+                    guard error == nil else { return success(false) }
+                    success(true)
+                }
             }
         }
     }
     
     static func removeComment(spotId: String, success: @escaping (Bool) -> Void) {
-//        getComments(spotId: spotId) { (result) in
-//            switch result {
-//            case .failure(_ ):
-//                success(false)
-//            case.success(let comments):
-//                guard !comments.isEmpty else { return success(true) }
-//                var removed = false
-//                for comment in comments {
-//                    if comment.authorID == userId {
-//
-//
-//
-//                    }
-//                }
-//                success(canComment)
-//
-//
-//            }
-//        }
-        
-        
-        
         getUserComment(spotId: spotId, userId: "__defaultOwner__") { (comment) in
-            print("AAA")
             guard let comment = comment else { return success(false) }
             guard comment.authorID == "__defaultOwner__" else { return success(false) }
             let recordId = CKRecord.ID(recordName: comment.id)
@@ -122,43 +119,43 @@ class Comment {
         }
     }
     
-    static func getUserComment(spotId: String, userId: String, completion: @escaping (Comment.Item?) -> Void) {
-        getComments(spotId: spotId) { (result) in
-            switch result {
-            case .failure(_ ):
-                print("AAA")
-                completion(nil)
-            case .success(let comments):
-                print("BBB")
-                for comment in comments {
-                    if comment.authorID == userId {
-                        completion(comment)
-                    }
-                }
-            }
-        }
-    }
-    
 }
 
 // MARK: - Private Static methods
 
 private extension Comment {
+    static func doesRecordExists(recordId: String, completion: @escaping (Bool?) -> Void) {
+        guard PersistenceController.isICloudAvailable else { return completion(nil) }
+        let recordId = CKRecord.ID(recordName: recordId)
+        PersistenceController.publicCKDB.fetch(withRecordID: recordId) { (record, error) in
+            guard error == nil else { return completion(nil) }
+            guard let record = record else { return completion(nil) }
+            if record.recordID.recordName == recordId.recordName {
+                return completion(true)
+            } else {
+                return completion(false)
+            }
+        }
+    }
+    
     static func canPostComment(spotId :String, userId: String, success: @escaping (Bool) -> Void) {
         guard PersistenceController.isICloudAvailable else { return success(false) }
-        Comment.getComments(spotId: spotId) { (result) in
-            switch result {
-            case .success(let comments):
-                guard !comments.isEmpty else { return success(true) }
-                var canComment = true
-                for comment in comments {
-                    if comment.authorID == userId {
-                        canComment = false
+        doesRecordExists(recordId: spotId) { (result) in
+            guard let exists = result, exists else { return success(false) }
+            Comment.getComments(spotId: spotId) { (result) in
+                switch result {
+                case .success(let comments):
+                    guard !comments.isEmpty else { return success(true) }
+                    var canComment = true
+                    for comment in comments {
+                        if comment.authorID == userId {
+                            canComment = false
+                        }
                     }
+                    success(canComment)
+                case .failure( _):
+                    success(false)
                 }
-                success(canComment)
-            case .failure( _):
-                success(false)
             }
         }
     }

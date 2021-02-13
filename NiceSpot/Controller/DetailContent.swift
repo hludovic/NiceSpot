@@ -29,7 +29,6 @@ class DetailContent: ObservableObject {
     @Published var displayCommentSheet: Bool = false {
         didSet { if displayCommentSheet && canComment { clearUserLoadedComment() } }
     }
-//    @Published var isFavorite: Bool = false
     
     // MARK: - Private Property
     
@@ -106,7 +105,7 @@ class DetailContent: ObservableObject {
             errorMessage = "ERROR ..."
             return
         }
-        Comment.updateComment(commentId: userComment.id, title: userComment.title, comment: userComment.detail, pseudo: userComment.authorPseudo) { [unowned self] (success) in
+        Comment.editComment(spotId: spot.id, title: userComment.title, detail: userComment.detail, pseudo: userComment.authorPseudo) { [unowned self] (success) in
             guard success else {
                 DispatchQueue.main.async {
                     self.isLoading = false

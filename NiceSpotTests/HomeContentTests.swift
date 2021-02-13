@@ -44,7 +44,7 @@ class HomeContentTests: XCTestCase {
         let expectation = XCTestExpectation(description: "Fetching spots")
         DispatchQueue.main.asyncAfter(wallDeadline: .now() + 5) {
             //THEN
-            XCTAssertEqual(self.content.spots.count, 2)
+            XCTAssertEqual(self.content.spots.count, 9)
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: 5.0)
