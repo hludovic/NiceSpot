@@ -82,27 +82,16 @@ struct DetailView: View {
 
 struct FavoriteButton: View {
     @ObservedObject var content: DetailContent
-    @State var buttonIcon: String = "bookmark"
     @Environment(\.managedObjectContext) private var viewContext
     
     var  body: some View {
         Button(action: {
-            content.pressFavoriteButton(context: viewContext) { (iconButton) in
-                guard let iconButton = iconButton else { return }
-                buttonIcon = iconButton
-            }
+            content.pressFavoriteButton(context: viewContext)
         }, label: {
-            Image(systemName: buttonIcon)
+            content.favoriteButtonIcon
                 .foregroundColor(.red)
         })
         .onAppear{
-            Favorite.isFavorite(context: viewContext, spotId: content.spot.id) { (isFavorite) in
-                if isFavorite {
-                    buttonIcon = "bookmark.fill"
-                } else {
-                    buttonIcon = "bookmark"
-                }
-            }
         }
     }
 }
@@ -127,7 +116,7 @@ struct CommentButton: View {
             })
         } else {
             Button(action: {
-                content.loadUserComment()
+                content.loadUserComment { _ in }
             }, label: {
                 HStack {
                     Image(systemName: "square.and.pencil")

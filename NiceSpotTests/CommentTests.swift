@@ -9,7 +9,7 @@ import XCTest
 @testable import NiceSpot
 
 class CommentTests: XCTestCase {
-    let spotId = "8EBDDD40-AA09-45C3-3C05-0BF506BEE974"
+    let spotId = FakeData.testableSpotId
     let commentItem = Comment.Item(
         id: "", title: "title",
         detail: "comment", authorID: "",

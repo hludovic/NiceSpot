@@ -29,6 +29,7 @@ class DetailContent: ObservableObject {
     @Published var displayCommentSheet: Bool = false {
         didSet { if displayCommentSheet && canComment { clearUserLoadedComment() } }
     }
+    @Published var favoriteButtonIcon: Image = Image(systemName: "bookmark")
     
     // MARK: - Private Property
     
@@ -72,41 +73,47 @@ class DetailContent: ObservableObject {
         }
     }
     
-    func loadUserComment() {
+    func loadUserComment(success: @escaping (Bool) -> Void) {
         Comment.getComments(spotId: spot.id) { [unowned self] (result) in
             switch result {
             case .failure(_ ):
                 DispatchQueue.main.async { errorMessage = "ERROR LOADING COMMENT" }
+                return success(false)
             case .success(let comments):
+                guard !comments.isEmpty else {
+                    DispatchQueue.main.async { errorMessage = "ERROR LOADING COMMENT" }
+                    return success(false)
+                }
                 for comment in comments {
                     if comment.authorID == "__defaultOwner__" {
                         DispatchQueue.main.async {
                             self.userComment = comment
                             self.displayCommentSheet.toggle()
                         }
-                        break
-                    } else {
-                        DispatchQueue.main.async { errorMessage = "ERROR LOADING COMMENT" }
+                        return success(true)
                     }
                 }
             }
+            DispatchQueue.main.async { errorMessage = "ERROR LOADING COMMENT" }
+            return success(false)
         }
     }
     
-    func updateUserComment() {
+    func updateUserComment(success: @escaping (Bool) -> Void) {
         isLoading = true
-        Comment.editComment(spotId: spot.id, item: userComment) { [unowned self] (success) in
-            guard success else {
+        Comment.editComment(spotId: spot.id, item: userComment) { [unowned self] (isEdited) in
+            guard isEdited else {
                 DispatchQueue.main.async {
                     self.isLoading = false
                     self.errorMessage = "ERROR EDDITING"
                 }
-                return
+                return success(false)
             }
             DispatchQueue.main.async {
                 successOperation()
                 refreshComments()
             }
+            return success(true)
         }
     }
     
@@ -144,22 +151,30 @@ class DetailContent: ObservableObject {
         }
     }
     
-    func pressFavoriteButton(context: NSManagedObjectContext, completion: @escaping (_ iconName: String?) -> Void) {
+    func pressFavoriteButton(context: NSManagedObjectContext) {
         Favorite.isFavorite(context: context, spotId: spot.id) { (isFavorite) in
             let generator = UINotificationFeedbackGenerator()
             if isFavorite {
-                Favorite.remove(context: context, spotId: self.spot.id) { (success) in
-                    guard success else { return completion(nil) }
+                Favorite.remove(context: context, spotId: self.spot.id) { [unowned self] (success) in
+                    guard success else { return }
                     generator.notificationOccurred(.success)
-                    completion("bookmark")
+                    self.refreshFavoriteButtonStatus(context: context)
                 }
             } else {
                 Favorite.saveSpotId(context: context, spotId: self.spot.id) { (success) in
-                    guard success else { return completion(nil) }
+                    guard success else { return }
                     generator.notificationOccurred(.success)
-                    completion("bookmark.fill")
+                    self.refreshFavoriteButtonStatus(context: context)
                 }
             }
+        }
+    }
+    
+    func refreshFavoriteButtonStatus(context: NSManagedObjectContext) {
+        if spot.isFavorite(context: context) {
+            favoriteButtonIcon = Image(systemName: "bookmark.fill")
+        } else {
+            favoriteButtonIcon = Image(systemName: "bookmark")
         }
     }
     
@@ -198,7 +213,6 @@ private extension DetailContent {
         let isNotFill = (userComment.title == "" || userComment.authorPseudo == "") || (userComment.detail == "")
         isSaveButtonDisabled = isNotFill || isLoading
     }
-    
 }
 
 // MARK: - Nested Struct
@@ -214,6 +228,17 @@ extension DetailContent {
         let category: String
         let location: Location
         let mapLink: URL
+        func isFavorite(context: NSManagedObjectContext) -> Bool {
+            var returnValue = false
+            Favorite.isFavorite(context: context, spotId: self.id) { (favorite) in
+                if favorite {
+                    returnValue = true
+                } else {
+                    returnValue = false
+                }
+            }
+            return returnValue
+        }
     }
     
     /// A structure representing a location that can be used as annotationItems in a Map.

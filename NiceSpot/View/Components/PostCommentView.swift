@@ -30,7 +30,7 @@ struct PostCommentView: View {
                     if content.canComment {
                         content.saveUserComment { _ in }
                     } else {
-                        content.updateUserComment()
+                        content.updateUserComment { _ in }
                     }
                 }) {
                     Text("Save")

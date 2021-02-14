@@ -23,7 +23,7 @@ class SpotTests: XCTestCase {
         //When GetSpots
         Spot.getSpots(context: viewContext) { (spots) in
             //Then
-            XCTAssertEqual(spots.count, 3)
+            XCTAssertEqual(spots.count, 4)
         }
     }
     
@@ -65,7 +65,7 @@ class SpotTests: XCTestCase {
         
         //Then
         Spot.getSpots(context: viewContext) { (spots) in
-            XCTAssertEqual(spots.count, 9)
+            XCTAssertEqual(spots.count, 10)
         }
         
     }

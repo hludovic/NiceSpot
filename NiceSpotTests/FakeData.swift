@@ -10,8 +10,10 @@ import CoreData
 @testable import NiceSpot
 
 class FakeData {
-    static func saveFakeSpots(context: NSManagedObjectContext) {
+    static let testableSpotId: String = "91421B70-BC40-C23A-09C8-8897C0D9F3B7"
         
+    static func saveFakeSpots(context: NSManagedObjectContext) {
+                
         // MARK: - Item Cascecr
         let cascecr = Spot(context: context)
         cascecr.category = Spot.Category.waterfall.rawValue
@@ -36,7 +38,7 @@ Elle se trouve juste à côté de la très belle plage de la Perle. Les lieux ne
 
 La plage de l’Anse Rifflet appelle au farniente et à la contemplation. Impossible de rater vos photos de cette plage, les lieux sont tout droit sortis d’une carte postale.
 """
-        rifflet.id = "B11FDB9F-A933-DA3C-0855-FCDF5AEC017E"
+        rifflet.id = testableSpotId
         rifflet.latitude = 16.336675
         rifflet.longitude = -61.785863
         rifflet.municipality = Spot.Municipality.deshaies.rawValue
@@ -56,6 +58,17 @@ Assurément une des plus belles plages en Guadeloupe ! La plage de la Caravelle,
         caravelle.imageName = "caravelle"
         caravelle.title = "La Plage de la Caravelle"
         
+        // MARK: - Item WrongItem
+        let wrongItem = Spot(context: context)
+        wrongItem.category = Spot.Category.beach.rawValue
+        wrongItem.detail = "Test"
+        wrongItem.id = "wrongItem"
+        wrongItem.latitude = 16.221350519784288
+        wrongItem.longitude = -61.39367191555051
+        wrongItem.municipality = Spot.Municipality.sainteAnne.rawValue
+        wrongItem.imageName = "caravelle"
+        wrongItem.title = "Wrong Item"
+        
         do {
             try context.save()
         } catch {
@@ -64,9 +77,9 @@ Assurément une des plus belles plages en Guadeloupe ! La plage de la Caravelle,
         }
     }
     
-    static func getFakeSpot(context: NSManagedObjectContext) -> Spot {
+    static func getFakeSpot(context: NSManagedObjectContext, title: String) -> Spot {
         let request: NSFetchRequest<Spot> = Spot.fetchRequest()
-        let predicate = NSPredicate(format: "title == %@", "La Plage de l’Anse Rifflet")
+        let predicate = NSPredicate(format: "title == %@", title)
         request.predicate = predicate
         let result = try! context.fetch(request)
         return result.first!
