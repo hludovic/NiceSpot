@@ -9,7 +9,7 @@ import Foundation
 import CoreData
 @testable import NiceSpot
 
-class PersistenceHelper {
+class FakeData {
     static func saveFakeSpots(context: NSManagedObjectContext) {
         
         // MARK: - Item Cascecr
@@ -63,22 +63,30 @@ Assurément une des plus belles plages en Guadeloupe ! La plage de la Caravelle,
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
     }
-
-//    static func clearSpots(context: NSManagedObjectContext, completion: @escaping (Bool) -> Void) {
-//        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = Spot.fetchRequest()
-//        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
-//        do {
-//            try context.execute(deleteRequest)
-//            completion(true)
-//        } catch {
-//            completion(false)
-//        }
-//        ImageManager.imageCache.removeAllObjects()
-//    }
     
-//    static func getFakeSpots(context: NSManagedObjectContext) -> [Spot] {
-//        let request: NSFetchRequest<Spot> = Spot.fetchRequest()
-//        let result = try! context.fetch(request)
-//        return result
-//    }
+    static func getFakeSpot(context: NSManagedObjectContext) -> Spot {
+        let request: NSFetchRequest<Spot> = Spot.fetchRequest()
+        let predicate = NSPredicate(format: "title == %@", "La Plage de l’Anse Rifflet")
+        request.predicate = predicate
+        let result = try! context.fetch(request)
+        return result.first!
+    }    
+
+    static func clearSpots(context: NSManagedObjectContext, completion: @escaping (Bool) -> Void) {
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = Spot.fetchRequest()
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        do {
+            try context.execute(deleteRequest)
+            completion(true)
+        } catch {
+            completion(false)
+        }
+        ImageManager.imageCache.removeAllObjects()
+    }
+    
+    static func getFakeSpots(context: NSManagedObjectContext) -> [Spot] {
+        let request: NSFetchRequest<Spot> = Spot.fetchRequest()
+        let result = try! context.fetch(request)
+        return result
+    }
 }

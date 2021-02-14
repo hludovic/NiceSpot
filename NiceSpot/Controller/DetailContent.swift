@@ -48,7 +48,6 @@ class DetailContent: ObservableObject {
                         location: Location(coordinate: coodinate),
                         mapLink: URL(string: "maps://?ll=\(spot.latitude),\(spot.longitude)")!
         )
-        
         self.mapRegion = MKCoordinateRegion(
             center: coodinate,
             span: MKCoordinateSpan(latitudeDelta: 0.002, longitudeDelta: 0.002)
@@ -96,16 +95,7 @@ class DetailContent: ObservableObject {
     
     func updateUserComment() {
         isLoading = true
-        guard
-            userComment.title != "",
-            userComment.authorPseudo != "",
-            userComment.detail != ""
-        else {
-            self.isLoading = false
-            errorMessage = "ERROR ..."
-            return
-        }
-        Comment.editComment(spotId: spot.id, title: userComment.title, detail: userComment.detail, pseudo: userComment.authorPseudo) { [unowned self] (success) in
+        Comment.editComment(spotId: spot.id, item: userComment) { [unowned self] (success) in
             guard success else {
                 DispatchQueue.main.async {
                     self.isLoading = false
@@ -120,24 +110,15 @@ class DetailContent: ObservableObject {
         }
     }
     
-    func saveUserComment() {
+    func saveUserComment(success: @escaping (Bool) -> Void) {
         isLoading = true
-        guard
-            userComment.title != "",
-            userComment.authorPseudo != "",
-            userComment.detail != ""
-        else {
-            self.isLoading = false
-            errorMessage = "ERROR ..."
-            return
-        }
-        Comment.postComment(spotId: spot.id, title: userComment.title, content: userComment.detail, pseudo: userComment.authorPseudo) { [unowned self] (success) in
-            guard success else {
+        Comment.postComment(spotId: spot.id, item: userComment) { [unowned self] (posted) in
+            guard posted else {
                 DispatchQueue.main.async {
                     self.isLoading = false
                     self.errorMessage = "ERROR SAVING"
                 }
-                return
+                return success(false)
             }
             DispatchQueue.main.async {
                 successOperation()
@@ -150,6 +131,7 @@ class DetailContent: ObservableObject {
                     creationDate: Date())
                 )
             }
+            return success(true)
         }
     }
     
@@ -184,6 +166,7 @@ class DetailContent: ObservableObject {
 }
 
 // MARK: - Private Methods
+
 private extension DetailContent {
     func successOperation() {
         let generator = UINotificationFeedbackGenerator()
@@ -219,7 +202,9 @@ private extension DetailContent {
 }
 
 // MARK: - Nested Struct
+
 extension DetailContent {
+    
     struct Item {
         let id: String
         let title: String

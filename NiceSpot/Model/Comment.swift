@@ -71,17 +71,18 @@ class Comment {
     ///   - content: The content of the comment.
     ///   - pseudo: The pseudonym of the author of the comment.
     ///   - success: Dismiss if the task has been completed successfully.
-    static func postComment(spotId: String, title: String, content: String, pseudo: String, success: @escaping (Bool) -> Void) {
+    static func postComment(spotId: String, item: Item, success: @escaping (Bool) -> Void) {
+        guard item.title != "", item.authorPseudo != "", item.detail != "" else { return success(false) }
         canPostComment(spotId: spotId, userId: "__defaultOwner__") { (canPostComment) in
             guard canPostComment else { return success(false) }
-            guard title != "", content != "" else { return success(false) }
+            guard item.title != "", item.detail != "", item.authorPseudo != "" else { return success(false) }
             guard PersistenceController.isICloudAvailable else { return success(false) }
             let commentRecord = CKRecord(recordType: "Comments")
             let reference = CKRecord.Reference(recordID: CKRecord.ID(recordName: spotId), action: .none)
-            commentRecord["title"] = title as CKRecordValue
-            commentRecord["detail"] = content as CKRecordValue
+            commentRecord["title"] = item.title as CKRecordValue
+            commentRecord["detail"] = item.detail as CKRecordValue
             commentRecord["spot"] = reference
-            commentRecord["pseudo"] = pseudo
+            commentRecord["pseudo"] = item.authorPseudo as CKRecordValue
             PersistenceController.publicCKDB.save(commentRecord) { (record, error) in
                 guard error == nil else { return success(false) }
                 success(true)
@@ -89,16 +90,17 @@ class Comment {
         }
     }
         
-    static func editComment(spotId: String, title: String, detail: String, pseudo: String, success: @escaping (Bool) -> Void) {
+    static func editComment(spotId: String, item: Item, success: @escaping (Bool) -> Void) {
+        guard item.title != "", item.authorPseudo != "", item.detail != "" else { return success(false) }
         guard PersistenceController.isICloudAvailable else { return success(false) }
         getUserComment(spotId: spotId, userId: "__defaultOwner__") { (comment) in
             guard let comment = comment else { return success(false) }
             let recordId = CKRecord.ID(recordName: comment.id)
             PersistenceController.publicCKDB.fetch(withRecordID: recordId) { (record, errors) in
                 guard let record = record else { return success(false) }
-                record["title"] = title
-                record["detail"] = detail
-                record["pseudo"] = pseudo
+                record["title"] = item.title
+                record["detail"] = item.detail
+                record["pseudo"] = item.authorPseudo
                 PersistenceController.publicCKDB.save(record) { (_ , error) in
                     guard error == nil else { return success(false) }
                     success(true)

@@ -28,7 +28,7 @@ struct PostCommentView: View {
                 },
                 trailing: Button(action: {
                     if content.canComment {
-                        content.saveUserComment()
+                        content.saveUserComment { _ in }
                     } else {
                         content.updateUserComment()
                     }

@@ -9,8 +9,7 @@ import Foundation
 import CoreData
 
 class HomeContent: ObservableObject {
-    
-    // MARK: Properties
+    // MARK: - Properties
     
     @Published var showAlert: Bool = false
     @Published private(set) var spots: [Spot] = []

@@ -10,7 +10,12 @@ import XCTest
 
 class CommentTests: XCTestCase {
     let spotId = "8EBDDD40-AA09-45C3-3C05-0BF506BEE974"
-    
+    let commentItem = Comment.Item(
+        id: "", title: "title",
+        detail: "comment", authorID: "",
+        authorPseudo: "pseudo", creationDate: Date()
+    )
+
     override func setUp() {
         super.setUp()
         removeComment()
@@ -18,10 +23,19 @@ class CommentTests: XCTestCase {
     
     // MARK: - Delete
     
+    func testWhenDeletingCommentWithAWrongSpotId_ThenItFails() {
+        let expectation = XCTestExpectation(description: "Posting Comment")
+        Comment.removeComment(spotId: "AAA") { (success) in
+            XCTAssertFalse(success)
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 5.0)
+    }
+    
     func testGiventThereAreAComment_WhenDeleteThisComment_ThenSuccess() {
         //Given
         var expectation = XCTestExpectation(description: "Posting Comment")
-        Comment.postComment(spotId: spotId, title: "title", content: "comment", pseudo: "pseudo") { (success) in
+        Comment.postComment(spotId: spotId, item: commentItem) { (success) in
             XCTAssertTrue(success)
             expectation.fulfill()
         }
@@ -31,8 +45,7 @@ class CommentTests: XCTestCase {
         expectation = XCTestExpectation(description: "Fetching comments")
         Comment.getComments(spotId: spotId) { (result) in
             switch result{
-            case .failure(_ ):
-                print("Error")
+            case .failure(_ ): break
             case .success(let comments):
                 XCTAssertEqual(comments.count, 1)
             }
@@ -53,8 +66,7 @@ class CommentTests: XCTestCase {
         expectation = XCTestExpectation(description: "Fetching comments")
         Comment.getComments(spotId: spotId) { (result) in
             switch result{
-            case .failure(_ ):
-                print("Error")
+            case .failure(_ ): break
             case .success(let comments):
                 XCTAssertEqual(comments.count, 0)
             }
@@ -90,6 +102,57 @@ class CommentTests: XCTestCase {
     
     // MARK: - Save
     
+    func testWhenCommentWithAWrongSpotId_ThenItFails() {
+        let expectation = XCTestExpectation(description: "Posting Comment")
+        Comment.postComment(spotId: "AAA", item: commentItem) { (success) in
+            XCTAssertFalse(success)
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 5.0)
+    }
+    
+    func testGivenCommentContainsEmptyContent_WhenSaveComment_ThenFailure() {
+        // Empty Title
+        var item = Comment.Item( id: "", title: "", detail: "comment", authorID: "",
+            authorPseudo: "pseudo", creationDate: Date() )
+        var expectation = XCTestExpectation(description: "Posting comments")
+        Comment.postComment(spotId: spotId, item: item) { (success) in
+            XCTAssertFalse(success)
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 5.0)
+        
+        // Empty Detail
+        item = Comment.Item( id: "", title: "title", detail: "", authorID: "",
+            authorPseudo: "pseudo", creationDate: Date() )
+        expectation = XCTestExpectation(description: "Posting comments")
+        Comment.postComment(spotId: spotId, item: item) { (success) in
+            XCTAssertFalse(success)
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 5.0)
+        
+        // Empty Pseudo
+        item = Comment.Item( id: "", title: "title", detail: "detail", authorID: "",
+            authorPseudo: "", creationDate: Date() )
+        expectation = XCTestExpectation(description: "Posting comments")
+        Comment.postComment(spotId: spotId, item: item) { (success) in
+            XCTAssertFalse(success)
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 5.0)
+        
+        // Empty Item
+        item = Comment.Item( id: "", title: "", detail: "", authorID: "",
+            authorPseudo: "", creationDate: Date() )
+        expectation = XCTestExpectation(description: "Posting comments")
+        Comment.postComment(spotId: spotId, item: item) { (success) in
+            XCTAssertFalse(success)
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 5.0)
+    }
+    
     func testGivenThereAreNoComment_WhenIComment_ThenSuccess() {
         //Given
         var expectation = XCTestExpectation(description: "Fetching comments")
@@ -106,7 +169,7 @@ class CommentTests: XCTestCase {
         
         //When
         expectation = XCTestExpectation(description: "Posting Comment")
-        Comment.postComment(spotId: spotId, title: "title", content: "comment", pseudo: "pseudo") { (success) in
+        Comment.postComment(spotId: spotId, item: commentItem) { (success) in
             XCTAssertTrue(success)
             expectation.fulfill()
         }
@@ -130,7 +193,7 @@ class CommentTests: XCTestCase {
     func testGivenThereAreOneComment_WhenICommentAgain_ThenFailure() {
         //Given
         var expectation = XCTestExpectation(description: "Posting Comment")
-        Comment.postComment(spotId: spotId, title: "title", content: "comment", pseudo: "pseudo") { (success) in
+        Comment.postComment(spotId: spotId, item: commentItem) { (success) in
             XCTAssertTrue(success)
             expectation.fulfill()
         }
@@ -139,7 +202,7 @@ class CommentTests: XCTestCase {
         
         //When
         expectation = XCTestExpectation(description: "Posting Comment Again")
-        Comment.postComment(spotId: spotId, title: "new comment", content: "comment", pseudo: "pseudo") { (success) in
+        Comment.postComment(spotId: spotId, item: commentItem) { (success) in
             //Then
             XCTAssertFalse(success)
             expectation.fulfill()
@@ -147,13 +210,65 @@ class CommentTests: XCTestCase {
         wait(for: [expectation], timeout: 5.0)
     }
     
-    
     // MARK: - Edit
+    
+    func testWhenEditingCommentWithAWrongSpotId_ThenItFails() {
+        let expectation = XCTestExpectation(description: "Posting Comment")
+        Comment.editComment(spotId: "AAA", item: commentItem) { (success) in
+            XCTAssertFalse(success)
+            expectation.fulfill()
+
+        }
+        wait(for: [expectation], timeout: 5.0)
+    }
+    
+    func testGivenCommentContainsEmptyContent_WhenEditingComment_ThenFailure() {
+        // Empty Title
+        var item = Comment.Item( id: "", title: "", detail: "comment", authorID: "",
+            authorPseudo: "pseudo", creationDate: Date() )
+        var expectation = XCTestExpectation(description: "Posting comments")
+        Comment.editComment(spotId: spotId, item: item) { (success) in
+            XCTAssertFalse(success)
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 5.0)
+        
+        // Empty Detail
+        item = Comment.Item( id: "", title: "title", detail: "", authorID: "",
+            authorPseudo: "pseudo", creationDate: Date() )
+        expectation = XCTestExpectation(description: "Posting comments")
+        Comment.editComment(spotId: spotId, item: item) { (success) in
+            XCTAssertFalse(success)
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 5.0)
+        
+        // Empty Pseudo
+        item = Comment.Item( id: "", title: "title", detail: "detail", authorID: "",
+            authorPseudo: "", creationDate: Date() )
+        expectation = XCTestExpectation(description: "Posting comments")
+        Comment.editComment(spotId: spotId, item: item) { (success) in
+            XCTAssertFalse(success)
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 5.0)
+        
+        // Empty Item
+        item = Comment.Item( id: "", title: "", detail: "", authorID: "",
+            authorPseudo: "", creationDate: Date() )
+        expectation = XCTestExpectation(description: "Posting comments")
+        Comment.editComment(spotId: spotId, item: item) { (success) in
+            XCTAssertFalse(success)
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 5.0)
+    }
+
     
     func testGivenThereAreOneComment_WhenEditing_ThenSuccess() {
         //Given
         var expectation = XCTestExpectation(description: "Posting Comment")
-        Comment.postComment(spotId: spotId, title: "title", content: "comment", pseudo: "pseudo") { (success) in
+        Comment.postComment(spotId: spotId, item: commentItem) { (success) in
             XCTAssertTrue(success)
             expectation.fulfill()
         }
@@ -162,7 +277,12 @@ class CommentTests: XCTestCase {
         
         //When
         expectation = XCTestExpectation(description: "Editing Comment")
-        Comment.editComment(spotId: spotId, title: "Edited", detail: "Edited", pseudo: "pseudo") { (success) in
+        let editedComment = Comment.Item(
+            id: "", title: "Edited",
+            detail: "Edited", authorID: "",
+            authorPseudo: "pseudo", creationDate: Date()
+        )
+        Comment.editComment(spotId: spotId, item: editedComment) { (success) in
             XCTAssertTrue(success)
             expectation.fulfill()
         }
@@ -198,7 +318,7 @@ class CommentTests: XCTestCase {
         
         //When
         expectation = XCTestExpectation(description: "Editing Comment")
-        Comment.editComment(spotId: spotId, title: "Title", detail: "Detail", pseudo: "pseudo") { (success) in
+        Comment.editComment(spotId: spotId, item: commentItem) { (success) in
             XCTAssertFalse(success)
             expectation.fulfill()
         }
@@ -206,35 +326,9 @@ class CommentTests: XCTestCase {
         Thread.sleep(forTimeInterval: 3)
     }
     
-    // MARK: - Test Wrong ID
-    
-    func testWhenCommentWithAWrongSpotId_ThenItFails() {
-        let expectation = XCTestExpectation(description: "Posting Comment")
-        Comment.postComment(spotId: "AAA", title: "Title", content: "Content", pseudo: "pseudo") { (success) in
-            XCTAssertFalse(success)
-            expectation.fulfill()
-        }
-        wait(for: [expectation], timeout: 5.0)
-    }
-    
-    func testWhenEditingCommentWithAWrongSpotId_ThenItFails() {
-        let expectation = XCTestExpectation(description: "Posting Comment")
-        Comment.editComment(spotId: "AAA", title: "a", detail: "b", pseudo: "c") { (success) in
-            XCTAssertFalse(success)
-            expectation.fulfill()
+}
 
-        }
-        wait(for: [expectation], timeout: 5.0)
-    }
-    
-    func testWhenDeletingCommentWithAWrongSpotId_ThenItFails() {
-        let expectation = XCTestExpectation(description: "Posting Comment")
-        Comment.removeComment(spotId: "AAA") { (success) in
-            XCTAssertFalse(success)
-            expectation.fulfill()
-        }
-        wait(for: [expectation], timeout: 5.0)
-    }
+private extension CommentTests {
     
     func removeComment() {
         Thread.sleep(forTimeInterval: 1)
@@ -245,5 +339,5 @@ class CommentTests: XCTestCase {
         wait(for: [expectation], timeout: 5.0)
         Thread.sleep(forTimeInterval: 1)
     }
-    
+
 }

@@ -19,7 +19,7 @@ class SpotTests: XCTestCase {
     
     func testGetspots() {
         //Given Spots Saved
-        PersistenceHelper.saveFakeSpots(context: viewContext)
+        FakeData.saveFakeSpots(context: viewContext)
         //When GetSpots
         Spot.getSpots(context: viewContext) { (spots) in
             //Then
@@ -29,7 +29,7 @@ class SpotTests: XCTestCase {
     
     func testGivenSpotAreSaved_WhenSearchAWordThatExists_ThenSuccess() {
         //Given
-        PersistenceHelper.saveFakeSpots(context: viewContext)
+        FakeData.saveFakeSpots(context: viewContext)
         
         //When
         Spot.searchSpots(context: viewContext, titleContains: "plage") { (spots) in
@@ -42,7 +42,7 @@ class SpotTests: XCTestCase {
     
     func testGivenSpotAreSaved_WhenSearchAWordThatNotExists_ThenFailure() {
         //Given
-        PersistenceHelper.saveFakeSpots(context: viewContext)
+        FakeData.saveFakeSpots(context: viewContext)
         
         //When
         Spot.searchSpots(context: viewContext, titleContains: "Palge") { (spots) in
@@ -53,7 +53,7 @@ class SpotTests: XCTestCase {
     
     func testGiventSpotsAreSaved_WhenRefresh_ThenNewSpots() {
         //Given
-        PersistenceHelper.saveFakeSpots(context: viewContext)
+        FakeData.saveFakeSpots(context: viewContext)
         
         // When
         let expectation = XCTestExpectation(description: "Refreshing spots")
