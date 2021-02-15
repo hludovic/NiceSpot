@@ -9,14 +9,19 @@ import SwiftUI
 
 struct FavoriteView: View {
     @Environment(\.managedObjectContext) private var viewContext
-
-    @State var favorites: [Favorite] = []
+    @State var spotsFavorite: [Spot] = []
     
     var body: some View {
         NavigationView {
             List {
-                ForEach(favorites, id: \.self) { favorite in
-                    Text(favorite.spotId!)
+                ForEach(spotsFavorite, id: \.self) { spotFavorite in
+                    NavigationLink(
+                        destination:
+                            DetailView(content: DetailContent(spot: spotFavorite)),
+                        label: {
+                            SpotItemView(content: SpotCellContent(spot: spotFavorite))
+                        }
+                    )
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
@@ -29,11 +34,11 @@ struct FavoriteView: View {
             }
         }
         .onAppear {
-            Favorite.getFavorites(context: viewContext) { (favorites) in
-                self.favorites = favorites
-            }
+            print("appear")
+            spotsFavorite = Spot.getFavoriteSpots(context: viewContext)
         }
     }
+    
 }
 
 struct FavoriteView_Previews: PreviewProvider {

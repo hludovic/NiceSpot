@@ -92,6 +92,7 @@ struct FavoriteButton: View {
                 .foregroundColor(.red)
         })
         .onAppear{
+            content.refreshFavoriteButtonStatus(context: viewContext)
         }
     }
 }
