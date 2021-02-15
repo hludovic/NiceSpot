@@ -331,13 +331,11 @@ class CommentTests: XCTestCase {
 private extension CommentTests {
     
     func removeComment() {
-        Thread.sleep(forTimeInterval: 1)
         let expectation = XCTestExpectation(description: "Removing Comment")
         Comment.removeComment(spotId: spotId) { (success) in
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: 5.0)
-        Thread.sleep(forTimeInterval: 1)
     }
 
 }

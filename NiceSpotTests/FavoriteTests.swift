@@ -12,65 +12,67 @@ import CoreData
 
 class FavoriteTests: XCTestCase {
     var viewContext: NSManagedObjectContext!
+    let goodSpotId = "075C8DEC-D2DB-D81C-43CC-B453D78E02E7"
 
     override func setUp() {
         super.setUp()
         self.viewContext = loadTestableContext()
+        
     }
     
     func testGivenFavoriteIsEmpty_WhenSavingAFavorite_ThenTheFavoriteIsStored() {
-        var expectation = XCTestExpectation(description: "Get favorites")
-        Favorite.getFavorites(context: viewContext) { (favorites) in
-            XCTAssertEqual(favorites.count, 0)
-            expectation.fulfill()
+        FakeData.saveFakeSpots(context: viewContext)
+        
+        Favorite.getFavoriteSpots(context: viewContext) { (spots) in
+            XCTAssertEqual(spots.count, 0)
         }
-        wait(for: [expectation], timeout: 0.5)
 
-        Favorite.saveSpotId(context: viewContext, spotId: "__SPOT_ID__") { (success) in
+        Favorite.saveSpotId(context: viewContext, spotId: goodSpotId) { (success) in
             XCTAssertTrue(success)
         }
         
-        expectation = XCTestExpectation(description: "Get favorites")
-        Favorite.getFavorites(context: viewContext) { (favorites) in
-            XCTAssertEqual(favorites.first!.spotId, "__SPOT_ID__")
-            expectation.fulfill()
+        Favorite.getFavoriteSpots(context: viewContext) { (spots) in
+            XCTAssertEqual(spots.count, 1)
+            XCTAssertEqual(spots.first!.id!, self.goodSpotId)
         }
-        wait(for: [expectation], timeout: 0.5)
     }
     
-    func testGivenAnIdIsSaved_WhenIGetAWrongSpotId_ThenItReturnsFalse() {
-        Favorite.saveSpotId(context: viewContext, spotId: "__SPOT_ID__") { (success) in
-            XCTAssertTrue(success)
-        }
-
-        Favorite.getFavorite(context: viewContext, spotId: "__NOT_STORED_SPOT_ID__") { (favorite) in
-            XCTAssertNil(favorite)
+    func testGivenSpotsAreSaved_WhenISaveAFalseID_ThenFailure() {
+        FakeData.saveFakeSpots(context: viewContext)
+        
+        Favorite.saveSpotId(context: viewContext, spotId: "__FAIL_ID__") { (success) in
+            XCTAssertFalse(success)
         }
     }
 
-    func testGivenAnIdIsSaved_WhenIGetThisFavorite_ThenItReturnsTrue() {
-        Favorite.saveSpotId(context: viewContext, spotId: "__SPOT_ID__") { (success) in
+    func testGivenASpotIsFavorite_WhenSaveItFavoriteAgain_ThenFailure() {
+        FakeData.saveFakeSpots(context: viewContext)
+
+        Favorite.saveSpotId(context: viewContext, spotId: goodSpotId) { (success) in
             XCTAssertTrue(success)
         }
 
-        Favorite.getFavorite(context: viewContext, spotId: "__SPOT_ID__") { (favorite) in
-            XCTAssertEqual(favorite!.spotId, "__SPOT_ID__")
+        Favorite.saveSpotId(context: viewContext, spotId: goodSpotId) { (success) in
+            XCTAssertFalse(success)
         }
     }
     
     func testGivenAnIdIsSaved_WhenITestIfItIsFavorite_ThenItReturnsTrue() {
-        Favorite.saveSpotId(context: viewContext, spotId: "__SPOT_ID__") { (success) in
+        FakeData.saveFakeSpots(context: viewContext)
+        
+        Favorite.saveSpotId(context: viewContext, spotId: goodSpotId) { (success) in
             XCTAssertTrue(success)
         }
         
-        Favorite.isFavorite(context: viewContext, spotId: "__SPOT_ID__") { (isFavorite) in
+        Favorite.isFavorite(context: viewContext, spotId: goodSpotId) { (isFavorite) in
             XCTAssertTrue(isFavorite)
         }
-
     }
 
     func testGivenAnIdIsSaved_WhenITestAWrongIdIfItIsFavorite_ThenItReturnsFalse() {
-        Favorite.saveSpotId(context: viewContext, spotId: "__SPOT_ID__") { (success) in
+        FakeData.saveFakeSpots(context: viewContext)
+
+        Favorite.saveSpotId(context: viewContext, spotId: goodSpotId) { (success) in
             XCTAssertTrue(success)
         }
 
@@ -80,31 +82,36 @@ class FavoriteTests: XCTestCase {
     }
 
     func testGivenAnIdIsSaved_WhenIDeleteThisFavorite_ThenItReturnsTrue() {
-        Favorite.saveSpotId(context: viewContext, spotId: "__SPOT_ID__") { (success) in
+        FakeData.saveFakeSpots(context: viewContext)
+        
+        Favorite.getFavoriteSpots(context: viewContext) { (spots) in
+            XCTAssertEqual(spots.count, 0)
+        }
+        Favorite.saveSpotId(context: viewContext, spotId: goodSpotId) { (success) in
             XCTAssertTrue(success)
+        }
+        Favorite.getFavoriteSpots(context: viewContext) { (spots) in
+            XCTAssertEqual(spots.count, 1)
+            XCTAssertEqual(spots.first!.id!, self.goodSpotId)
         }
 
-        Favorite.remove(context: viewContext, spotId: "__SPOT_ID__") { (success) in
+        Favorite.remove(context: viewContext, spotId: goodSpotId) { (success) in
             XCTAssertTrue(success)
         }
+        Favorite.getFavoriteSpots(context: viewContext) { (spots) in
+            XCTAssertEqual(spots.count, 0)
+        }
+
     }
 
     func testGivenNothingIsSaved_WhenIDeleteAFavorite_ThenItReturnsFalse() {
-        Favorite.getFavorites(context: viewContext) { (favorites) in
-            XCTAssertEqual(favorites.count, 0)
+        FakeData.saveFakeSpots(context: viewContext)
+        
+        Favorite.getFavoriteSpots(context: viewContext) { (spots) in
+            XCTAssertEqual(spots.count, 0)
         }
 
-        Favorite.remove(context: viewContext, spotId: "__SPOT_ID__") { (success) in
-            XCTAssertFalse(success)
-        }
-    }
-
-    func testASpotIsInFavorite_WhenSaveThisSpotAgain_ThenItReturnsFalse() {
-        Favorite.saveSpotId(context: viewContext, spotId: "__SPOT_ID__") { (success) in
-            XCTAssertTrue(success)
-        }
-
-        Favorite.saveSpotId(context: viewContext, spotId: "__SPOT_ID__") { (success) in
+        Favorite.remove(context: viewContext, spotId: goodSpotId) { (success) in
             XCTAssertFalse(success)
         }
     }

@@ -14,14 +14,7 @@ struct SearchView: View {
     var body: some View {
         NavigationView {
             SearchSubView(content: SearchContent(context: viewContext))
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .principal) {
-                        VStack {
-                            Text("Rechercher").font(.headline)
-                        }
-                    }
-                }
+                .navigationTitle("Search")
         }
     }
 }

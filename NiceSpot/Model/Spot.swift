@@ -22,23 +22,7 @@ extension Spot {
             completion(result)
         } else { completion([]) }
     }
-    
-    static func getFavoriteSpots(context: NSManagedObjectContext) -> [Spot] {
-        var favSpots: [Spot] = []
-        Spot.getSpots(context: context) { (spots) in
-            Favorite.getFavorites(context: context) { (favorites) in
-                for spot in spots {
-                    for favorite in favorites {
-                        if spot.id! == favorite.spotId! {
-                            favSpots.append(spot)
-                        }
-                    }
-                }
-            }
-        }
-        return favSpots
-    }
-    
+        
     /// Retrieves the Spots whose title contains the characters passed in parameter.
     /// - Parameters:
     ///   - context: The NSManagedObjectContext used for this task.

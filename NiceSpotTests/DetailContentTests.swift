@@ -188,7 +188,34 @@ class DetailContentTests: XCTestCase {
         
         XCTAssertFalse(content.spot.isFavorite(context: viewContext))        
     }
+    
+    // MARK: - Load Image
+    
+    func testGivenSpotWithGoodImageName_WhenLoadImage_ThenSuccess() {
+        let wrongSpot = FakeData.getFakeSpot(context: viewContext, title: "La Cascade aux Ecrevisses")
+        let detailContent = DetailContent(spot: wrongSpot)
+        
+        let expectation = XCTestExpectation(description: "Load Image")
+        detailContent.loadImage { (loaded) in
+            XCTAssertTrue(loaded)
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 5.0)
 
+    }
+    
+    func testGivenSpotWithBadImageName_WhenLoadImage_ThenFailure() {
+        let wrongSpot = FakeData.getFakeSpot(context: viewContext, title: "Wrong Item")
+        let detailContent = DetailContent(spot: wrongSpot)
+        
+        let expectation = XCTestExpectation(description: "Load Image")
+        detailContent.loadImage { (loaded) in
+            XCTAssertFalse(loaded)
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 5.0)
+    }
+        
 }
 
 
@@ -214,13 +241,13 @@ private extension DetailContentTests {
     }
     
     func removeComment() {
-        Thread.sleep(forTimeInterval: 1)
+//        Thread.sleep(forTimeInterval: 1)
         let expectation = XCTestExpectation(description: "Removing Comment")
         Comment.removeComment(spotId: FakeData.testableSpotId) { (success) in
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: 5.0)
-        Thread.sleep(forTimeInterval: 1)
+//        Thread.sleep(forTimeInterval: 1)
     }
     
     func loadTestableContext() -> NSManagedObjectContext {

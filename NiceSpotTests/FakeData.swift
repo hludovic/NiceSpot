@@ -66,7 +66,7 @@ Assurément une des plus belles plages en Guadeloupe ! La plage de la Caravelle,
         wrongItem.latitude = 16.221350519784288
         wrongItem.longitude = -61.39367191555051
         wrongItem.municipality = Spot.Municipality.sainteAnne.rawValue
-        wrongItem.imageName = "caravelle"
+        wrongItem.imageName = "wrong"
         wrongItem.title = "Wrong Item"
         
         do {

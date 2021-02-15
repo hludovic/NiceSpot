@@ -25,16 +25,11 @@ struct FavoriteView: View {
                 }
             }
             .onAppear {
-                spotsFavorite = Spot.getFavoriteSpots(context: viewContext)
-            }
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .principal) {
-                    VStack {
-                        Text("Saved Spots").font(.headline)
-                    }
+                Favorite.getFavoriteSpots(context: viewContext) { (spots) in
+                    spotsFavorite = spots
                 }
             }
+            .navigationTitle("Favorite spots")
         }
     }
     

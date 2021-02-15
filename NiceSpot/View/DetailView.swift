@@ -71,7 +71,7 @@ struct DetailView: View {
             Spacer(minLength: 50)
         }
         .onAppear{
-            content.loadImage()
+            content.loadImage { _ in }
             content.refreshComments()
         }
         .navigationTitle(content.spot.category)
