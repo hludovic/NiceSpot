@@ -24,6 +24,9 @@ struct FavoriteView: View {
                     )
                 }
             }
+            .onAppear {
+                spotsFavorite = Spot.getFavoriteSpots(context: viewContext)
+            }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
@@ -32,10 +35,6 @@ struct FavoriteView: View {
                     }
                 }
             }
-        }
-        .onAppear {
-            print("appear")
-            spotsFavorite = Spot.getFavoriteSpots(context: viewContext)
         }
     }
     
