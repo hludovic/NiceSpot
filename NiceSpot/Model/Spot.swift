@@ -105,12 +105,14 @@ private extension Spot {
     }
     
     static func removeAllSpots(context: NSManagedObjectContext, completion: @escaping (Bool) -> Void) {
-        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = Spot.fetchRequest()
-        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "Spot")
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
         do {
             try context.execute(deleteRequest)
+            try context.save()
         } catch {
-            completion(false)
+            print ("ERROR REMOVING")
+            return completion(false)
         }
         completion(true)
     }

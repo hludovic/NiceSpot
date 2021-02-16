@@ -21,6 +21,7 @@ class SearchContent: ObservableObject {
     }
     
     func perform() {
+        guard searchText != "" else { return }
         Spot.searchSpots(context: context, titleContains: searchText) { [unowned self] (spots) in
             self.spots = spots
         }

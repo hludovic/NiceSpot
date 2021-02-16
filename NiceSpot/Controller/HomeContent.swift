@@ -28,15 +28,15 @@ class HomeContent: ObservableObject {
         }
     }
     
-    func refreshSpots (context: NSManagedObjectContext) {
+    func refreshSpots (context: NSManagedObjectContext, success: @escaping (Bool) -> Void) {
         loadingIndicator = "Syncing..."
-        Spot.refreshSpots(context: context) { [unowned self] (success) in
-            guard success else {
+        Spot.refreshSpots(context: context) { [unowned self] (refreshed) in
+            guard refreshed else {
                 DispatchQueue.main.async {
                     loadingIndicator = ""
                     errorMessage = "Error: Not refreshed"
                 }
-                return
+                return success(false)
             }
             Spot.getSpots(context: context) { [unowned self] (spots) in
                 DispatchQueue.main.async {
@@ -44,6 +44,7 @@ class HomeContent: ObservableObject {
                     self.getUsedCategories()
                     loadingIndicator = ""
                 }
+                return success(true)
             }
         }
     }

@@ -35,7 +35,7 @@ struct HomeView: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(
-                        action: { content.refreshSpots(context: viewContext) },
+                        action: { content.refreshSpots(context: viewContext) { _ in } },
                         label: { Image(systemName: "arrow.clockwise") }
                     )
                 }

@@ -54,8 +54,11 @@ class SpotTests: XCTestCase {
     func testGiventSpotsAreSaved_WhenRefresh_ThenNewSpots() {
         //Given
         FakeData.saveFakeSpots(context: viewContext)
+        Spot.getSpots(context: viewContext) { (spots) in
+            XCTAssertEqual(spots.count, 4)
+        }
         
-        // When
+        //When
         let expectation = XCTestExpectation(description: "Refreshing spots")
         Spot.refreshSpots(context: viewContext) { (success) in
             XCTAssertTrue(success)
@@ -67,9 +70,28 @@ class SpotTests: XCTestCase {
         Spot.getSpots(context: viewContext) { (spots) in
             XCTAssertEqual(spots.count, 10)
         }
-        
     }
+    
+    func testGiventNoSpotsAreSaved_WhenRefresh_ThenNewSpots() {
+        //Given
+        Spot.getSpots(context: viewContext) { (spots) in
+            XCTAssertEqual(spots.count, 0)
+        }
 
+        //When
+        let expectation = XCTestExpectation(description: "Refreshing spots")
+        Spot.refreshSpots(context: viewContext) { (success) in
+            XCTAssertTrue(success)
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 5.0)
+        
+        //Then
+        Spot.getSpots(context: viewContext) { (spots) in
+            XCTAssertEqual(spots.count, 10)
+        }
+    }
+    
     func loadTestableContext() -> NSManagedObjectContext {
         let persistenceController = PersistenceController(inMemory: true)
         let viewContext = persistenceController.container.viewContext
