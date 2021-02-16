@@ -12,16 +12,16 @@ struct SpotScrollView: View {
     let spots: [Spot]
     
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack {
             HStack {
                 Text(cathegory)
-                    .font(.title)
-                    .fontWeight(.bold)
+                    .font(.title2)
+                    .fontWeight(.semibold)
                 Spacer()
                 Text("See All")
             }
-            .padding(.horizontal)
-            .offset(y: 10.0)
+            .offset(y: 12)
+            .padding(.horizontal, 8)
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
                     ForEach(spots) { (result: Spot) in

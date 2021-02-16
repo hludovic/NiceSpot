@@ -11,9 +11,10 @@ import CoreData
 class SearchContent: ObservableObject {
     private let context: NSManagedObjectContext
     @Published var spots: [Spot] = []
-    @Published var isSearching: Bool = false
     @Published var searchText: String = "" {
-        didSet { perform() }
+        didSet {
+            perform()
+        }
     }
     
     init(context: NSManagedObjectContext) {
@@ -21,7 +22,10 @@ class SearchContent: ObservableObject {
     }
     
     func perform() {
-        guard searchText != "" else { return }
+        guard searchText != "" else {
+            spots = []
+            return
+        }
         Spot.searchSpots(context: context, titleContains: searchText) { [unowned self] (spots) in
             self.spots = spots
         }

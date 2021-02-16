@@ -13,24 +13,26 @@ struct SearchSubView: View {
     
     var body: some View {
         VStack {
-            HStack {
+            ZStack(alignment: Alignment(horizontal: .trailing, vertical: .center)) {
                 TextField("Search...", text: $content.searchText)
                     .padding(7)
                     .padding(.horizontal, 25)
                     .background(Color(.systemGray6))
+                    .overlay(
+                        Image(systemName: "magnifyingglass")
+                            .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+                            .padding(.leading, 8)
+                    )
                     .cornerRadius(8)
                     .padding()
-                    .onTapGesture {
-                        content.isSearching = true
-                    }
-                if content.isSearching {
-                    Button("Cancel") {
-                        content.isSearching = false
+                if content.searchText != "" {
+                    Button(action: {
                         content.searchText = ""
+                    }) {
+                        Image(systemName: "xmark.circle")
+                            .foregroundColor(.black)
                     }
-                    .padding(.trailing, 20)
-                    .transition(.move(edge: .trailing))
-                    .animation(.default)
+                    .padding(.trailing, 25)
                 }
             }
             List {
