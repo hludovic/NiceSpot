@@ -35,22 +35,10 @@ struct DetailView: View {
                 .font(.body)
                 .foregroundColor(Color.gray)
                 .padding([.leading, .bottom, .trailing])
-            Group {
-                HStack {
-                    Text("Location")
-                        .fontWeight(.medium)
-                    Spacer()
-                    Link("Open in Maps", destination: content.spot.mapLink)
-                }
-                .font(.subheadline)
-                .offset(y: -5)
-                .padding(.bottom, -5)
-                MapView(content: content)
-                    .padding(.bottom, 20)
-                    .frame(height: 300)
-                    .cornerRadius(10)
-            }
-            .padding(.horizontal)
+            MapView(content: content)
+                .padding(.bottom, 20)
+                .frame(height: 300)
+                .padding(.horizontal)
             VStack {
                 HStack {
                     Text("Comments")

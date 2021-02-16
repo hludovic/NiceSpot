@@ -179,6 +179,13 @@ class DetailContent: ObservableObject {
         }
     }
     
+    func openInMap() {
+        let item = MKMapItem(placemark: MKPlacemark(coordinate: spot.location.coordinate))
+        item.name = spot.title
+        item.openInMaps(launchOptions: nil)
+    }
+
+    
 }
 
 // MARK: - Private Methods
