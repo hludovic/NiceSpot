@@ -39,22 +39,11 @@ struct DetailView: View {
                 .padding(.bottom, 20)
                 .frame(height: 300)
                 .padding(.horizontal)
-            VStack {
-                HStack {
-                    Text("Comments")
-                        .fontWeight(.medium)
-                    Spacer()
-                    if PersistenceController.isICloudAvailable {
-                        CommentButton(content: content)
-                    }
-                }
-                .offset(y: -5)
-                .padding(.bottom, -5)
-                .font(.subheadline)
-                .padding(.horizontal)
+            if PersistenceController.isICloudAvailable {
                 if content.comments.count != 0 {
                     CommentsView(content: content)
                 }
+                CommentButton(content: content)
             }
             Spacer(minLength: 50)
         }
@@ -62,60 +51,9 @@ struct DetailView: View {
             content.loadImage { _ in }
             content.refreshComments()
         }
+        .navigationBarTitleDisplayMode(.inline)
         .navigationTitle(content.spot.category)
-    }
-}
-
-// MARK: - Favorite Button
-
-struct FavoriteButton: View {
-    @ObservedObject var content: DetailContent
-    @Environment(\.managedObjectContext) private var viewContext
-    
-    var  body: some View {
-        Button(action: {
-            content.pressFavoriteButton(context: viewContext)
-        }, label: {
-            content.favoriteButtonIcon
-                .foregroundColor(.red)
-        })
-        .onAppear{
-            content.refreshFavoriteButtonStatus(context: viewContext)
-        }
-    }
-}
-
-// MARK: - Comment Button
-
-struct CommentButton: View {
-    @ObservedObject var content: DetailContent
-    
-    var  body: some View {
-        if content.canComment {
-            Button(action: {
-                content.displayCommentSheet.toggle()
-            }, label: {
-                HStack {
-                    Image(systemName: "square.and.pencil")
-                    Text("Write a comment")
-                }
-                .sheet(isPresented: $content.displayCommentSheet) {
-                    PostCommentView(content: content, pageTitle: "Write a comment")
-                }
-            })
-        } else {
-            Button(action: {
-                content.loadUserComment { _ in }
-            }, label: {
-                HStack {
-                    Image(systemName: "square.and.pencil")
-                    Text("Edit your comment")
-                }
-                .sheet(isPresented: $content.displayCommentSheet) {
-                    PostCommentView(content: content, pageTitle: "Edit your comment")
-                }
-            })
-        }
+        .navigationBarItems(trailing: ShareButton(content: content))
     }
 }
 

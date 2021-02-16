@@ -23,6 +23,7 @@
 		436B580625B5FE5B0020883B /* SpotCellContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436B580525B5FE5B0020883B /* SpotCellContent.swift */; };
 		436E0A5425B5154000BD456D /* HomeContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436E0A5325B5154000BD456D /* HomeContent.swift */; };
 		437A8EEB25CF23B1000AB5EB /* FakeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 437A8EEA25CF23B1000AB5EB /* FakeData.swift */; };
+		437CC6BA25DC211E00A4A0B9 /* CustomButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 437CC6B925DC211E00A4A0B9 /* CustomButtons.swift */; };
 		438089BD25C85CF8002C9919 /* PostCommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 438089BC25C85CF8002C9919 /* PostCommentView.swift */; };
 		438A67F725C6438D00BB262B /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 438A67F625C6438D00BB262B /* Comment.swift */; };
 		438BEF1725B47EBE00CA5042 /* NiceSpotApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 438BEF1625B47EBE00CA5042 /* NiceSpotApp.swift */; };
@@ -72,6 +73,7 @@
 		437A8ED225CF0E8A000AB5EB /* NiceSpotTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NiceSpotTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		437A8ED625CF0E8A000AB5EB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		437A8EEA25CF23B1000AB5EB /* FakeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeData.swift; sourceTree = "<group>"; };
+		437CC6B925DC211E00A4A0B9 /* CustomButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButtons.swift; sourceTree = "<group>"; };
 		438089BC25C85CF8002C9919 /* PostCommentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCommentView.swift; sourceTree = "<group>"; };
 		438A67F625C6438D00BB262B /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		438BEF1325B47EBE00CA5042 /* NiceSpot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NiceSpot.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -227,6 +229,7 @@
 				43F705AD25C757FD00F4A81B /* CommentsView.swift */,
 				431249DD25CDA306008CC1D0 /* SearchSubView.swift */,
 				43D7CEAC25D38E51006EF106 /* SpotItemView.swift */,
+				437CC6B925DC211E00A4A0B9 /* CustomButtons.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -349,6 +352,7 @@
 				432167FD25D16AA500B082EF /* Preview.swift in Sources */,
 				43B538E825BA421E00321B05 /* MapView.swift in Sources */,
 				431249DE25CDA306008CC1D0 /* SearchSubView.swift in Sources */,
+				437CC6BA25DC211E00A4A0B9 /* CustomButtons.swift in Sources */,
 				436B580625B5FE5B0020883B /* SpotCellContent.swift in Sources */,
 				431249D825CD8DB7008CC1D0 /* ImageManager.swift in Sources */,
 				43F705AE25C757FD00F4A81B /* CommentsView.swift in Sources */,

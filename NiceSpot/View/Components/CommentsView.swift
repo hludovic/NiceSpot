@@ -12,6 +12,8 @@ struct CommentsView: View {
     
     var body: some View {
         VStack {
+            Text("Comments")
+                .font(.title3)
             ScrollView(.horizontal, showsIndicators: true) {
                 HStack {
                     ForEach(content.comments) { (comment: Comment.Item) in

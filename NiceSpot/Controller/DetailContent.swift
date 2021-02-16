@@ -46,8 +46,7 @@ class DetailContent: ObservableObject {
                         imageName: spot.imageName!,
                         municipality: spot.municipality!,
                         category: spot.category!,
-                        location: Location(coordinate: coodinate),
-                        mapLink: URL(string: "maps://?ll=\(spot.latitude),\(spot.longitude)")!
+                        location: Location(coordinate: coodinate)
         )
         self.mapRegion = MKCoordinateRegion(
             center: coodinate,
@@ -184,7 +183,6 @@ class DetailContent: ObservableObject {
         item.name = spot.title
         item.openInMaps(launchOptions: nil)
     }
-
     
 }
 
@@ -235,7 +233,6 @@ extension DetailContent {
         let municipality: String
         let category: String
         let location: Location
-        let mapLink: URL
         func isFavorite(context: NSManagedObjectContext) -> Bool {
             var returnValue = false
             Favorite.isFavorite(context: context, spotId: self.id) { (favorite) in
