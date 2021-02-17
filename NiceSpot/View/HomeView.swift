@@ -13,14 +13,14 @@ struct HomeView: View {
 
     var body: some View {
         NavigationView {
-            List {
+            ScrollView(.vertical, showsIndicators: false) {
                 Rectangle()
                     .fill(Color.gray)
                     .frame(height: 250)
                     .listRowInsets(EdgeInsets())
                 ForEach(content.usedCategories, id: \.self) { (category: String) in
                     SpotScrollView(
-                        cathegory: category,
+                        category: category,
                         spots: content.getSpotsBy(category: category)
                     )
                 }

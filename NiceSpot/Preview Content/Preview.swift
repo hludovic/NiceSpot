@@ -18,6 +18,14 @@ class Preview {
         return result.first!
     }()
     
+    static let spots: [Spot] = {
+        let context = Preview.context
+        let request: NSFetchRequest<Spot> = Spot.fetchRequest()
+        let result = try! context.fetch(request)
+        return result
+    }()
+
+    
     static var detailContent: DetailContent = {
         let detailContent = DetailContent(spot: Preview.spot)
         let comment = Comment.Item(

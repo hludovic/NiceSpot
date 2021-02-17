@@ -8,19 +8,26 @@
 import SwiftUI
 
 struct SpotScrollView: View {
-    let cathegory: String
+    let category: String
     let spots: [Spot]
     
     var body: some View {
         VStack {
             HStack {
-                Text(cathegory)
+                Text(category)
                     .font(.title2)
-                    .fontWeight(.semibold)
+                    .fontWeight(.bold)
                 Spacer()
-                Text("See All")
+                NavigationLink(
+                    destination: SeeAllByCategoryView(category: category, spots: spots),
+                    label: {
+                        Text("See All")
+                            .font(.callout)
+                    }
+                )
             }
             .offset(y: 12)
+            .padding(.top, -12)
             .padding(.horizontal, 8)
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
@@ -35,13 +42,14 @@ struct SpotScrollView: View {
         }
         .padding(.bottom)
         .listRowInsets(EdgeInsets())
+        .background(LinearGradient(gradient: Gradient(colors: [.clear, Color.primary.opacity(0.07)]), startPoint: .top, endPoint: .bottom))
     }
 }
 
 struct SpotListView_Previews: PreviewProvider {
     static var previews: some View {
         SpotScrollView(
-            cathegory: Spot.Category.mountain.rawValue,
+            category: Spot.Category.mountain.rawValue,
             spots: [Preview.spot, Preview.spot, Preview.spot]
         )
     }

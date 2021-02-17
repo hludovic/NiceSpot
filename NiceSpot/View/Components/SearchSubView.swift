@@ -30,7 +30,7 @@ struct SearchSubView: View {
                         content.searchText = ""
                     }) {
                         Image(systemName: "xmark.circle")
-                            .foregroundColor(.black)
+                            .foregroundColor(.gray)
                     }
                     .padding(.trailing, 25)
                 }
