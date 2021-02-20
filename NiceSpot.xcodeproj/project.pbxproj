@@ -211,10 +211,10 @@
 		43B1CA4525B48B9600B9E5EE /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				438BEF1F25B47EBF00CA5042 /* Persistence.swift */,
 				4322557325BFB7CF0043E4E3 /* Spot.swift */,
-				438A67F625C6438D00BB262B /* Comment.swift */,
 				4330F0D425D47E5000CCF814 /* Favorite.swift */,
+				438A67F625C6438D00BB262B /* Comment.swift */,
+				438BEF1F25B47EBF00CA5042 /* Persistence.swift */,
 				431249D725CD8DB7008CC1D0 /* ImageManager.swift */,
 				438BEF2125B47EBF00CA5042 /* NiceSpot.xcdatamodeld */,
 			);
@@ -561,7 +561,7 @@
 				DEVELOPMENT_TEAM = W8A2PVHCN3;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = NiceSpot/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -584,7 +584,7 @@
 				DEVELOPMENT_TEAM = W8A2PVHCN3;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = NiceSpot/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

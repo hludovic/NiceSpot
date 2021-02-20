@@ -13,26 +13,30 @@ struct SearchSubView: View {
     
     var body: some View {
         VStack {
-            ZStack(alignment: Alignment(horizontal: .trailing, vertical: .center)) {
-                TextField("Search...", text: $content.searchText)
-                    .padding(7)
-                    .padding(.horizontal, 25)
-                    .background(Color(.systemGray6))
-                    .overlay(
-                        Image(systemName: "magnifyingglass")
-                            .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
-                            .padding(.leading, 8)
-                    )
-                    .cornerRadius(8)
-                    .padding()
-                if content.searchText != "" {
-                    Button(action: {
-                        content.searchText = ""
-                    }) {
-                        Image(systemName: "xmark.circle")
-                            .foregroundColor(.gray)
+            HStack {
+                ZStack(alignment: Alignment(horizontal: .trailing, vertical: .center)) {
+                    TextField("Search...", text: $content.searchText)
+                        .padding(7)
+                        .padding(.horizontal, 25)
+                        .background(Color(.systemGray6))
+                        .overlay(
+                            Image(systemName: "magnifyingglass")
+                                .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+                                .padding(.leading, 8)
+                                .foregroundColor(.gray)
+                        )
+                        .cornerRadius(8)
+                        .padding()
+                    if content.searchText != "" {
+                        Button(action: {
+                            content.searchText = ""
+                            hideKeyboard()
+                        }) {
+                            Image(systemName: "xmark.circle")
+                                .foregroundColor(.gray)
+                        }
+                        .padding(.trailing, 25)
                     }
-                    .padding(.trailing, 25)
                 }
             }
             List {
@@ -57,3 +61,11 @@ struct SpotsListView_Previews: PreviewProvider {
         SearchSubView(content: Preview.searchContent)
     }
 }
+
+#if canImport(UIKit)
+extension View {
+    func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+}
+#endif
