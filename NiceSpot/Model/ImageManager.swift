@@ -7,38 +7,36 @@
 
 import Foundation
 import UIKit
+import SwiftUI
 
 class ImageManager {
-    static let imageCache = NSCache<NSString, UIImage>()
-    private let urlAssets = "https://github.com/hludovic/NiceSpotAssets/blob/main/"
-
-    func getUIImage(imageName: String, completion: @escaping (UIImage?) -> Void) {
-        guard imageName != "placeholder", imageName != "" else { return completion(nil) }
-        if let imageCached = ImageManager.imageCache.object(forKey: NSString(string: imageName)) {
-            completion(imageCached)
+    private let urlAssets = "https://raw.githubusercontent.com/hludovic/NiceSpotAssets/main"
+        
+    func loadImage(imageName: String, completion: @escaping (Image) -> Void) {
+        guard let url = URL(string: "\(urlAssets)/\(imageName)/\(imageName)_1.jpg") else { return }
+        let cache = URLCache.shared
+        let urlRequest = URLRequest(url: url, cachePolicy: URLRequest.CachePolicy.returnCacheDataElseLoad, timeoutInterval: 60.0)
+        if let data = cache.cachedResponse(for: urlRequest)?.data {
+            let image = dataToImage(data: data)
+            return completion(image)
         } else {
-            fetchImageData(imageName: imageName) {(data) in
-                guard let data = data else { return completion(nil) }
-                guard let uiImage = UIImage(data: data) else { return completion(nil) }
-                ImageManager.imageCache.setObject(uiImage, forKey: NSString(string: imageName))
-                completion(uiImage)
-            }
+            URLSession.shared.dataTask(with: urlRequest) { data, response, error in
+                if let data = data,  let response = response {
+                    let cachedResponse = CachedURLResponse(response: response, data: data)
+                    cache.storeCachedResponse(cachedResponse, for: urlRequest)
+                    DispatchQueue.main.async {
+                        let image = self.dataToImage(data: data)
+                        return completion(image)
+                    }
+                }
+            }.resume()
         }
     }
-
-    private func fetchImageData(imageName: String, completion: @escaping (Data?) -> Void) {
-        let urlSession = URLSession(configuration: .default)
-        var urlRequest = URLComponents(string: "\(urlAssets)/\(imageName)/\(imageName)_1.jpg")!
-        urlRequest.queryItems = [URLQueryItem(name: "raw", value: "true")]
-        let dataTask = urlSession.dataTask(with: urlRequest.url!) { (data, response, error) in
-            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-                return completion(nil)
-            }
-            guard let data = data, error == nil else {
-                return completion(nil)
-            }
-            completion(data)
+    
+    private func dataToImage(data: Data) -> Image {
+        guard let uiImage = UIImage(data: data) else {
+            return Image(uiImage: UIImage())
         }
-        dataTask.resume()
+        return Image(uiImage: uiImage)
     }
 }

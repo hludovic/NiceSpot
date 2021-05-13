@@ -15,10 +15,8 @@ extension Favorite {
         Spot.getSpots(context: context) { (spots) in
             Favorite.getFavorites(context: context) { (favorites) in
                 for spot in spots {
-                    for favorite in favorites {
-                        if spot.id! == favorite.spotId! {
-                            favSpots.append(spot)
-                        }
+                    for favorite in favorites where spot.id! == favorite.spotId! {
+                        favSpots.append(spot)
                     }
                 }
             }

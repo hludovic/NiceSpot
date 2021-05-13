@@ -142,13 +142,12 @@ class DetailContent: ObservableObject {
     }
     
     func loadImage(success: @escaping(Bool) -> Void) {
-        imageManager.getUIImage(imageName: spot.imageName) { [unowned self] (uiImage) in
-            guard let uiImage = uiImage else { return success(false) }
+        imageManager.loadImage(imageName: spot.imageName) { image in
             DispatchQueue.main.async {
-                self.image = Image(uiImage: uiImage)
+                self.image = image
                 success(true)
             }
-        }
+        }        
     }
     
     func pressFavoriteButton(context: NSManagedObjectContext) {
