@@ -9,8 +9,9 @@ import Foundation
 import CoreData
 
 class HomeContent: ObservableObject {
+
     // MARK: - Properties
-    
+
     @Published var showAlert: Bool = false
     @Published private(set) var spots: [Spot] = []
     @Published private(set) var errorMessage: String = "" {
@@ -18,16 +19,16 @@ class HomeContent: ObservableObject {
     }
     @Published private(set) var loadingIndicator: String = ""
     @Published private(set) var usedCategories: [String] = []
-    
+
     // MARK: - Public Methods
-    
+
     func loadSpots(context: NSManagedObjectContext) {
         Spot.getSpots(context: context) { [unowned self] (result) in
             self.spots = result
             self.getUsedCategories()
         }
     }
-    
+
     func refreshSpots (context: NSManagedObjectContext, success: @escaping (Bool) -> Void) {
         loadingIndicator = "Syncing..."
         Spot.refreshSpots(context: context) { [unowned self] (refreshed) in
@@ -48,7 +49,7 @@ class HomeContent: ObservableObject {
             }
         }
     }
-    
+
     func getSpotsBy(category: String) -> [Spot] {
         guard !spots.isEmpty else { return [] }
         var spotList: [Spot] = []
@@ -60,13 +61,12 @@ class HomeContent: ObservableObject {
         }
         return spotList
     }
-    
 }
 
 // MARK: - Private Method
 
 private extension HomeContent {
-    
+
     func getUsedCategories() {
         usedCategories = []
         for category in Spot.Category.allCases {
@@ -79,5 +79,4 @@ private extension HomeContent {
             }
         }
     }
-    
 }

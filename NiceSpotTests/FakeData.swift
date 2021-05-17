@@ -11,9 +11,9 @@ import CoreData
 
 class FakeData {
     static let testableSpotId: String = "91421B70-BC40-C23A-09C8-8897C0D9F3B7"
-        
+
     static func saveFakeSpots(context: NSManagedObjectContext) {
-                
+
         // MARK: - Item Cascecr
         let cascecr = Spot(context: context)
         cascecr.category = Spot.Category.waterfall.rawValue
@@ -44,7 +44,7 @@ La plage de l’Anse Rifflet appelle au farniente et à la contemplation. Imposs
         rifflet.municipality = Spot.Municipality.deshaies.rawValue
         rifflet.imageName = "rifflet"
         rifflet.title = "La Plage de l’Anse Rifflet"
-        
+
         // MARK: - Item Caravelle
         let caravelle = Spot(context: context)
         caravelle.category = Spot.Category.beach.rawValue
@@ -57,7 +57,7 @@ Assurément une des plus belles plages en Guadeloupe ! La plage de la Caravelle,
         caravelle.municipality = Spot.Municipality.sainteAnne.rawValue
         caravelle.imageName = "caravelle"
         caravelle.title = "La Plage de la Caravelle"
-        
+
         // MARK: - Item WrongItem
         let wrongItem = Spot(context: context)
         wrongItem.category = Spot.Category.beach.rawValue
@@ -68,7 +68,7 @@ Assurément une des plus belles plages en Guadeloupe ! La plage de la Caravelle,
         wrongItem.municipality = Spot.Municipality.sainteAnne.rawValue
         wrongItem.imageName = "wrong"
         wrongItem.title = "Wrong Item"
-        
+
         do {
             try context.save()
         } catch {
@@ -76,14 +76,14 @@ Assurément une des plus belles plages en Guadeloupe ! La plage de la Caravelle,
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
     }
-    
+
     static func getFakeSpot(context: NSManagedObjectContext, title: String) -> Spot {
         let request: NSFetchRequest<Spot> = Spot.fetchRequest()
         let predicate = NSPredicate(format: "title == %@", title)
         request.predicate = predicate
         let result = try! context.fetch(request)
         return result.first!
-    }    
+    }
 
     static func clearSpots(context: NSManagedObjectContext, completion: @escaping (Bool) -> Void) {
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = Spot.fetchRequest()
@@ -94,9 +94,9 @@ Assurément une des plus belles plages en Guadeloupe ! La plage de la Caravelle,
         } catch {
             completion(false)
         }
-        ImageManager.imageCache.removeAllObjects()
+        // TODO: Clear the URLCache data
     }
-    
+
     static func getFakeSpots(context: NSManagedObjectContext) -> [Spot] {
         let request: NSFetchRequest<Spot> = Spot.fetchRequest()
         let result = try! context.fetch(request)

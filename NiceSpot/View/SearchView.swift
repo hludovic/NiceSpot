@@ -10,7 +10,7 @@ import SwiftUI
 struct SearchView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @ObservedObject var content = SearchContent(context: PersistenceController.shared.container.viewContext)
-    
+
     var body: some View {
         NavigationView {
             SearchSubView(content: SearchContent(context: viewContext))

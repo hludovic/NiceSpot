@@ -1,5 +1,5 @@
 //
-//  SpotIteView.swift
+//  SpotItemView.swift
 //  NiceSpot
 //
 //  Created by Ludovic HENRY on 09/02/2021.
@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct SpotItemView: View {
-    @ObservedObject var content : SpotCellContent
-    
+    @ObservedObject var content: SpotCellContent
+
     var body: some View {
         HStack {
             content.image

@@ -10,7 +10,7 @@ import SwiftUI
 struct SeeAllByCategoryView: View {
     let category: String
     @State var spots: [Spot] = []
-    
+
     var body: some View {
         List {
             ForEach(spots) { spot in

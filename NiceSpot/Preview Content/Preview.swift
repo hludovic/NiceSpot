@@ -10,14 +10,14 @@ import CoreData
 
 class Preview {
     static let context = Preview.persistenceController.container.viewContext
-    
+
     static let spot: Spot = {
         let context = Preview.context
         let request: NSFetchRequest<Spot> = Spot.fetchRequest()
         let result = try! context.fetch(request)
         return result.first!
     }()
-    
+
     static let spots: [Spot] = {
         let context = Preview.context
         let request: NSFetchRequest<Spot> = Spot.fetchRequest()
@@ -25,7 +25,6 @@ class Preview {
         return result
     }()
 
-    
     static var detailContent: DetailContent = {
         let detailContent = DetailContent(spot: Preview.spot)
         let comment = Comment.Item(
@@ -39,11 +38,11 @@ class Preview {
         detailContent.comments = [comment, comment, comment]
         return detailContent
     }()
-    
+
     static let searchContent: SearchContent = {
         return SearchContent(context: Preview.context)
     }()
-    
+
     static let persistenceController: PersistenceController = {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
@@ -52,7 +51,7 @@ class Preview {
             newItem.category = Spot.Category.beach.rawValue
             newItem.detail = """
                 La plage de l’Anse Rifflet se situe au nord de la belle Basse Terre. A une poignée de kilomètres de la bourgade de Deshaies, il faut tourner à gauche, dans une descente (panneau) pour y accéder.
-                
+
                 Elle se trouve juste à côté de la très belle plage de la Perle. Les lieux ne sont pas connus du tourisme de masse. Ceux-ci préfèrent aller sur la jolie mais bien plus fréquentée plage de Grande Anse.
 
                 La plage de l’Anse Rifflet appelle au farniente et à la contemplation. Impossible de rater vos photos de cette plage, les lieux sont tout droit sortis d’une carte postale.

@@ -1,5 +1,5 @@
 //
-//  SpotDetailView.swift
+//  DetailView.swift
 //  NiceSpot
 //
 //  Created by Ludovic HENRY on 19/01/2021.
@@ -9,7 +9,7 @@ import SwiftUI
 
 struct DetailView: View {
     @ObservedObject var content: DetailContent
-    
+
     var body: some View {
         ScrollView(.vertical, showsIndicators: true) {
             content.image
@@ -47,7 +47,7 @@ struct DetailView: View {
             }
             Spacer(minLength: 50)
         }
-        .onAppear{
+        .onAppear {
             content.loadImage { _ in }
             content.refreshComments()
         }

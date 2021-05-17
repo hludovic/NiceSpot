@@ -15,16 +15,16 @@ class DetailContentTests: XCTestCase {
                                 authorID: "", authorPseudo: "Me", creationDate: Date()
     )
     var content: DetailContent!
-    
+
     override func setUp() {
         super.setUp()
         self.viewContext = loadTestableContext()
         removeComment()
         self.content = loadFakeDetailContent()
     }
-    
+
     // MARK: - Save
-    
+
     func testWhenSavingWrongContent_ThenFailure() {
         // Saving Empty Title
         let wrongTitle = Comment.Item(
@@ -64,28 +64,28 @@ class DetailContentTests: XCTestCase {
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: 5.0)
-        
+
 //         Saving Wrong SpotId
         expectation = XCTestExpectation(description: "Saving Comment")
         let wrongConten = loadWrongSpotIdDetailContent()
         XCTAssertEqual(wrongConten.spot.id, "wrongItem")
         XCTAssertEqual(wrongConten.userComment.title, "Title Test Comment2")
-        
+
         wrongConten.saveUserComment { (success) in
             XCTAssertFalse(success)
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: 5.0)
     }
-    
+
     // MARK: - Load
-    
+
     func testGivenAContentIsLoaded_WhenISaveAGoodComment_ThenSuccess() {
         XCTAssertEqual(content.spot.title, "La Plage de l’Anse Rifflet")
         XCTAssertEqual(content.comments.count, 0)
         content.userComment = comment
-        
-        //When
+
+        // When
         let expectation = XCTestExpectation(description: "Saving Comment")
         content.saveUserComment { (success) in
             // Then
@@ -97,11 +97,11 @@ class DetailContentTests: XCTestCase {
         XCTAssertEqual(content.userComment.title, "Title Test Comment2")
         XCTAssertEqual(content.comments.count, 1)
     }
-    
+
     func testWhenLoadsWrongSpotId_ThenFailure() {
         let wrongConten = loadWrongSpotIdDetailContent()
         XCTAssertEqual(wrongConten.spot.id, "wrongItem")
-        
+
         let expectation = XCTestExpectation(description: "Loading Comment")
         wrongConten.loadUserComment { (success) in
             XCTAssertFalse(success)
@@ -110,9 +110,9 @@ class DetailContentTests: XCTestCase {
         wait(for: [expectation], timeout: 5.0)
         XCTAssertEqual(wrongConten.errorMessage, "ERROR LOADING COMMENT")
     }
-    
+
     func testGivenACommentIsPosted_WhenILoadTisComments_ThenSuccess() {
-        //Given
+        // Given
         XCTAssertEqual(content.spot.title, "La Plage de l’Anse Rifflet")
         XCTAssertEqual(content.comments.count, 0)
         content.userComment = comment
@@ -125,10 +125,10 @@ class DetailContentTests: XCTestCase {
         content.userComment.title = ""
         content.userComment.detail = ""
         XCTAssertEqual(content.userComment.title, "")
-        
+
         Thread.sleep(forTimeInterval: 3)
 
-        //When
+        // When
         expectation = XCTestExpectation(description: "Loading Comment")
         content.loadUserComment { (success) in
             XCTAssertTrue(success)
@@ -137,13 +137,13 @@ class DetailContentTests: XCTestCase {
         wait(for: [expectation], timeout: 5.0)
         XCTAssertEqual(content.userComment.title, "Title Test Comment2")
     }
-    
+
     // MARK: - Edit
-    
+
     func testWhenEditWrongSpotId_ThenFailure() {
         let wrongConten = loadWrongSpotIdDetailContent()
         XCTAssertEqual(wrongConten.spot.id, "wrongItem")
-        
+
         let expectation = XCTestExpectation(description: "Editing Comment")
         wrongConten.updateUserComment { (success) in
             XCTAssertFalse(success)
@@ -152,9 +152,9 @@ class DetailContentTests: XCTestCase {
         wait(for: [expectation], timeout: 5.0)
         XCTAssertEqual(wrongConten.errorMessage, "ERROR EDDITING")
     }
-    
+
     func testGivenACommentIsSaved_WhenEditing_ThenSuccess() {
-        //Given
+        // Given
         XCTAssertEqual(content.comments.count, 0)
         content.userComment = comment
         var expectation = XCTestExpectation(description: "Saving Comment")
@@ -164,8 +164,8 @@ class DetailContentTests: XCTestCase {
         }
         wait(for: [expectation], timeout: 5.0)
         Thread.sleep(forTimeInterval: 3)
-        
-        //When
+
+        // When
         let editedComment = Comment.Item(
             id: "", title: "Title Test Comment2", detail: "Detail Test Comment",
             authorID: "", authorPseudo: "Me", creationDate: Date()
@@ -178,23 +178,23 @@ class DetailContentTests: XCTestCase {
         }
         wait(for: [expectation], timeout: 5.0)
     }
-    
+
     // MARK: - Favorite Button
-    
+
     func testGivenSpotNotFavorite_WhenPressFavorite_ThenSpotFavorite() {
         XCTAssertTrue(content.spot.isFavorite(context: viewContext))
-        
+
         content.pressFavoriteButton(context: viewContext)
-        
-        XCTAssertFalse(content.spot.isFavorite(context: viewContext))        
+
+        XCTAssertFalse(content.spot.isFavorite(context: viewContext))
     }
-    
+
     // MARK: - Load Image
-    
+
     func testGivenSpotWithGoodImageName_WhenLoadImage_ThenSuccess() {
         let wrongSpot = FakeData.getFakeSpot(context: viewContext, title: "La Cascade aux Ecrevisses")
         let detailContent = DetailContent(spot: wrongSpot)
-        
+
         let expectation = XCTestExpectation(description: "Load Image")
         detailContent.loadImage { (loaded) in
             XCTAssertTrue(loaded)
@@ -203,11 +203,11 @@ class DetailContentTests: XCTestCase {
         wait(for: [expectation], timeout: 5.0)
 
     }
-    
+
     func testGivenSpotWithBadImageName_WhenLoadImage_ThenFailure() {
         let wrongSpot = FakeData.getFakeSpot(context: viewContext, title: "Wrong Item")
         let detailContent = DetailContent(spot: wrongSpot)
-        
+
         let expectation = XCTestExpectation(description: "Load Image")
         detailContent.loadImage { (loaded) in
             XCTAssertFalse(loaded)
@@ -215,13 +215,11 @@ class DetailContentTests: XCTestCase {
         }
         wait(for: [expectation], timeout: 5.0)
     }
-        
+
 }
 
-
-
 private extension DetailContentTests {
-    
+
     func loadFakeDetailContent() -> DetailContent {
         FakeData.saveFakeSpots(context: viewContext)
         let spot = FakeData.getFakeSpot(context: viewContext, title: "La Plage de l’Anse Rifflet")
@@ -231,7 +229,7 @@ private extension DetailContentTests {
         }
         return content
     }
-    
+
     func loadWrongSpotIdDetailContent() -> DetailContent {
         FakeData.saveFakeSpots(context: viewContext)
         let spot = FakeData.getFakeSpot(context: viewContext, title: "Wrong Item")
@@ -239,17 +237,17 @@ private extension DetailContentTests {
         content.userComment = comment
         return content
     }
-    
+
     func removeComment() {
 //        Thread.sleep(forTimeInterval: 1)
         let expectation = XCTestExpectation(description: "Removing Comment")
-        Comment.removeComment(spotId: FakeData.testableSpotId) { (success) in
+        Comment.removeComment(spotId: FakeData.testableSpotId) { (_) in
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: 5.0)
 //        Thread.sleep(forTimeInterval: 1)
     }
-    
+
     func loadTestableContext() -> NSManagedObjectContext {
         let persistenceController = PersistenceController(inMemory: true)
         let viewContext = persistenceController.container.viewContext

@@ -9,9 +9,9 @@ import Foundation
 import CoreData
 
 extension Spot {
-    
+
     // MARK: - Public Static Methods
-    
+
     /// This static method returns all values contained in the Spot entity.
     /// - Parameters:
     ///   - context: The NSManagedObjectContext used for this task.
@@ -22,7 +22,7 @@ extension Spot {
             completion(result)
         } else { completion([]) }
     }
-        
+
     /// Retrieves the Spots whose title contains the characters passed in parameter.
     /// - Parameters:
     ///   - context: The NSManagedObjectContext used for this task.
@@ -37,7 +37,7 @@ extension Spot {
             completion(result)
         } else { completion([])}
     }
-    
+
     static func refreshSpots(context: NSManagedObjectContext, success: @escaping (Bool) -> Void) {
         fetchSpots { (spots) in
             guard !spots.isEmpty else { return success(false) }
@@ -49,13 +49,13 @@ extension Spot {
             }
         }
     }
-    
+
 }
 
 // MARK: - Private Static Methods
 
 private extension Spot {
-    
+
     private static func fetchSpots(completion: @escaping ([Fetched]) -> Void) {
         let publicDB: CKDatabase = CKContainer(identifier: "iCloud.fr.hludovic.container1").publicCloudDatabase
         let predicate = NSPredicate(value: true)
@@ -74,16 +74,23 @@ private extension Spot {
                 let pictureName = record["pictureName"] as? String,
                 let municipality = record["municipality"] as? String
             else { return completion([]) }
-            let spotFetched = Fetched(recordID: record.recordID, title: title, detail: detail, category: category, location: location, pictureName: pictureName, municipality: municipality)
+            let spotFetched = Fetched(recordID: record.recordID,
+                                      title: title,
+                                      detail: detail,
+                                      category: category,
+                                      location: location,
+                                      pictureName: pictureName,
+                                      municipality: municipality
+            )
             newSpotsCK.append(spotFetched)
         }
-        operation.queryCompletionBlock = { (cursor, error) in
+        operation.queryCompletionBlock = { (_, error) in
             guard error == nil else { return completion([]) }
             completion(newSpotsCK)
         }
         publicDB.add(operation)
     }
-    
+
     static func saveFetchedSpots(context: NSManagedObjectContext, fetchedSpots: [Fetched], success: @escaping (Bool) -> Void) {
         for fetchedSpot in fetchedSpots {
             let spot = Spot(context: context)
@@ -95,34 +102,40 @@ private extension Spot {
             spot.imageName = fetchedSpot.pictureName
             spot.latitude = fetchedSpot.location.coordinate.latitude
             spot.longitude = fetchedSpot.location.coordinate.longitude
-            do {
-                try context.save()
-            } catch {
-                success(false)
-            }
+        }
+        do {
+            try context.save()
+        } catch {
+            print("ERROR REMOVING")
+            return success(false)
         }
         success(true)
     }
-    
+
     static func removeAllSpots(context: NSManagedObjectContext, completion: @escaping (Bool) -> Void) {
         let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "Spot")
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
         do {
             try context.execute(deleteRequest)
-            try context.save()
         } catch {
-            print ("ERROR REMOVING")
+            print("ERROR REMOVING")
             return completion(false)
         }
+
+        do {
+            try context.save()
+        } catch {
+            return completion(false)
+        }
+
         completion(true)
     }
 }
 
-
 // MARK: - Enum
 
 extension Spot {
-    
+
     /// The list of categories in which a spot can be placed.
     enum Category: String, CaseIterable {
         case unknown = "Unknown"
@@ -131,7 +144,7 @@ extension Spot {
         case river = "River"
         case waterfall = "Waterfall"
     }
-    
+
     /// The list of municipalities in which a spot can be found.
     enum Municipality: String, CaseIterable {
         case basseTerre = "Basse-Terre"
@@ -172,7 +185,7 @@ extension Spot {
 // MARK: - Nested Struct
 
 extension Spot {
-    
+
     /// A struct representing the result of a Spot request passed on CloudKit.
     struct Fetched {
         let recordID: CKRecord.ID
@@ -184,5 +197,3 @@ extension Spot {
         var municipality: String
     }
 }
-
-

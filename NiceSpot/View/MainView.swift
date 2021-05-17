@@ -1,5 +1,5 @@
 //
-//  MainVIew.swift
+//  MainView.swift
 //  NiceSpot
 //
 //  Created by Ludovic HENRY on 01/02/2021.

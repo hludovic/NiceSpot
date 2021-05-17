@@ -1,5 +1,5 @@
 //
-//  SpotListView.swift
+//  SpotScrollView.swift
 //  NiceSpot
 //
 //  Created by Ludovic HENRY on 09/02/2021.
@@ -10,7 +10,7 @@ import SwiftUI
 struct SpotScrollView: View {
     let category: String
     let spots: [Spot]
-    
+
     var body: some View {
         VStack {
             HStack {
@@ -42,11 +42,14 @@ struct SpotScrollView: View {
         }
         .padding(.bottom)
         .listRowInsets(EdgeInsets())
-        .background(LinearGradient(gradient: Gradient(colors: [.clear, Color.primary.opacity(0.07)]), startPoint: .top, endPoint: .bottom))
+        .background(LinearGradient(
+                        gradient: Gradient(colors: [.clear, Color.primary.opacity(0.07)]),
+                        startPoint: .top, endPoint: .bottom)
+        )
     }
 }
 
-struct SpotListView_Previews: PreviewProvider {
+struct SpotScrollView_Previews: PreviewProvider {
     static var previews: some View {
         SpotScrollView(
             category: Spot.Category.mountain.rawValue,

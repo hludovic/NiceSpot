@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CommentsView: View {
     @ObservedObject var content: DetailContent
-    
+
     var body: some View {
         VStack {
             Text("Comments")

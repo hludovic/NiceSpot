@@ -1,5 +1,5 @@
 //
-//  SpotDetailContent.swift
+//  DetailContent.swift
 //  NiceSpot
 //
 //  Created by Ludovic HENRY on 19/01/2021.
@@ -11,13 +11,14 @@ import MapKit
 import CoreData
 
 class DetailContent: ObservableObject {
+
     // MARK: - Public Property
-    
+
     let spot: Item
-    @Published var mapRegion : MKCoordinateRegion
+    @Published var mapRegion: MKCoordinateRegion
     @Published var comments: [Comment.Item] = []
     @Published var showAlert: Bool = false
-    @Published var userComment : Comment.Item {
+    @Published var userComment: Comment.Item {
         didSet { refreshSaveButtonStatus() }
     }
     @Published private(set) var isSaveButtonDisabled = true
@@ -30,14 +31,14 @@ class DetailContent: ObservableObject {
         didSet { if displayCommentSheet && canComment { clearUserLoadedComment() } }
     }
     @Published var favoriteButtonIcon: Image = Image(systemName: "bookmark")
-    
+
     // MARK: - Private Property
-    
+
     private let imageManager = ImageManager()
     private var isLoading: Bool = false {
         didSet { refreshSaveButtonStatus() }
     }
-    
+
     init(spot: Spot) {
         let coodinate = CLLocationCoordinate2D(latitude: spot.latitude, longitude: spot.longitude)
         let item = Item(id: spot.id!,
@@ -53,11 +54,17 @@ class DetailContent: ObservableObject {
             span: MKCoordinateSpan(latitudeDelta: 0.002, longitudeDelta: 0.002)
         )
         self.spot = item
-        self.userComment = Comment.Item(id: "", title: "", detail: "", authorID: "", authorPseudo: "", creationDate: Date())
+        self.userComment = Comment.Item(id: "",
+                                        title: "",
+                                        detail: "",
+                                        authorID: "",
+                                        authorPseudo: "",
+                                        creationDate: Date()
+        )
     }
-    
+
     // MARK: - Public Methods
-    
+
     func refreshComments() {
         Comment.getComments(spotId: spot.id) { [unowned self] (result) in
             switch result {
@@ -71,7 +78,7 @@ class DetailContent: ObservableObject {
             }
         }
     }
-    
+
     func loadUserComment(success: @escaping (Bool) -> Void) {
         Comment.getComments(spotId: spot.id) { [unowned self] (result) in
             switch result {
@@ -83,21 +90,19 @@ class DetailContent: ObservableObject {
                     DispatchQueue.main.async { errorMessage = "ERROR LOADING COMMENT" }
                     return success(false)
                 }
-                for comment in comments {
-                    if comment.authorID == "__defaultOwner__" {
-                        DispatchQueue.main.async {
-                            self.userComment = comment
-                            self.displayCommentSheet.toggle()
-                        }
-                        return success(true)
+                for comment in comments where comment.authorID == "__defaultOwner__" {
+                    DispatchQueue.main.async {
+                        self.userComment = comment
+                        self.displayCommentSheet.toggle()
                     }
+                    return success(true)
                 }
             }
             DispatchQueue.main.async { errorMessage = "ERROR LOADING COMMENT" }
             return success(false)
         }
     }
-    
+
     func updateUserComment(success: @escaping (Bool) -> Void) {
         isLoading = true
         Comment.editComment(spotId: spot.id, item: userComment) { [unowned self] (isEdited) in
@@ -115,7 +120,7 @@ class DetailContent: ObservableObject {
             return success(true)
         }
     }
-    
+
     func saveUserComment(success: @escaping (Bool) -> Void) {
         isLoading = true
         Comment.postComment(spotId: spot.id, item: userComment) { [unowned self] (posted) in
@@ -140,16 +145,16 @@ class DetailContent: ObservableObject {
             return success(true)
         }
     }
-    
+
     func loadImage(success: @escaping(Bool) -> Void) {
-        imageManager.loadImage(imageName: spot.imageName) { image in
+        imageManager.loadImageData(imageName: spot.imageName) { imageData in
             DispatchQueue.main.async {
-                self.image = image
+                self.image = Image(uiImage: UIImage(data: imageData) ?? UIImage())
                 success(true)
             }
-        }        
+        }
     }
-    
+
     func pressFavoriteButton(context: NSManagedObjectContext) {
         Favorite.isFavorite(context: context, spotId: spot.id) { (isFavorite) in
             let generator = UINotificationFeedbackGenerator()
@@ -168,7 +173,7 @@ class DetailContent: ObservableObject {
             }
         }
     }
-    
+
     func refreshFavoriteButtonStatus(context: NSManagedObjectContext) {
         if spot.isFavorite(context: context) {
             favoriteButtonIcon = Image(systemName: "bookmark.fill")
@@ -176,13 +181,13 @@ class DetailContent: ObservableObject {
             favoriteButtonIcon = Image(systemName: "bookmark")
         }
     }
-    
+
     func openInMap() {
         let item = MKMapItem(placemark: MKPlacemark(coordinate: spot.location.coordinate))
         item.name = spot.title
         item.openInMaps(launchOptions: nil)
     }
-    
+
 }
 
 // MARK: - Private Methods
@@ -196,7 +201,7 @@ private extension DetailContent {
         canComment = false
         isSaveButtonDisabled = false
     }
-    
+
     func refreshCanCommentStatus(comments: [Comment.Item]) {
         guard comments.count > 0 else { return canComment = true }
         for comment in comments {
@@ -207,13 +212,13 @@ private extension DetailContent {
             }
         }
     }
-    
+
     func clearUserLoadedComment() {
         userComment.title = ""
         userComment.authorPseudo = ""
         userComment.detail = ""
     }
-    
+
     func refreshSaveButtonStatus() {
         let isNotFill = (userComment.title == "" || userComment.authorPseudo == "") || (userComment.detail == "")
         isSaveButtonDisabled = isNotFill || isLoading
@@ -223,7 +228,6 @@ private extension DetailContent {
 // MARK: - Nested Struct
 
 extension DetailContent {
-    
     struct Item {
         let id: String
         let title: String
@@ -244,11 +248,11 @@ extension DetailContent {
             return returnValue
         }
     }
-    
+
     /// A structure representing a location that can be used as annotationItems in a Map.
     struct Location: Identifiable {
         let id = UUID()
         let coordinate: CLLocationCoordinate2D
     }
-    
+
 }

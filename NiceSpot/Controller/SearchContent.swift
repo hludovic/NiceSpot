@@ -16,11 +16,11 @@ class SearchContent: ObservableObject {
             perform()
         }
     }
-    
+
     init(context: NSManagedObjectContext) {
         self.context = context
     }
-    
+
     func perform() {
         guard searchText != "" else {
             spots = []

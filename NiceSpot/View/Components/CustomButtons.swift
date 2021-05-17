@@ -12,7 +12,7 @@ import SwiftUI
 struct FavoriteButton: View {
     @ObservedObject var content: DetailContent
     @Environment(\.managedObjectContext) private var viewContext
-    
+
     var  body: some View {
         Button(action: {
             content.pressFavoriteButton(context: viewContext)
@@ -20,7 +20,7 @@ struct FavoriteButton: View {
             content.favoriteButtonIcon
                 .foregroundColor(.red)
         })
-        .onAppear{
+        .onAppear {
             content.refreshFavoriteButtonStatus(context: viewContext)
         }
     }
@@ -31,7 +31,7 @@ struct FavoriteButton: View {
 struct ShareButton: View {
     @ObservedObject var content: DetailContent
     @State private var showingSheet = false
-    
+
     var body: some View {
         Button(action: {
             showingSheet = true
@@ -57,7 +57,7 @@ struct ShareButton: View {
 
 struct CommentButton: View {
     @ObservedObject var content: DetailContent
-    
+
     var  body: some View {
         if content.canComment {
             Button(action: {

@@ -9,7 +9,7 @@ import Foundation
 import CoreData
 
 extension Favorite {
-        
+
     static func getFavoriteSpots(context: NSManagedObjectContext, completion: @escaping ([Spot]) -> Void) {
         var favSpots: [Spot] = []
         Spot.getSpots(context: context) { (spots) in
@@ -23,7 +23,7 @@ extension Favorite {
         }
         completion(favSpots)
     }
-    
+
     static func isFavorite(context: NSManagedObjectContext, spotId: String, completion: @escaping (Bool) -> Void) {
         getFavorites(context: context) { (favorites) in
             if !favorites.isEmpty {
@@ -39,7 +39,7 @@ extension Favorite {
             }
         }
     }
-        
+
     static func saveSpotId(context: NSManagedObjectContext, spotId: String, success: @escaping (Bool) -> Void) {
         canSave(spotId: spotId, context: context) { (canSave) in
             guard canSave else { return success(false) }
@@ -56,7 +56,7 @@ extension Favorite {
             }
         }
     }
-    
+
     static func remove(context: NSManagedObjectContext, spotId: String, success: @escaping (Bool) -> Void) {
         getFavorite(context: context, spotId: spotId) { (favorite) in
             guard let favorite = favorite else { return success(false) }
@@ -72,7 +72,7 @@ extension Favorite {
 }
 
 private extension Favorite {
-    
+
     static func canSave(spotId id: String, context: NSManagedObjectContext, success: @escaping (Bool) -> Void) {
         Spot.getSpots(context: context) { (spots) in
             for spot in spots {
@@ -84,17 +84,17 @@ private extension Favorite {
             return success(false)
         }
     }
-    
+
     static func getFavorite(context: NSManagedObjectContext, spotId: String, completion: @escaping (Favorite?) -> Void ) {
         let request: NSFetchRequest<Favorite> = Favorite.fetchRequest()
         let predicate = NSPredicate(format: "spotId == %@", spotId)
         request.predicate = predicate
-        if let result = try? context.fetch(request){
+        if let result = try? context.fetch(request) {
             guard !result.isEmpty else { return completion(nil) }
             completion(result.first)
         } else { completion(nil) }
     }
-    
+
     static func getFavorites(context: NSManagedObjectContext, completion: @escaping([Favorite]) -> Void ) {
         let request: NSFetchRequest<Favorite> = Favorite.fetchRequest()
         do {
@@ -105,5 +105,5 @@ private extension Favorite {
             completion([])
         }
     }
-    
+
 }

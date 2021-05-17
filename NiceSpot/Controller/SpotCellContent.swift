@@ -1,5 +1,5 @@
 //
-//  SpotContent.swift
+//  SpotCellContent.swift
 //  NiceSpot
 //
 //  Created by Ludovic HENRY on 18/01/2021.
@@ -16,23 +16,20 @@ class SpotCellContent: ObservableObject {
     @Published private(set) var title: String
     @Published private(set) var municipality: String
     @Published private(set) var category: String
-    @Published private(set) var image: Image
-    
+    @Published private(set) var image = Image(uiImage: UIImage())
+
     init(spot: Spot) {
         self.spot = spot
         self.title = spot.title!
         self.municipality = spot.municipality!
         self.category = spot.category!
-        self.image = Image("placeholder")
         loadImage(imageName: spot.imageName!)
     }
-    
+
     private func loadImage(imageName: String) {
-        imageManager.loadImage(imageName: imageName) { image in
-            DispatchQueue.main.async {
-                self.image = image
-                self.isRedacted = false
-            }
+        imageManager.loadImageData(imageName: imageName) { imageData in
+            self.image = Image(uiImage: UIImage(data: imageData) ?? UIImage())
+            self.isRedacted = false
         }
     }
 }

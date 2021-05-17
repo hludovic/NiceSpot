@@ -10,7 +10,7 @@ import SwiftUI
 struct FavoriteView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @State var spotsFavorite: [Spot] = []
-    
+
     var body: some View {
         NavigationView {
             List {
@@ -32,7 +32,6 @@ struct FavoriteView: View {
             .navigationTitle("Favorite spots")
         }
     }
-    
 }
 
 struct FavoriteView_Previews: PreviewProvider {

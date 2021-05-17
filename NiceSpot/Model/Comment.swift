@@ -10,7 +10,7 @@ import CloudKit
 
 class Comment {
     // MARK: - Public Static methods
-    
+
     /// Retrieves all the comments posted on a Spot.
     /// - Parameters:
     ///   - ckDatabase: The CKDatabase used for this task.
@@ -25,7 +25,7 @@ class Comment {
         let operation = CKQueryOperation(query: querry)
         operation.desiredKeys = ["title", "detail", "pseudo"]
         var commentList: [Item] = []
-        
+
         operation.recordFetchedBlock = { record in
             guard
                 let title = record["title"] as? String,
@@ -34,11 +34,17 @@ class Comment {
                 let authorID = record.creatorUserRecordID?.recordName,
                 let creationDate = record.creationDate
             else { return }
-            let commentFetched = Item(id: record.recordID.recordName,title: title, detail: detail, authorID: authorID, authorPseudo: authorPseudo, creationDate: creationDate)
+            let commentFetched = Item(id: record.recordID.recordName,
+                                      title: title,
+                                      detail: detail,
+                                      authorID: authorID,
+                                      authorPseudo: authorPseudo,
+                                      creationDate: creationDate
+            )
             commentList.append(commentFetched)
         }
-        
-        operation.queryCompletionBlock = { cursor, error in
+
+        operation.queryCompletionBlock = { _, error in
             if let error = error {
                 completion(.failure(error))
             } else {
@@ -47,23 +53,21 @@ class Comment {
         }
         PersistenceController.publicCKDB.add(operation)
     }
-    
+
     static func getUserComment(spotId: String, userId: String, completion: @escaping (Comment.Item?) -> Void) {
         getComments(spotId: spotId) { (result) in
             switch result {
             case .failure(_ ):
                 completion(nil)
             case .success(let comments):
-                for comment in comments {
-                    if comment.authorID == userId {
-                        return completion(comment)
-                    }
+                for comment in comments where comment.authorID == userId {
+                    return completion(comment)
                 }
                 completion(nil)
             }
         }
     }
-    
+
     /// Post a comment on a spot.
     /// - Parameters:
     ///   - spotId: The ID of the spot to which this comment relates.
@@ -83,32 +87,32 @@ class Comment {
             commentRecord["detail"] = item.detail as CKRecordValue
             commentRecord["spot"] = reference
             commentRecord["pseudo"] = item.authorPseudo as CKRecordValue
-            PersistenceController.publicCKDB.save(commentRecord) { (record, error) in
+            PersistenceController.publicCKDB.save(commentRecord) { (_, error) in
                 guard error == nil else { return success(false) }
                 success(true)
             }
         }
     }
-        
+
     static func editComment(spotId: String, item: Item, success: @escaping (Bool) -> Void) {
         guard item.title != "", item.authorPseudo != "", item.detail != "" else { return success(false) }
         guard PersistenceController.isICloudAvailable else { return success(false) }
         getUserComment(spotId: spotId, userId: "__defaultOwner__") { (comment) in
             guard let comment = comment else { return success(false) }
             let recordId = CKRecord.ID(recordName: comment.id)
-            PersistenceController.publicCKDB.fetch(withRecordID: recordId) { (record, errors) in
+            PersistenceController.publicCKDB.fetch(withRecordID: recordId) { (record, _) in
                 guard let record = record else { return success(false) }
                 record["title"] = item.title
                 record["detail"] = item.detail
                 record["pseudo"] = item.authorPseudo
-                PersistenceController.publicCKDB.save(record) { (_ , error) in
+                PersistenceController.publicCKDB.save(record) { (_, error) in
                     guard error == nil else { return success(false) }
                     success(true)
                 }
             }
         }
     }
-    
+
     static func removeComment(spotId: String, success: @escaping (Bool) -> Void) {
         getUserComment(spotId: spotId, userId: "__defaultOwner__") { (comment) in
             guard let comment = comment else { return success(false) }
@@ -120,7 +124,7 @@ class Comment {
             }
         }
     }
-    
+
 }
 
 // MARK: - Private Static methods
@@ -139,8 +143,8 @@ private extension Comment {
             }
         }
     }
-    
-    static func canPostComment(spotId :String, userId: String, success: @escaping (Bool) -> Void) {
+
+    static func canPostComment(spotId: String, userId: String, success: @escaping (Bool) -> Void) {
         guard PersistenceController.isICloudAvailable else { return success(false) }
         doesRecordExists(recordId: spotId) { (result) in
             guard let exists = result, exists else { return success(false) }
@@ -149,10 +153,8 @@ private extension Comment {
                 case .success(let comments):
                     guard !comments.isEmpty else { return success(true) }
                     var canComment = true
-                    for comment in comments {
-                        if comment.authorID == userId {
-                            canComment = false
-                        }
+                    for comment in comments where comment.authorID == userId {
+                        canComment = false
                     }
                     success(canComment)
                 case .failure( _):
@@ -161,7 +163,7 @@ private extension Comment {
             }
         }
     }
-    
+
 }
 
 // MARK: - Nested Struct
@@ -181,5 +183,5 @@ extension Comment {
             return dateFormater.string(from: creationDate)
         }
     }
-    
+
 }

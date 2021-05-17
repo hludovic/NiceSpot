@@ -1,5 +1,5 @@
 //
-//  CommentSheet.swift
+//  PostCommentView.swift
 //  NiceSpot
 //
 //  Created by Ludovic HENRY on 01/02/2021.
@@ -10,7 +10,7 @@ import SwiftUI
 struct PostCommentView: View {
     @ObservedObject var content: DetailContent
     let pageTitle: String
-    
+
     var body: some View {
         NavigationView {
             Form {
@@ -22,26 +22,40 @@ struct PostCommentView: View {
                 }
             }
             .navigationTitle(pageTitle)
-            .navigationBarItems(
-                leading: Button(action: { content.displayCommentSheet = false }) {
-                    Text("Cancel")
-                },
-                trailing: Button(action: {
-                    if content.canComment {
-                        content.saveUserComment { _ in }
-                    } else {
-                        content.updateUserComment { _ in }
-                    }
-                }) {
-                    Text("Save")
-                }
-                .disabled(content.isSaveButtonDisabled)
+            .navigationBarItems(leading: CancelButton(content: content),
+                                trailing: SaveButton(content: content)
             )
             .navigationBarTitleDisplayMode(.inline)
             .alert(isPresented: $content.showAlert) {
                 Alert(title: Text("Error"), message: Text(content.errorMessage), dismissButton: .default(Text("Ok")))
             }
         }
+    }
+}
+
+private struct CancelButton: View {
+    @ObservedObject var content: DetailContent
+    var  body: some View {
+        Button(action: {
+            content.displayCommentSheet = false
+        }, label: {
+            Text("Cancel")
+        })
+    }
+}
+
+private struct SaveButton: View {
+    @ObservedObject var content: DetailContent
+    var  body: some View {
+        Button(action: {
+            if content.canComment {
+                content.saveUserComment { _ in }
+            } else {
+                content.updateUserComment { _ in }
+            }
+        }, label: {
+            Text("Save")
+        }).disabled(content.isSaveButtonDisabled)
     }
 }
 

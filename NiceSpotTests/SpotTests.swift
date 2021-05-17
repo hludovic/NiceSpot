@@ -11,27 +11,27 @@ import CoreData
 
 class SpotTests: XCTestCase {
     var viewContext: NSManagedObjectContext!
-    
+
     override func setUp() {
         super.setUp()
         self.viewContext = loadTestableContext()
     }
-    
+
     func testGetspots() {
-        //Given Spots Saved
+        // Given Spots Saved
         FakeData.saveFakeSpots(context: viewContext)
-        //When GetSpots
+        // When GetSpots
         Spot.getSpots(context: viewContext) { (spots) in
-            //Then
+            // Then
             XCTAssertEqual(spots.count, 4)
         }
     }
-    
+
     func testGivenSpotAreSaved_WhenSearchAWordThatExists_ThenSuccess() {
-        //Given
+        // Given
         FakeData.saveFakeSpots(context: viewContext)
-        
-        //When
+
+        // When
         Spot.searchSpots(context: viewContext, titleContains: "plage") { (spots) in
             XCTAssertEqual(spots.count, 2)
             for spot in spots {
@@ -39,59 +39,59 @@ class SpotTests: XCTestCase {
             }
         }
     }
-    
+
     func testGivenSpotAreSaved_WhenSearchAWordThatNotExists_ThenFailure() {
-        //Given
+        // Given
         FakeData.saveFakeSpots(context: viewContext)
-        
-        //When
+
+        // When
         Spot.searchSpots(context: viewContext, titleContains: "Palge") { (spots) in
-            //Then
+            // Then
             XCTAssertEqual(spots.count, 0)
         }
     }
-    
+
     func testGiventSpotsAreSaved_WhenRefresh_ThenNewSpots() {
-        //Given
+        // Given
         FakeData.saveFakeSpots(context: viewContext)
         Spot.getSpots(context: viewContext) { (spots) in
             XCTAssertEqual(spots.count, 4)
         }
-        
-        //When
+
+        // When
         let expectation = XCTestExpectation(description: "Refreshing spots")
         Spot.refreshSpots(context: viewContext) { (success) in
             XCTAssertTrue(success)
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: 5.0)
-        
-        //Then
+
+        // Then
         Spot.getSpots(context: viewContext) { (spots) in
             XCTAssertEqual(spots.count, 10)
         }
     }
-    
+
     func testGiventNoSpotsAreSaved_WhenRefresh_ThenNewSpots() {
-        //Given
+        // Given
         Spot.getSpots(context: viewContext) { (spots) in
             XCTAssertEqual(spots.count, 0)
         }
 
-        //When
+        // When
         let expectation = XCTestExpectation(description: "Refreshing spots")
         Spot.refreshSpots(context: viewContext) { (success) in
             XCTAssertTrue(success)
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: 5.0)
-        
-        //Then
+
+        // Then
         Spot.getSpots(context: viewContext) { (spots) in
             XCTAssertEqual(spots.count, 10)
         }
     }
-    
+
     func loadTestableContext() -> NSManagedObjectContext {
         let persistenceController = PersistenceController(inMemory: true)
         let viewContext = persistenceController.container.viewContext
