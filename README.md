@@ -1,13 +1,4 @@
-
-<center><h1>NiceSpot</h1></center>
-
-
-<p align="center">
-    <img src="https://img.shields.io/badge/Swift-5.3-brightgreen.svg" />
-    <a href="https://www.linkedin.com/in/hludovic">
-        <img src="https://img.shields.io/badge/Contact-lightgrey.svg?style=flat&logo=linkedin" />
-    </a>
-</p>
+#NiceSpot
 
 Nice spot is an iOS application aiming at promoting the tourist places of the Guadeloupe region.  
 All the proposed tourist places are natural and free access sites.
