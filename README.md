@@ -1,4 +1,4 @@
-#NiceSpot
+# NiceSpot
 
 Nice spot is an iOS application aiming at promoting the tourist places of the Guadeloupe region.  
 All the proposed tourist places are natural and free access sites.
