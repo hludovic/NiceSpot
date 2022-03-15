@@ -21,7 +21,7 @@ class Spot {
     let municipality: Spot.Municipality
     let recordChangeTag: String
     private static let viewContext = PersistenceController.shared.container.viewContext
-
+    
     private init(id: String,
                  date: Date,
                  title: String,
@@ -31,8 +31,7 @@ class Spot {
                  latitude: Double,
                  picture: String,
                  municipality: Spot.Municipality,
-                 sha: String
-    ) {
+                 sha: String) {
         self.recordID = id
         self.creationDate = date
         self.title = title
@@ -44,108 +43,71 @@ class Spot {
         self.municipality = municipality
         self.recordChangeTag = sha
     }
-
-    func isFavorite(context: NSManagedObjectContext = viewContext) -> Bool {
+    
+    func isFavorite(context: NSManagedObjectContext = viewContext) throws -> Bool {
         let request: NSFetchRequest<FavoriteMO> = FavoriteMO.fetchRequest()
         let predicate = NSPredicate(format: "spotID == %@", self.recordID)
         request.predicate = predicate
-        guard let result = try? context.fetch(request) else { return false }
-        return result.count > 0 ? true : false
+        let result = try context.fetch(request)
+        return result.isEmpty ? false : true
     }
-
-    static func getSpots(context: NSManagedObjectContext = viewContext, completion: @escaping (Result<[Spot], Error>) -> Void) {
+    
+    static func newGetSpots(context: NSManagedObjectContext = viewContext) throws -> [Spot] {
         let request: NSFetchRequest<SpotMO> = SpotMO.fetchRequest()
         let sort = NSSortDescriptor(key: "creationDate", ascending: false)
         request.sortDescriptors = [sort]
-        let spotsFetched: [SpotMO]
-        do {
-            spotsFetched = try context.fetch(request)
-        } catch let error {
-            return completion(.failure(error))
-        }
+        let spotsMO: [SpotMO] = try context.fetch(request)
         var result: [Spot] = []
-        for spotFetched in spotsFetched {
-            switch managedObjectToSpot(spotFetched) {
-            case .failure(let error ):
-                return completion(.failure(error))
-            case .success(let convertedSpot):
-                result.append(convertedSpot)
-            }
+        for spotMO in spotsMO {
+            let spot = try convertSpotMOToSpot(spotMO)
+            result.append(spot)
         }
-        return completion(.success(result))
+        return result
     }
-
-    static func getFavorites(context: NSManagedObjectContext = viewContext, completion: @escaping (Result<[Spot], Error>) -> Void) {
+    
+    static func getFavorites(context: NSManagedObjectContext = viewContext) throws -> [Spot] {
+        let favoriteIDs = try getFavoriteIDs(context: context)
         var result: [Spot] = []
-        switch getFavoriteIDs(context: context) {
-        case .failure(let error):
-            return completion(.failure(error))
-        case .success(let favoriteIDs):
-            guard favoriteIDs.count > 0 else { return completion(.success([])) }
-            for favoriteID in favoriteIDs {
-                switch getSpot(context: context, id: favoriteID) {
-                case .failure(let error):
-                    return completion(.failure(error))
-                case .success(let spot):
-                    result.append(spot)
-                }
-            }
-            return completion(.success(result))
+        for favoriteID in favoriteIDs {
+            let spot = try getSpot(context: context, id: favoriteID)
+            result.append(spot)
         }
+        return result
     }
-
-    static func searchSpots(context: NSManagedObjectContext, titleContains: String) -> Result<[Spot], Error> {
-        guard (titleContains != "") && (titleContains != " ") else {return .failure(SpotError.searchSpotWrongName) }
+    
+    static func searchSpots(context: NSManagedObjectContext = viewContext, titleContains: String) throws -> [Spot] {
+        guard (titleContains != "") && (titleContains != " ") else {throw SpotError.searchSpotWrongName }
         let request: NSFetchRequest<SpotMO> = SpotMO.fetchRequest()
         let predicate = NSPredicate(format: "title CONTAINS[cd] %@", titleContains)
-        let fetchedSpots: [SpotMO]
         request.predicate = predicate
-        do {
-            fetchedSpots = try context.fetch(request)
-        } catch let error {
-            return .failure(error)
-        }
+        let spotsMO = try context.fetch(request)
         var result: [Spot] = []
-        for fetchedSpot in fetchedSpots {
-            switch managedObjectToSpot(fetchedSpot) {
-            case .failure(let error):
-                return .failure(error)
-            case .success(let convertedSpot):
-                result.append(convertedSpot)
-            }
+        for spotMO in spotsMO {
+            let spot = try convertSpotMOToSpot(spotMO)
+            result.append(spot)
         }
-        return .success(result)
+        return result
     }
-
-    func saveToFavorite(context: NSManagedObjectContext = viewContext, date: Date = Date()) -> Result<Bool, Error> {
-        guard !isFavorite(context: context) else { return Result.failure(SpotError.favAlreadyFaved) }
+    
+    func saveToFavorite(context: NSManagedObjectContext = viewContext, date: Date = Date()) throws -> Bool {
+        let isFavorite = try isFavorite(context: context)
+        guard !isFavorite else { return false }
         let favoriteMO = FavoriteMO(context: context)
         favoriteMO.spotID = self.recordID
         favoriteMO.dateSaved = date
-        do {
-            try context.save()
-        } catch let error {
-            return Result.failure(error)
-        }
-        return Result.success(true)
+        try context.save()
+        return true
     }
-
-    func removeToFavorite(context: NSManagedObjectContext = viewContext) -> Result<Bool, Error> {
-        guard isFavorite(context: context) else { return Result.failure(SpotError.unfavAlreadyUnfaved) }
-        switch getFavoriteMO(context: context, id: self.recordID) {
-        case .failure(let error):
-            return Result.failure(error)
-        case .success(let favoriteMO):
-            context.delete(favoriteMO)
-            do {
-                try context.save()
-            } catch let saveError {
-                return Result.failure(saveError)
-            }
-        }
-        return .success(true)
+    
+    func removeToFavorite(context: NSManagedObjectContext) throws -> Bool {
+        let isFavorite = try isFavorite()
+        guard isFavorite else { return false }
+        let favoriteMO = try getFavoriteMO(context: context, id: self.recordID)
+        context.delete(favoriteMO)
+        try context.save()
+        return true
     }
-
+    
     static func refreshSpots(context: NSManagedObjectContext = viewContext, completion: @escaping (Result<Bool, Error>) -> Void) {
         Spot.fetchSpots { result in
             switch result {
@@ -170,7 +132,7 @@ class Spot {
 
 private extension Spot {
 
-    static func managedObjectToSpot(_ spotMO: SpotMO) -> Result<Spot, Error> {
+    static func convertSpotMOToSpot(_ spotMO: SpotMO) throws -> Spot {
         guard
             let spotID = spotMO.recordID,
             let date = spotMO.creationDate,
@@ -180,7 +142,7 @@ private extension Spot {
             let pictureName = spotMO.pictureName,
             let municipalityString = spotMO.municipality,
             let recordChangeTag = spotMO.recordChangeTag
-        else { return .failure(SpotError.failReadingSpotMOWhenConvert) }
+        else { throw SpotError.failReadingSpotMOWhenConvert }
         let spot = Spot(id: spotID,
                         date: date,
                         title: title,
@@ -192,60 +154,41 @@ private extension Spot {
                         municipality: Spot.Municipality(rawValue: municipalityString) ?? .unknown,
                         sha: recordChangeTag
         )
-        return .success(spot)
+        return spot
     }
-
-    func getFavoriteMO(context: NSManagedObjectContext, id: String) -> Result<FavoriteMO, Error> {
+    
+    func getFavoriteMO(context: NSManagedObjectContext, id: String) throws -> FavoriteMO {
         let request: NSFetchRequest<FavoriteMO> = FavoriteMO.fetchRequest()
         let predicate = NSPredicate(format: "spotID == %@", id)
         request.predicate = predicate
-        let resultMO: [FavoriteMO]
-        do {
-            resultMO = try context.fetch(request)
-        } catch let error {
-            return .failure(error)
-        }
-        guard let result = resultMO.first else { return .failure(SpotError.readFavoriteMOWhenGettingFavoriteMO) }
-        return .success(result)
+        let favoritesMO = try context.fetch(request)
+        guard let result = favoritesMO.first else { throw SpotError.readFavoriteMOWhenGettingFavoriteMO }
+        return result
     }
-
-    static func getSpot(context: NSManagedObjectContext, id: String) -> Result<Spot, Error> {
+    
+    static func getSpot(context: NSManagedObjectContext, id: String) throws -> Spot {
         let request: NSFetchRequest<SpotMO> = SpotMO.fetchRequest()
         let predicate = NSPredicate(format: "recordID == %@", id)
         request.predicate = predicate
-        let result: [SpotMO]
-        do {
-            result = try context.fetch(request)
-        } catch let error {
-            return .failure(error)
-        }
-        guard let spotMO: SpotMO = result.first else { return.failure(SpotError.readSpotMOWhenGettingSpot) }
-        switch Spot.managedObjectToSpot(spotMO) {
-        case .failure(let error):
-            return .failure(error)
-        case .success(let convertedSpot):
-            return .success(convertedSpot)
-        }
+        let spotsMO: [SpotMO] = try context.fetch(request)
+        guard let spotMO = spotsMO.first else { throw SpotError.readSpotMOWhenGettingSpot }
+        let result = try convertSpotMOToSpot(spotMO)
+        return result
     }
-
-    static func getFavoriteIDs(context: NSManagedObjectContext) -> Result<[String], Error> {
+    
+    static func getFavoriteIDs(context: NSManagedObjectContext) throws -> [String] {
         let request: NSFetchRequest<FavoriteMO> = FavoriteMO.fetchRequest()
         let sort = NSSortDescriptor(key: "dateStarred", ascending: true)
         request.sortDescriptors = [sort]
         var result: [String] = []
-        let fetchedFavoriteIds: [FavoriteMO]
-        do {
-            fetchedFavoriteIds = try context.fetch(request)
-        } catch let error {
-            return .failure(error)
+        let favoritesMO = try context.fetch(request)
+        for favoriteMO in favoritesMO {
+            guard let favoriteID = favoriteMO.spotID else { throw SpotError.readFavoriteInGetFav }
+            result.append(favoriteID)
         }
-        for fetchedFavoriteID in fetchedFavoriteIds {
-            guard let favorite = fetchedFavoriteID.spotID else { return .failure(SpotError.readFavoriteInGetFav)}
-            result.append(favorite)
-        }
-        return .success(result)
+        return result
     }
-
+    
 }
 
 // MARK: - CloudKit
