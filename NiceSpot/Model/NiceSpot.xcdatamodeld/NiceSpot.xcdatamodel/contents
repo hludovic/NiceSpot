@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19574" systemVersion="21E230" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Favorite" representedClassName="FavoriteMO" syncable="YES" codeGenerationType="class">
+        <attribute name="dateSaved" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="spotID" attributeType="String"/>
+    </entity>
+    <entity name="Spot" representedClassName="SpotMO" syncable="YES" codeGenerationType="class">
+        <attribute name="category" attributeType="String"/>
+        <attribute name="creationDate" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="detail" attributeType="String"/>
+        <attribute name="latitude" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="longitude" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="municipality" attributeType="String"/>
+        <attribute name="pictureName" attributeType="String"/>
+        <attribute name="recordChangeTag" attributeType="String"/>
+        <attribute name="recordID" attributeType="String"/>
+        <attribute name="title" attributeType="String"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="recordChangeTag"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <elements>
+        <element name="Spot" positionX="-63" positionY="-18" width="128" height="179"/>
+        <element name="Favorite" positionX="-54" positionY="63" width="128" height="59"/>
+    </elements>
+</model>
