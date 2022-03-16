@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		43905C8E27E0F03E008D7090 /* SpotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43905C8D27E0F03E008D7090 /* SpotTests.swift */; };
+		43905C9027E0F090008D7090 /* TestableData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43905C8F27E0F090008D7090 /* TestableData.swift */; };
 		43A10EEE27E0CA1800186EAF /* NiceSpotApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43A10EED27E0CA1800186EAF /* NiceSpotApp.swift */; };
 		43A10EF027E0CA1800186EAF /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43A10EEF27E0CA1800186EAF /* ContentView.swift */; };
 		43A10EF227E0CA1A00186EAF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 43A10EF127E0CA1A00186EAF /* Assets.xcassets */; };
@@ -18,7 +20,20 @@
 		43CC2B0627E0D157001B574B /* ProjectErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43CC2B0527E0D157001B574B /* ProjectErrors.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		43905C8827E0EF98008D7090 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 43A10EE227E0CA1800186EAF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 43A10EE927E0CA1800186EAF;
+			remoteInfo = NiceSpot;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		43905C8427E0EF98008D7090 /* NiceSpotTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NiceSpotTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		43905C8D27E0F03E008D7090 /* SpotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotTests.swift; sourceTree = "<group>"; };
+		43905C8F27E0F090008D7090 /* TestableData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestableData.swift; sourceTree = "<group>"; };
 		43A10EEA27E0CA1800186EAF /* NiceSpot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NiceSpot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		43A10EED27E0CA1800186EAF /* NiceSpotApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NiceSpotApp.swift; sourceTree = "<group>"; };
 		43A10EEF27E0CA1800186EAF /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -32,6 +47,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		43905C8127E0EF98008D7090 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		43A10EE727E0CA1800186EAF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -42,10 +64,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		43905C8527E0EF98008D7090 /* NiceSpotTests */ = {
+			isa = PBXGroup;
+			children = (
+				43905C8F27E0F090008D7090 /* TestableData.swift */,
+				43905C8D27E0F03E008D7090 /* SpotTests.swift */,
+			);
+			path = NiceSpotTests;
+			sourceTree = "<group>";
+		};
 		43A10EE127E0CA1800186EAF = {
 			isa = PBXGroup;
 			children = (
 				43A10EEC27E0CA1800186EAF /* NiceSpot */,
+				43905C8527E0EF98008D7090 /* NiceSpotTests */,
 				43A10EEB27E0CA1800186EAF /* Products */,
 			);
 			sourceTree = "<group>";
@@ -54,6 +86,7 @@
 			isa = PBXGroup;
 			children = (
 				43A10EEA27E0CA1800186EAF /* NiceSpot.app */,
+				43905C8427E0EF98008D7090 /* NiceSpotTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -101,6 +134,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		43905C8327E0EF98008D7090 /* NiceSpotTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 43905C8C27E0EF98008D7090 /* Build configuration list for PBXNativeTarget "NiceSpotTests" */;
+			buildPhases = (
+				43905C8027E0EF98008D7090 /* Sources */,
+				43905C8127E0EF98008D7090 /* Frameworks */,
+				43905C8227E0EF98008D7090 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				43905C8927E0EF98008D7090 /* PBXTargetDependency */,
+			);
+			name = NiceSpotTests;
+			productName = NiceSpotTests;
+			productReference = 43905C8427E0EF98008D7090 /* NiceSpotTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		43A10EE927E0CA1800186EAF /* NiceSpot */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 43A10EF827E0CA1A00186EAF /* Build configuration list for PBXNativeTarget "NiceSpot" */;
@@ -128,6 +179,10 @@
 				LastSwiftUpdateCheck = 1320;
 				LastUpgradeCheck = 1320;
 				TargetAttributes = {
+					43905C8327E0EF98008D7090 = {
+						CreatedOnToolsVersion = 13.2.1;
+						TestTargetID = 43A10EE927E0CA1800186EAF;
+					};
 					43A10EE927E0CA1800186EAF = {
 						CreatedOnToolsVersion = 13.2.1;
 					};
@@ -147,11 +202,19 @@
 			projectRoot = "";
 			targets = (
 				43A10EE927E0CA1800186EAF /* NiceSpot */,
+				43905C8327E0EF98008D7090 /* NiceSpotTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		43905C8227E0EF98008D7090 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		43A10EE827E0CA1800186EAF /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -164,6 +227,15 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		43905C8027E0EF98008D7090 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				43905C8E27E0F03E008D7090 /* SpotTests.swift in Sources */,
+				43905C9027E0F090008D7090 /* TestableData.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		43A10EE627E0CA1800186EAF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -180,7 +252,51 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		43905C8927E0EF98008D7090 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 43A10EE927E0CA1800186EAF /* NiceSpot */;
+			targetProxy = 43905C8827E0EF98008D7090 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		43905C8A27E0EF98008D7090 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = W8A2PVHCN3;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = fr.hludovic.NiceSpotTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NiceSpot.app/NiceSpot";
+			};
+			name = Debug;
+		};
+		43905C8B27E0EF98008D7090 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = W8A2PVHCN3;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = fr.hludovic.NiceSpotTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NiceSpot.app/NiceSpot";
+			};
+			name = Release;
+		};
 		43A10EF627E0CA1A00186EAF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -358,6 +474,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		43905C8C27E0EF98008D7090 /* Build configuration list for PBXNativeTarget "NiceSpotTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				43905C8A27E0EF98008D7090 /* Debug */,
+				43905C8B27E0EF98008D7090 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		43A10EE527E0CA1800186EAF /* Build configuration list for PBXProject "NiceSpot" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

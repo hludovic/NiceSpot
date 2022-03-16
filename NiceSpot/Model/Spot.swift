@@ -52,7 +52,7 @@ class Spot {
         return result.isEmpty ? false : true
     }
     
-    static func newGetSpots(context: NSManagedObjectContext = viewContext) throws -> [Spot] {
+    static func getSpots(context: NSManagedObjectContext = viewContext) throws -> [Spot] {
         let request: NSFetchRequest<SpotMO> = SpotMO.fetchRequest()
         let sort = NSSortDescriptor(key: "creationDate", ascending: false)
         request.sortDescriptors = [sort]
@@ -100,7 +100,7 @@ class Spot {
     }
     
     func removeToFavorite(context: NSManagedObjectContext) throws -> Bool {
-        let isFavorite = try isFavorite()
+        let isFavorite = try isFavorite(context: context)
         guard isFavorite else { return false }
         let favoriteMO = try getFavoriteMO(context: context, id: self.recordID)
         context.delete(favoriteMO)
@@ -178,7 +178,7 @@ private extension Spot {
     
     static func getFavoriteIDs(context: NSManagedObjectContext) throws -> [String] {
         let request: NSFetchRequest<FavoriteMO> = FavoriteMO.fetchRequest()
-        let sort = NSSortDescriptor(key: "dateStarred", ascending: true)
+        let sort = NSSortDescriptor(key: "dateSaved", ascending: true)
         request.sortDescriptors = [sort]
         var result: [String] = []
         let favoritesMO = try context.fetch(request)
