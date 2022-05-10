@@ -10,7 +10,7 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         VStack{
-            Text("Hello, world!")
+            Text("Hello, world!!")
                 .padding()
             AsyncImage(url: URL(string: "https://www.hackingwithswift.com/img/paul-2.png")) { image in
                 image.resizable()
