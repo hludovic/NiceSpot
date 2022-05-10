@@ -17,7 +17,7 @@ class Spot {
     let category: Spot.Category
     let longitude: Double
     let latitude: Double
-    let pictureName: String
+    let picture: URL
     let municipality: Spot.Municipality
     let recordChangeTag: String
     private static let viewContext = PersistenceController.shared.container.viewContext
@@ -29,7 +29,7 @@ class Spot {
                  detail: String,
                  longitude: Double,
                  latitude: Double,
-                 picture: String,
+                 picture: URL,
                  municipality: Spot.Municipality,
                  sha: String) {
         self.recordID = id
@@ -39,7 +39,7 @@ class Spot {
         self.category = category
         self.longitude = longitude
         self.latitude = latitude
-        self.pictureName = picture
+        self.picture = picture
         self.municipality = municipality
         self.recordChangeTag = sha
     }
@@ -139,7 +139,7 @@ private extension Spot {
             let title = spotMO.title,
             let detail = spotMO.detail,
             let categoryString = spotMO.category,
-            let pictureName = spotMO.pictureName,
+            let picture = spotMO.picture,
             let municipalityString = spotMO.municipality,
             let recordChangeTag = spotMO.recordChangeTag
         else { throw SpotError.failReadingSpotMOWhenConvert }
@@ -150,7 +150,7 @@ private extension Spot {
                         detail: detail,
                         longitude: spotMO.longitude,
                         latitude: spotMO.latitude,
-                        picture: pictureName,
+                        picture: picture,
                         municipality: Spot.Municipality(rawValue: municipalityString) ?? .unknown,
                         sha: recordChangeTag
         )
@@ -194,41 +194,51 @@ private extension Spot {
 // MARK: - CloudKit
 
 private extension Spot {
-
+    
+    static func convertCKRecordToSpot(ckrecord: CKRecord) throws -> Spot {
+        guard
+            let date = ckrecord.creationDate,
+            let title = ckrecord["title"] as? String,
+            let detail = ckrecord["detail"] as? String,
+            let recordChangeTag = ckrecord.recordChangeTag,
+            let category = ckrecord["category"] as? String,
+            let location = ckrecord["location"] as? CLLocation,
+            let pictureCKAsset = ckrecord["picture"] as? CKAsset,
+            let municipality = ckrecord["municipality"] as? String,
+            let picture = pictureCKAsset.fileURL
+        else { throw SpotError.failReadingSpotCK }
+        let spotFetched = Spot(id: ckrecord.recordID.recordName,
+                               date: date,
+                               title: title,
+                               category: Spot.Category(rawValue: category) ?? .unknown,
+                               detail: detail,
+                               longitude: location.coordinate.longitude,
+                               latitude: location.coordinate.latitude,
+                               picture: picture,
+                               municipality: Spot.Municipality(rawValue: municipality) ?? .unknown,
+                               sha: recordChangeTag
+        )
+        return spotFetched
+    }
+    
     static func fetchSpots(completion: @escaping (Result<[Spot], Error>) -> Void ) {
         let predicate = NSPredicate(value: true)
         let querry = CKQuery(recordType: "SpotCK", predicate: predicate)
         let operation = CKQueryOperation(query: querry)
-        operation.desiredKeys = ["title", "detail", "category", "location", "municipality", "pictureName"]
+        operation.desiredKeys = ["title", "detail", "category", "location", "municipality", "picture"]
         var newSpotsCK: [Spot] = []
         // - recordMatchedBlock -
-        operation.recordMatchedBlock = { recordID, recordResult in
+        operation.recordMatchedBlock = { _, recordResult in
             switch recordResult {
             case .failure(let error ):
                 return completion(Result.failure(error))
             case .success(let ckrecord):
-                guard
-                    let date = ckrecord.creationDate,
-                    let title = ckrecord["title"] as? String,
-                    let detail = ckrecord["detail"] as? String,
-                    let recordChangeTag = ckrecord.recordChangeTag,
-                    let category = ckrecord["category"] as? String,
-                    let location = ckrecord["location"] as? CLLocation,
-                    let pictureName = ckrecord["pictureName"] as? String,
-                    let municipality = ckrecord["municipality"] as? String
-                else { return completion(Result.failure(SpotError.failReadingSpotCK)) }
-                let spotFetched = Spot(id: recordID.recordName,
-                                  date: date,
-                                  title: title,
-                                  category: Spot.Category(rawValue: category) ?? .unknown,
-                                  detail: detail,
-                                  longitude: location.coordinate.longitude,
-                                  latitude: location.coordinate.latitude,
-                                  picture: pictureName,
-                                  municipality: Spot.Municipality(rawValue: municipality) ?? .unknown,
-                                  sha: recordChangeTag
-                )
-                newSpotsCK.append(spotFetched)
+                do {
+                    let spotFetched = try Spot.convertCKRecordToSpot(ckrecord: ckrecord)
+                    newSpotsCK.append(spotFetched)
+                } catch let error {
+                    return completion(Result.failure(error))
+                }
             }
         }
         // - querryResultBlock -
@@ -271,7 +281,7 @@ private extension Spot {
         spotMO.latitude = self.latitude
         spotMO.category = self.category.rawValue
         spotMO.municipality = self.municipality.rawValue
-        spotMO.pictureName = self.pictureName
+        spotMO.picture = self.picture
         spotMO.recordChangeTag = self.recordChangeTag
         do {
             try context.save()

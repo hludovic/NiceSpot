@@ -60,7 +60,7 @@ class TestableData {
         spot.latitude = 11111.112
         spot.longitude = -111111.221
         spot.municipality = municipality
-        spot.pictureName = "newSpot"
+        spot.picture = URL(string: "https://upload.wikimedia.org/wikipedia/Adventures.JPG")
         spot.title = "NewSpot"
         spot.creationDate = date
         spot.recordChangeTag = "AAAV"
@@ -82,7 +82,7 @@ class TestableData {
         spot.latitude = 11111.112
         spot.longitude = -111111.221
         spot.municipality = Spot.Municipality.lamentin.rawValue
-        spot.pictureName = "newSpot"
+        spot.picture = URL(string: "https://upload.wikimedia.org/wikipedia/Adventures.JPG")
         spot.title = title
         spot.creationDate = Date()
         spot.recordChangeTag = sha
@@ -113,7 +113,7 @@ Un chemin ombragé par une végétation luxuriante, entièrement balisé le long
         cascecr.latitude = 16.179118967390906
         cascecr.longitude = -61.68083214438678
         cascecr.municipality = Spot.Municipality.petitBourg.rawValue
-        cascecr.pictureName = "cascecr_1_GqbzwSMC4"
+        cascecr.picture = URL(string: "https://upload.wikimedia.org/wikipedia/Adventures.JPG")
         cascecr.title = "La Cascade aux Ecrevisses New"
         cascecr.creationDate = TestableData.getDate(year: 2020, month: 06, day: 01)
         cascecr.recordChangeTag = "kkyd889w"
@@ -133,7 +133,7 @@ La plage de l’Anse Rifflet appelle au farniente et à la contemplation. Imposs
         rifflet.latitude = 16.336675
         rifflet.longitude = -61.785863
         rifflet.municipality = Spot.Municipality.deshaies.rawValue
-        rifflet.pictureName = "rifflet"
+        rifflet.picture = URL(string: "https://upload.wikimedia.org/wikipedia/Adventures.JPG")
         rifflet.title = "La Plage de l’Anse Rifflet New"
         rifflet.creationDate = TestableData.getDate(year: 2020, month: 01, day: 01)
         rifflet.recordChangeTag = "BBB22"
@@ -149,7 +149,7 @@ Assurément une des plus belles plages en Guadeloupe ! La plage de la Caravelle,
         caravelle.latitude = 16.221350519784288
         caravelle.longitude = -61.39367191555051
         caravelle.municipality = Spot.Municipality.sainteAnne.rawValue
-        caravelle.pictureName = "caravelle"
+        caravelle.picture = URL(string: "https://upload.wikimedia.org/wikipedia/Adventures.JPG")
         caravelle.title = "La Plage de la Caravelle New"
         caravelle.creationDate = TestableData.getDate(year: 2020, month: 03, day: 01)
         caravelle.recordChangeTag = "CCC33"
